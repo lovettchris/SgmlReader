@@ -10,9 +10,7 @@
         <projectUrl>https://github.com/lovettchris/SgmlReader</projectUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>
-          SgmlReader is a .NET library that is handy for converting SGML content (like HTML and OFX) into 
-          well formed XML via XmlReader, XmlDocument, XDocument or XPathDocument. 
-          It runs on Windows and Linux using Mono.</description>
+          SgmlReader is a .NET library that is handy for converting SGML content (like HTML and OFX) into well formed XML via XmlReader, XmlDocument, XDocument or XPathDocument. It runs on Windows and Linux using Mono.</description>
         <summary>
           SgmlReader is a .NET library that is handy for converting SGML into well formed XML.
         </summary>
