@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Demo.aspx = Demo.aspx
 		license.txt = license.txt
 		ReadMe.md = ReadMe.md
-		SgmlReaderDll\SgmlReaderDll.nuspec = SgmlReaderDll\SgmlReaderDll.nuspec
+		SgmlReader.nuspec = SgmlReader.nuspec
 		Version.cs = Version.cs
 	EndProjectSection
 EndProject

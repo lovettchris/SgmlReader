@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>Microsoft.Xml.SgmlReader</id>
+        <version>1.8.12.0</version>
+        <title>Microsoft.Xml.SgmlReader</title>
+        <authors>Chris Lovett, Steve Bjorg</authors>
+        <owners>Chris Lovett</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://github.com/lovettchris/SgmlReader</projectUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>
+          SgmlReader is a .NET library that is handy for converting SGML content (like HTML and OFX) into 
+          well formed XML via XmlReader, XmlDocument, XDocument or XPathDocument. 
+          It runs on Windows and Linux using Mono.</description>
+        <summary>
+          SgmlReader is a .NET library that is handy for converting SGML into well formed XML.
+        </summary>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright © 2002-2016, Microsoft Corporation; Copyright © 2007-2013, MindTouch</copyright>
+        <language>en-US</language>
+        <references>
+        </references>
+        <tags>SGML HTML XML HTMLTidy SgmlReader</tags>
+    </metadata>
+    <files>
+        <file src="SgmlReaderDll\bin\Release\SgmlReaderDll.dll" target="lib\net45\SgmlReaderDll.dll" />
+        <file src="SgmlReaderPortable\bin\Release\SgmlReaderPortable.dll" target="lib\netcore\SgmlReaderPortable.dll" />
+        <file src="SgmlReaderUniversal\bin\Release\SgmlReaderUniversal.dll" target="lib\uap\SgmlReaderUniversal.dll" />
+    </files>
+</package>
