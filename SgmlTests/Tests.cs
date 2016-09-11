@@ -398,5 +398,25 @@ namespace SGMLTests {
             }
             Assert.AreEqual(2, count, "Expecing 2 XmlDocuments in the input stream");
         }
+
+#if WINDOWS_DESKTOP
+        [Test]
+        public void Test_XPathDocument()
+        {
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.ConformanceLevel = ConformanceLevel.Fragment;
+            StringReader stream = new StringReader("<html><head></head><script></script><body><p>Test</html> ");
+
+            SgmlReader reader = new SgmlReader(settings);
+            reader.DocType = "html";
+            reader.InputStream = stream;
+
+            XPathDocument doc = new XPathDocument(reader);
+
+            string expected = @"<html><head></head><script></script><body><p>Test</p></body></html>";
+            string actual = doc.CreateNavigator().OuterXml.Replace("\n", "").Replace("\r", "").Replace(" ", "");
+            Assert.AreEqual(expected, actual, "Expecing same XML document");
+        }
+#endif
     }
 }

@@ -55,7 +55,7 @@ namespace Sgml {
                                 reader.ErrorLog = Console.Error;
                             } 
                             else {
-                                reader.ErrorLogFile = errorlog;
+                                reader.ErrorLog = new StreamWriter(errorlog);
                             }
                             break;
                         case "html":
@@ -66,7 +66,7 @@ namespace Sgml {
                             break;
                         case "proxy":
                             proxy = args[++i];
-                            reader.WebProxy = proxy;
+                            reader.WebProxy = new WebProxy(proxy);
                             break;
                         case "encoding":
                             encoding = Encoding.GetEncoding(args[++i]);

@@ -16,6 +16,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+#if !PORTABLE
+using System.Net;
+#endif
 using System.Reflection;
 using System.Text;
 using System.Xml;
@@ -326,6 +329,28 @@ namespace Sgml
         Eof
     }
 
+#if !WINDOWS_DESKTOP
+    //
+    // Summary:
+    //     Specifies how white space is handled.
+    //     (Not defined in PORTABLE framework, so we added it here).
+    public enum WhitespaceHandling
+    {
+        //
+        // Summary:
+        //     Return Whitespace and SignificantWhitespace nodes. This is the default.
+        All = 0,
+        //
+        // Summary:
+        //     Return SignificantWhitespace nodes only.
+        Significant = 1,
+        //
+        // Summary:
+        //     Return no Whitespace and no SignificantWhitespace nodes.
+        None = 2
+    } 
+#endif
+
 
     /// <summary>
     /// SgmlReader is an XmlReader API over any SGML document (including built in 
@@ -366,9 +391,7 @@ namespace Sgml
         private string m_rootElementName;
 
         private string m_href;
-        private string m_errorLogFile;
         private Entity m_lastError;
-        private string m_proxy;
         private TextReader m_inputStream;
         private string m_syslit;
         private string m_pubid;
@@ -380,6 +403,8 @@ namespace Sgml
         //private string m_startTag;
         private Dictionary<string, string> unknownNamespaces = new Dictionary<string,string>();
         private XmlNameTable m_nameTable;
+        private IEntityResolver m_resolver;
+
 
         /// <summary>
         /// Initialises a new instance of the SgmlReader class.
@@ -428,6 +453,18 @@ namespace Sgml
             }
         }
 
+        /// <summary>
+        /// On portable platforms the mechanism for loading files is different.  For example,
+        /// WinRT uses StorageFile, HttpClient and Windows.ApplicationModel.Resources.ResourceLoader.  
+        /// So the caller must implement this interface and provide the platform specific mechanism
+        /// for finding relative resources (DTDs, external entities, etc).
+        /// </summary>
+        public IEntityResolver Resolver
+        {
+            get { return m_resolver; }
+            set { m_resolver = value; }
+        }
+
         private void LazyLoadDtd(Uri baseUri)
         {
             if (this.m_dtd == null && !this.m_ignoreDtd)
@@ -436,19 +473,23 @@ namespace Sgml
                 {
                     if (this.m_docType != null && StringUtilities.EqualsIgnoreCase(this.m_docType, "html"))
                     {
-                        Assembly a = typeof(SgmlReader).Assembly;
-                        string name = a.FullName.Split(',')[0]+".Html.dtd";
-                        Stream stm = a.GetManifestResourceStream(name);
-                        if (stm != null)
+                        Stream stream = null;
+                        // see if our resolver can find it.
+                        var content = m_resolver.GetContent(new Uri("Html.dtd", UriKind.Relative));
+                        if (content != null)
                         {
-                            StreamReader sr = new StreamReader(stm);
-                            this.m_dtd = SgmlDtd.Parse(baseUri, "HTML", sr, null, this.m_proxy, null);
+                            stream = content.Open();
+                        }
+                        if (stream != null)
+                        {
+                            StreamReader sr = new StreamReader(stream);
+                            this.m_dtd = SgmlDtd.Parse(baseUri, "HTML", sr, null, null, m_resolver);
                         }
                     }
                 }
                 else
                 { 
-                    this.m_dtd = SgmlDtd.Parse(baseUri, this.m_docType, this.m_pubid, this.m_syslit, this.m_subset, this.m_proxy, null);
+                    this.m_dtd = SgmlDtd.Parse(baseUri, this.m_docType, this.m_pubid, this.m_syslit, this.m_subset, null, m_resolver);
                 }
             }
 
@@ -559,21 +600,32 @@ namespace Sgml
             }
         }
 
+#if WINDOWS_DESKTOP
         /// <summary>
         /// Sometimes you need to specify a proxy server in order to load data via HTTP
         /// from outside the firewall.  For example: "itgproxy:80".
         /// </summary>
-        public string WebProxy
+        public WebProxy WebProxy
         {
             get
             {
-                return this.m_proxy;
+                if (m_resolver == null) return null;
+                return ((DesktopEntityResolver)m_resolver).Proxy;
             }
             set
             {
-                this.m_proxy = value;
+                DesktopEntityResolver der = m_resolver as DesktopEntityResolver;
+                if (der != null)
+                {
+                    der.Proxy = value;
+                }
+                else
+                {
+                    throw new NotSupportedException("Cannot set WebProxy on unknown IEntityResolver (see Resolver property)");
+                }
             }
         }
+#endif
 
         /// <summary>
         /// The base Uri is used to resolve relative Uri's like the SystemLiteral and
@@ -598,16 +650,9 @@ namespace Sgml
             {
                 this.m_href = value; 
                 Init();
-                if (this.m_baseUri == null)
+                if (this.m_baseUri == null && !string.IsNullOrWhiteSpace(value))
                 {
-                    if (this.m_href.IndexOf("://") > 0)
-                    {
-                        this.m_baseUri = new Uri(this.m_href);
-                    }
-                    else
-                    {
-                        this.m_baseUri = new Uri("file:///" + Directory.GetCurrentDirectory() + "//");
-                    }
+                    this.m_baseUri = new Uri(this.m_href, UriKind.RelativeOrAbsolute);
                 }
             }
         }
@@ -667,22 +712,6 @@ namespace Sgml
             }
         }
 
-        /// <summary>
-        /// DTD validation errors are written to this log file.
-        /// </summary>
-        public string ErrorLogFile
-        {
-            get
-            {
-                return this.m_errorLogFile;
-            }
-            set
-            {
-                this.m_errorLogFile = value;
-                this.m_log = new StreamWriter(value);
-            }
-        }
-
         private void Log(string msg, params string[] args)
         {
             if (ErrorLog != null)
@@ -739,6 +768,12 @@ namespace Sgml
             this.m_rootCount = 0;
             this.m_foundRoot = false;
             this.unknownNamespaces.Clear();
+#if WINDOWS_DESKTOP
+            this.m_resolver = new DesktopEntityResolver();
+#endif
+#if WINDOWS_UWP
+            this.m_resolver = new UniversalEntityResolver();
+#endif
         }
 
         private Node Push(string name, XmlNodeType nt, string value)
@@ -1080,7 +1115,11 @@ namespace Sgml
         /// <remarks>
         /// This property applies only to an attribute node.
         /// </remarks>
+#if WINDOWS_DESKTOP
         public override char QuoteChar
+#else
+        public char QuoteChar
+#endif
         {
             get
             {
@@ -1391,11 +1430,11 @@ namespace Sgml
 
             if (this.Href != null)
             {
-                this.m_current = new Entity("#document", null, this.m_href, this.m_proxy);
+                this.m_current = new Entity("#document", null, this.m_href, this.m_resolver);
             }
             else if (this.m_inputStream != null)
             {
-                this.m_current = new Entity("#document", null, this.m_inputStream, this.m_proxy);           
+                this.m_current = new Entity("#document", null, this.m_inputStream, this.m_resolver);           
             }
             else
             {
@@ -2340,7 +2379,7 @@ namespace Sgml
                         } 
                         else
                         {
-                            Entity ex = new Entity(name, e.PublicId, e.Uri, this.m_current.Proxy);
+                            Entity ex = new Entity(name, e.PublicId, e.Uri, this.m_resolver);
                             e.Open(this.m_current, new Uri(e.Uri));
                             this.m_current = ex;
                             this.m_current.ReadChar();
@@ -2376,11 +2415,10 @@ namespace Sgml
             }
         }
 
-        /// <summary>
-        /// Changes the <see cref="ReadState"/> to Closed.
-        /// </summary>
-        public override void Close()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             if (this.m_current != null)
             {
                 this.m_current.Close();
@@ -2389,7 +2427,7 @@ namespace Sgml
 
             if (this.m_log != null)
             {
-                this.m_log.Close();
+                this.m_log.Dispose();
                 this.m_log = null;
             }
         }
@@ -2411,11 +2449,12 @@ namespace Sgml
             }
         }
 
+
         /// <summary>
         /// Reads the contents of an element or text node as a string.
         /// </summary>
         /// <returns>The contents of the element or an empty string.</returns>
-        public override string ReadString()
+        public override string ReadContentAsString()
         {
             if (this.m_node.NodeType == XmlNodeType.Element)
             {
@@ -2452,27 +2491,29 @@ namespace Sgml
         public override string ReadInnerXml()
         {
             StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
-            XmlTextWriter xw = new XmlTextWriter(sw);
-            xw.Formatting = Formatting.Indented;
-            switch (this.NodeType)
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            settings.ConformanceLevel = ConformanceLevel.Fragment;
+            using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
-                case XmlNodeType.Element:
-                    Read();
-                    while (!this.EOF && this.NodeType != XmlNodeType.EndElement)
-                    {
-                        xw.WriteNode(this, true);
-                    }
-                    Read(); // consume the end tag
-                    break;
-                case XmlNodeType.Attribute:
-                    sw.Write(this.Value);
-                    break;
-                default:
-                    // return empty string according to XmlReader spec.
-                    break;
+                switch (this.NodeType)
+                {
+                    case XmlNodeType.Element:
+                        Read();
+                        while (!this.EOF && this.NodeType != XmlNodeType.EndElement)
+                        {
+                            xw.WriteNode(this, true);
+                        }
+                        Read(); // consume the end tag
+                        break;
+                    case XmlNodeType.Attribute:
+                        sw.Write(this.Value);
+                        break;
+                    default:
+                        // return empty string according to XmlReader spec.
+                        break;
+                }
             }
-
-            xw.Close();
             return sw.ToString();
         }
 
@@ -2485,10 +2526,12 @@ namespace Sgml
         public override string ReadOuterXml()
         {
             StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
-            XmlTextWriter xw = new XmlTextWriter(sw);
-            xw.Formatting = Formatting.Indented;
-            xw.WriteNode(this, true);
-            xw.Close();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+            using (XmlWriter xw = XmlWriter.Create(sw, settings))
+            {
+                xw.WriteNode(this, true);
+            }
             return sw.ToString();
         }
 

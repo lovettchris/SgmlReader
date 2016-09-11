@@ -7,7 +7,7 @@ using System;
 using System.Reflection;
 
 [assembly: AssemblyTitle("SgmlReader")]
-[assembly: AssemblyDescription("Converts SGML to XML via XmlReader API")]
+[assembly: AssemblyDescription("Converts SGML to XML via XmlReader API. SGML includes HTML and OFX. It also works with XmlDocument, XDocument and XPathDocument.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft Corporation")]
 [assembly: AssemblyProduct("")]

@@ -99,7 +99,8 @@ namespace SGMLTests {
         {
             using (Stream stream = typeof(SGMLTests.Tests).Assembly.GetManifestResourceStream("SgmlTests." + name))
             {
-                SgmlDtd dtd = SgmlDtd.Parse(null, System.IO.Path.GetFileNameWithoutExtension(name), new StreamReader(stream), "", null, new NameTable());
+                SgmlDtd dtd = SgmlDtd.Parse(null, System.IO.Path.GetFileNameWithoutExtension(name), new StreamReader(stream), "", new NameTable(), 
+                    new DesktopEntityResolver());
                 dtd.Name = docType;
                 return dtd;
             }
