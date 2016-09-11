@@ -143,11 +143,18 @@ mono ./packages/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./SgmlTests/b
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly 
 redirection to account for newer versions when recompilation is not an option.
 
-### Release notes for 1.8.12 (2013-Jan-27)
+### Release notes for 1.8.13 (2016-Sep-27)
 
-* Fixed NameTable but so SgmlReader can be used with XPathDocument. (Chris Lovett)
+* Redirect http://www.w3.org/TR/html4/loose.dtd to built-in html.dtd. (Chris Lovett)
+
+### Release notes for 1.8.12 (2016-Sep-11)
+
+* Fixed NameTable so SgmlReader can be used with XPathDocument. (Chris Lovett)
 * Switched to xbuild and nunit on mono. (Chris Lovett)
-* Move to NUnit 3 (which no longer requires VSIX extension to run the tests).
+* Add portable support by adding IEntityResolver interface. (Chris Lovett)
+* Add desktop and universal implementation of IEntityResolver. (Chris Lovett)
+* Move to NUnit 3 (which no longer requires VSIX extension to run the tests). (Chris Lovett)
+* Move to Nuget 3 (multi-platform support including portable and universal apps). (Chris Lovett)
 
 ### Release notes for 1.8.11 (2013-Jan-27)
 
