@@ -18,6 +18,9 @@ using System.Xml;
 using NUnit.Framework;
 using Sgml;
 using System.Xml.Linq;
+#if WINDOWS_DESKTOP
+using System.Xml.XPath;
+#endif
 
 namespace SGMLTests {
 
@@ -415,7 +418,25 @@ namespace SGMLTests {
 
             string expected = @"<html><head></head><script></script><body><p>Test</p></body></html>";
             string actual = doc.CreateNavigator().OuterXml.Replace("\n", "").Replace("\r", "").Replace(" ", "");
-            Assert.AreEqual(expected, actual, "Expecing same XML document");
+            Assert.AreEqual(expected, actual, "Expecting same XML document");
+        }
+
+        [Test]
+        public void Test_XPathDocument_NameTable()
+        {
+            NameTable nameTable = new NameTable();
+            SgmlReader sgmlReader = new SgmlReader(nameTable)
+            {
+                InputStream = new StringReader("<html><body>abcd</body></html>"),
+                DocType = "HTML"
+            };
+            XPathDocument xpathDocument = new XPathDocument(sgmlReader);
+            XPathNavigator xpathNavigator = xpathDocument.CreateNavigator();
+
+            // test that the navigator works properly.
+            Assert.AreEqual("html", nameTable.Get("html"), "Expecting 'html' name in nametable");
+            Assert.AreEqual("abcd", xpathNavigator.Evaluate("string(/html/body)"), "Expecting '/html/body' to be evaluated correctly.");
+
         }
 #endif
     }
