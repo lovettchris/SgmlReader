@@ -25,5 +25,6 @@
         <file src="SgmlReaderDll\bin\Release\SgmlReaderDll.dll" target="lib\net45\SgmlReaderDll.dll" />
         <file src="SgmlReaderPortable\bin\Release\SgmlReaderPortable.dll" target="lib\netcore\SgmlReaderPortable.dll" />
         <file src="SgmlReaderUniversal\bin\Release\SgmlReaderUniversal.dll" target="lib\uap\SgmlReaderUniversal.dll" />
+        <file src="SgmlReaderNetstandard\bin\Release\SgmlReaderNetstandard.dll" target="lib\netstandard\SgmlReaderNetstandard.dll" />
     </files>
 </package>
