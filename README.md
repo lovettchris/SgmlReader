@@ -114,23 +114,22 @@ the test.ofx file.
 
 If you have questions, please post them on 
 [StackOverflow](http://stackoverflow.com/questions/tagged/sgmlreader) and tag 
-them with *sgmlreader*.  You may also email bugs, feedback and/or feature 
-requests to <a href="mailto:lovettchris@hotmail.com">Chris Lovett</a>.
+them with *sgmlreader*.  Feel free to post issues in the github issues list.
 
-If you fix an issue, please submit follow these guidelines:
+If you fix an issue, please submit PR and follow these guidelines:
 
 1. Make sure the code formatting is **identical** to the existing code formatting. 
 You know that you're doing it right if your code is indistinguishable from
 existing code.
 1. Run the unit test to make sure no regressions are being introduced.
-1. Add a unit test to confirm your fix or feature.
+1. Add a unit test to confirm your fix or feature, if needed.
 1. Submit a pull request on [GitHub](https://github.com/LovettChris/SGMLReader).
 
 ## Testing
 
 Please make sure all tests pass and new tests are added for areas you work on.
-See [nunit](https://nunit.org).  If you have Visual Studio 2015, just open the 
-Test Explorer and click Run All.
+See [nunit](https://nunit.org).  If you have Visual Studio, just open the 
+Test Explorer and click Run All. 
  
 ## Mono
 
