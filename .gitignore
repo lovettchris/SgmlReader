@@ -208,5 +208,4 @@ $RECYCLE.BIN/
 # Nuget lock files
 *.lock.json
 /TestResult.xml
-/Microsoft.Xml.SgmlReader.1.8.12.0.nupkg
-/Microsoft.Xml.SgmlReader.1.8.13.0.nupkg
+/*.nupkg
