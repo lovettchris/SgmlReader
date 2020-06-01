@@ -1,0 +1,11 @@
+<Project>
+
+  <PropertyGroup>
+    <Company>Microsoft Corporation</Company>
+    <Product>SgmlReader</Product>
+    <Title>SgmlReader</Title>
+    <FileVersion>1.8.16</FileVersion>
+    <AssemblyVersion>1.8.16</AssemblyVersion>
+  </PropertyGroup>
+
+</Project>

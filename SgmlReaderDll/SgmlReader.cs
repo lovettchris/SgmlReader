@@ -1,9 +1,7 @@
 /*
- * Original Work Copyright (c) 2016 Microsoft Corporation. All rights reserved.
+ * Copyright (c) 2020 Microsoft Corporation. All rights reserved.
  * Modified work Copyright (c) 2008 MindTouch. All rights reserved. 
- * 
- * Support: lovettchris@hotmail.com 
- *
+ * s
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -329,7 +327,7 @@ namespace Sgml
         Eof
     }
 
-#if !WINDOWS_DESKTOP
+#if WINDOWS_UWP
     //
     // Summary:
     //     Specifies how white space is handled.
@@ -348,7 +346,7 @@ namespace Sgml
         // Summary:
         //     Return no Whitespace and no SignificantWhitespace nodes.
         None = 2
-    } 
+    }
 #endif
 
 
@@ -602,7 +600,7 @@ namespace Sgml
             }
         }
 
-#if WINDOWS_DESKTOP
+#if !WINDOWS_UWP
         /// <summary>
         /// Sometimes you need to specify a proxy server in order to load data via HTTP
         /// from outside the firewall.  For example: "itgproxy:80".
@@ -770,11 +768,10 @@ namespace Sgml
             this.m_rootCount = 0;
             this.m_foundRoot = false;
             this.unknownNamespaces.Clear();
-#if WINDOWS_DESKTOP
-            this.m_resolver = new DesktopEntityResolver();
-#endif
 #if WINDOWS_UWP
             this.m_resolver = new UniversalEntityResolver();
+#else
+            this.m_resolver = new DesktopEntityResolver();
 #endif
         }
 
@@ -1117,10 +1114,10 @@ namespace Sgml
         /// <remarks>
         /// This property applies only to an attribute node.
         /// </remarks>
-#if WINDOWS_DESKTOP
-        public override char QuoteChar
-#else
+#if WINDOWS_UWP
         public char QuoteChar
+#else
+        public override char QuoteChar
 #endif
         {
             get
