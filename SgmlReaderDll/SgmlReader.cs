@@ -1709,7 +1709,8 @@ namespace Sgml
                     name = name.ToLowerInvariant();
                     break;
             }
-            return name;
+
+            return m_nameTable.Add(name);
         }
 
         private static bool VerifyName(string name)
