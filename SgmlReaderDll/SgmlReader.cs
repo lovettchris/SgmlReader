@@ -926,7 +926,7 @@ namespace Sgml
                         // check if a 'xmlns:prefix' attribute is defined
                         for (int i = this.m_stack.Count - 1; i > 0; --i)
                         {
-                            Node node = this.m_stack[i] as Node;
+                            Node node = this.m_stack[i];
                             if ((node != null) && (node.NodeType == XmlNodeType.Element))
                             {
                                 int index = node.GetAttribute("xmlns");

@@ -678,8 +678,7 @@ namespace Sgml {
         /// <returns>The string for the character entity.</returns>
         public string ExpandCharEntity()
         {
-            string value;
-            int v = ReadNumericEntityCode(out value);
+            int v = ReadNumericEntityCode(out string value);
             if(v == -1)
             {
                 return value;
@@ -702,8 +701,7 @@ namespace Sgml {
                     char ch = ReadChar();
                     if (ch == '#')
                     {
-                        string value2;
-                        int v2 = ReadNumericEntityCode(out value2);
+                        int v2 = ReadNumericEntityCode(out string value2);
                         if(v2 == -1)
                         {
                             return value + ";" + value2;
@@ -1588,8 +1586,7 @@ namespace Sgml {
             if (m_attList == null)
                 throw new InvalidOperationException("The attribute list for the element declaration has not been initialised.");
 
-            AttDef a;
-            m_attList.TryGetValue(name.ToUpperInvariant(), out a);
+            m_attList.TryGetValue(name.ToUpperInvariant(), out AttDef a);
             return a;
         }
 
@@ -2530,8 +2527,7 @@ namespace Sgml {
         /// <returns>The specified Entity from the DTD.</returns>
         public Entity FindEntity(string name)
         {
-            Entity e;
-            this.m_entities.TryGetValue(name, out e);
+            this.m_entities.TryGetValue(name, out Entity e);
             return e;
         }
 
@@ -2542,8 +2538,7 @@ namespace Sgml {
         /// <returns>The <see cref="ElementDecl"/> matching the specified name.</returns>
         public ElementDecl FindElement(string name)
         {
-            ElementDecl el;
-            m_elements.TryGetValue(name.ToUpperInvariant(), out el);
+            m_elements.TryGetValue(name.ToUpperInvariant(), out ElementDecl el);
             return el;
         }
 
@@ -2735,9 +2730,8 @@ namespace Sgml {
 
         private Entity GetParameterEntity(string name)
         {
-            Entity e = null;
-            m_pentities.TryGetValue(name, out e);
-            if (e == null)
+            m_pentities.TryGetValue(name, out Entity e);
+            if (e is null)
                 this.m_current.Error("Reference to undefined parameter entity '{0}'", name);
 
             return e;
@@ -3094,8 +3088,7 @@ namespace Sgml {
             ParseAttList(attlist, '>');
             foreach (string name in names)
             {
-                ElementDecl e;
-                if (!m_elements.TryGetValue(name, out e)) 
+                if (!m_elements.TryGetValue(name, out ElementDecl e)) 
                 {
                     this.m_current.Error("ATTLIST references undefined ELEMENT {0}", name);
                 }
