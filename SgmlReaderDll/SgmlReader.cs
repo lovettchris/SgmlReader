@@ -52,9 +52,10 @@ namespace Sgml
     /// used to maintain current state of the parser for element stack, and attributes
     /// in each element.
     /// </summary>
-    internal class HWStack
+    internal sealed class HWStack<T>
+        where T: class
     {
-        private object[] m_items;
+        private T[] m_items;
         private int m_size;
         private int m_count;
         private int m_growth;
@@ -87,20 +88,14 @@ namespace Sgml
         /// The size (capacity) of the stack.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
-        public int Size
-        {
-            get
-            {
-                return this.m_size;
-            }
-        }
+        public int Size => this.m_size;
 
         /// <summary>
         /// Returns the item at the requested index or null if index is out of bounds
         /// </summary>
         /// <param name="i">The index of the item to retrieve.</param>
         /// <returns>The item at the requested index or null if index is out of bounds.</returns>
-        public object this[int i]
+        public T this[int i]
         {
             get
             {
@@ -116,7 +111,7 @@ namespace Sgml
         /// Removes and returns the item at the top of the stack
         /// </summary>
         /// <returns>The item at the top of the stack.</returns>
-        public object Pop()
+        public T Pop()
         {
             this.m_count--;
             if (this.m_count > 0)
@@ -124,7 +119,7 @@ namespace Sgml
                 return m_items[this.m_count - 1];
             }
 
-            return null;
+            return default(T);
         }
 
         /// <summary>
@@ -135,12 +130,12 @@ namespace Sgml
         /// This method tries to reuse a slot, if it returns null then
         /// the user has to call the other Push method.
         /// </remarks>
-        public object Push()
+        public T Push()
         {
             if (this.m_count == this.m_size)
             {
                 int newsize = this.m_size + this.m_growth;
-                object[] newarray = new object[newsize];
+                T[] newarray = new T[newsize];
                 if (this.m_items != null)
                     Array.Copy(this.m_items, newarray, this.m_size);
 
@@ -157,7 +152,7 @@ namespace Sgml
         [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         public void RemoveAt(int i)
         {
-            this.m_items[i] = null;
+            this.m_items[i] = default(T);
             Array.Copy(this.m_items, i + 1, this.m_items, i, this.m_count - i - 1);
             this.m_count--;
         }
@@ -216,7 +211,7 @@ namespace Sgml
     /// for validation purposes, and these Node objects are reused to reduce object allocation,
     /// hence the reset method.  
     /// </summary>
-    internal class Node
+    internal sealed class Node
     {
         internal XmlNodeType NodeType;
         internal string Value;
@@ -227,7 +222,7 @@ namespace Sgml
         internal ElementDecl DtdType; // the DTD type found via validation
         internal State CurrentState;
         internal bool Simulated; // tag was injected into result stream.
-        HWStack attributes = new HWStack(10);
+        readonly HWStack<Attribute> attributes = new HWStack<Attribute>(10);
 
         /// <summary>
         /// Attribute objects are reused during parsing to reduce memory allocations, 
@@ -248,7 +243,7 @@ namespace Sgml
             Attribute a;
             // check for duplicates!
             for (int i = 0, n = this.attributes.Count; i < n; i++) {
-                a = (Attribute)this.attributes[i];
+                a = this.attributes[i];
                 if (string.Equals(a.Name, name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
                     return null;
@@ -256,7 +251,7 @@ namespace Sgml
             }
             // This code makes use of the high water mark for attribute objects,
             // and reuses exisint Attribute objects to avoid memory allocation.
-            a = (Attribute)this.attributes.Push();
+            a = this.attributes.Push();
             if (a == null) {
                 a = new Attribute();
                 this.attributes[this.attributes.Count-1] = a;
@@ -270,7 +265,7 @@ namespace Sgml
         {
             for (int i = 0, n = this.attributes.Count; i < n; i++)
             {
-                Attribute a  = (Attribute)this.attributes[i];
+                Attribute a  = this.attributes[i];
                 if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase))
                 {
                     this.attributes.RemoveAt(i);
@@ -280,21 +275,17 @@ namespace Sgml
         }
         public void CopyAttributes(Node n) {
             for (int i = 0, len = n.attributes.Count; i < len; i++) {
-                Attribute a = (Attribute)n.attributes[i];
+                Attribute a = n.attributes[i];
                 Attribute na = this.AddAttribute(a.Name, a.Value, a.QuoteChar, false);
                 na.DtdType = a.DtdType;
             }
         }
 
-        public int AttributeCount {
-            get {
-                return this.attributes.Count;
-            }
-        }
+        public int AttributeCount => this.attributes.Count;
 
         public int GetAttribute(string name) {
             for (int i = 0, n = this.attributes.Count; i < n; i++) {
-                Attribute a = (Attribute)this.attributes[i];
+                Attribute a = this.attributes[i];
                 if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)) {
                     return i;
                 }
@@ -304,7 +295,7 @@ namespace Sgml
 
         public Attribute GetAttribute(int i) {
             if (i>=0 && i<this.attributes.Count) {
-                Attribute a = (Attribute)this.attributes[i];
+                Attribute a = this.attributes[i];
                 return a;
             }
             return null;
@@ -359,8 +350,8 @@ namespace Sgml
         /// <summary>
         /// The value returned when a namespace is queried and none has been specified.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1705", Justification = "SgmlReader's standards for constants are different to Microsoft's and in line with older C++ style constants naming conventions.  Visually, constants using this style are more easily identifiable as such.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1707", Justification = "SgmlReader's standards for constants are different to Microsoft's and in line with older C++ style constants naming conventions.  Visually, constants using this style are more easily identifiable as such.")]
+        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "SgmlReader's standards for constants are different to Microsoft's and in line with older C++ style constants naming conventions.  Visually, constants using this style are more easily identifiable as such.")]
+        [SuppressMessage("Microsoft.Naming", "CA1707", Justification = "SgmlReader's standards for constants are different to Microsoft's and in line with older C++ style constants naming conventions.  Visually, constants using this style are more easily identifiable as such.")]
         public const string UNDEFINED_NAMESPACE = "#unknown";
 
         private XmlReaderSettings m_settings;
@@ -369,7 +360,7 @@ namespace Sgml
         private State m_state;
         private char m_partial;
         private string m_endTag;
-        private HWStack m_stack;
+        private HWStack<Node> m_stack;
         private Node m_node; // current node (except for attributes)
         // Attributes are handled separately using these members.
         private Attribute m_a;
@@ -753,7 +744,7 @@ namespace Sgml
                 m_settings.NameTable = m_nameTable;
             }
             this.m_state = State.Initial;
-            this.m_stack = new HWStack(10);
+            this.m_stack = new HWStack<Node>(10);
             this.m_node = Push(null, XmlNodeType.Document, null);
             this.m_node.IsEmpty = false;
             this.m_sb = new StringBuilder();
@@ -777,7 +768,7 @@ namespace Sgml
 
         private Node Push(string name, XmlNodeType nt, string value)
         {
-            Node result = (Node)this.m_stack.Push();
+            Node result = this.m_stack.Push();
             if (result == null)
             {
                 result = new Node();
@@ -794,7 +785,7 @@ namespace Sgml
             int top = this.m_stack.Count - 1;
             if (top > 0)
             {
-                Node n = (Node)this.m_stack[top - 1];
+                Node n = this.m_stack[top - 1];
                 this.m_stack[top - 1] = this.m_stack[top];
                 this.m_stack[top] = n;
             }
@@ -819,7 +810,7 @@ namespace Sgml
         {
             if (this.m_stack.Count > 1)
             {
-                this.m_node = (Node)this.m_stack.Pop();
+                this.m_node = this.m_stack.Pop();
             }
         }
 
@@ -828,7 +819,7 @@ namespace Sgml
             int top = this.m_stack.Count - 1;
             if (top > 0)
             {
-                return (Node)this.m_stack[top];
+                return this.m_stack[top];
             }
 
             return null;
@@ -1139,7 +1130,7 @@ namespace Sgml
             {
                 for (int i = this.m_stack.Count - 1; i > 1; i--)
                 {
-                    Node n = (Node)this.m_stack[i];
+                    Node n = this.m_stack[i];
                     XmlSpace xs = n.Space;
                     if (xs != XmlSpace.None)
                         return xs;
@@ -1159,7 +1150,7 @@ namespace Sgml
             {
                 for (int i = this.m_stack.Count - 1; i > 1; i--)
                 {
-                    Node n = (Node)this.m_stack[i];
+                    Node n = this.m_stack[i];
                     string xmllang = n.XmlLang;
                     if (xmllang != null)
                         return xmllang;
@@ -1867,10 +1858,10 @@ namespace Sgml
 
             // Make sure there's a matching start tag for it.                        
             bool caseInsensitive = (this.m_folding == CaseFolding.None);
-            this.m_node = (Node)this.m_stack[this.m_stack.Count - 1];
+            this.m_node = this.m_stack[this.m_stack.Count - 1];
             for (int i = this.m_stack.Count - 1; i > 0; i--)
             {
-                Node n = (Node)this.m_stack[i];
+                Node n = this.m_stack[i];
                 if (string.Equals(n.Name, name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
                     this.m_endTag = n.Name;
@@ -2665,7 +2656,7 @@ namespace Sgml
                     // current context.
                     for (i = top; i > 0; i--)
                     {
-                        Node n = (Node)this.m_stack[i];
+                        Node n = this.m_stack[i];
                         if (n.IsEmpty)
                             continue; // we'll have to pop this one
                         ElementDecl f = n.DtdType;
@@ -2704,7 +2695,7 @@ namespace Sgml
                 }
                 else if (i < top)
                 {
-                    Node n = (Node)this.m_stack[top];
+                    Node n = this.m_stack[top];
                     if (i == top - 1 && string.Equals(name, n.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         // e.g. p not allowed inside p, not an interesting error.
@@ -2715,7 +2706,7 @@ namespace Sgml
                         string closing = "";
                         for (int k = top; k >= i+1; k--) {
                             if (closing != "") closing += ",";
-                            Node n2 = (Node)this.m_stack[k];
+                            Node n2 = this.m_stack[k];
                             closing += "<" + n2.Name + ">";
                         }
                         Log("Element '{0}' not allowed inside '{1}', closing {2}.", name, n.Name, closing);
