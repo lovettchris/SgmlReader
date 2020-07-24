@@ -12,7 +12,7 @@ namespace Sgml
 {
     class FileEntityContent : IEntityContent
     {
-        string path;
+        readonly string path;
 
         public FileEntityContent(string path)
         {
@@ -52,7 +52,7 @@ namespace Sgml
 
     class WebEntityContent : IEntityContent
     {
-        WebResponse response;
+        readonly WebResponse response;
 
         public WebEntityContent(WebResponse response)
         {
