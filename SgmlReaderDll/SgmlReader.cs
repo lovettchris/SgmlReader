@@ -390,7 +390,7 @@ namespace Sgml
         private CaseFolding m_folding = CaseFolding.None;
         private bool m_stripDocType = true;
         //private string m_startTag;
-        private Dictionary<string, string> unknownNamespaces = new Dictionary<string,string>();
+        private readonly Dictionary<string, string> unknownNamespaces = new Dictionary<string,string>();
         private XmlNameTable m_nameTable;
         private IEntityResolver m_resolver;
 

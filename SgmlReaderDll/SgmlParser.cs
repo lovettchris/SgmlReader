@@ -33,7 +33,7 @@ namespace Sgml {
 #endif
     public class SgmlParseException : Exception
     {
-        private string m_entityContext;
+        private readonly string m_entityContext;
 
         /// <summary>
         /// Instantiates a new instance of SgmlParseException with no specific error information.
@@ -151,18 +151,18 @@ namespace Sgml {
         [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "The capitalisation is correct since EOF is an acronym.")]
         public const char EOF = (char)65535;
 
-        private string m_name;
-        private bool m_isInternal;
-        private string m_publicId;
-        private string m_uri;
-        private string m_literal;
+        private readonly string m_name;
+        private readonly bool m_isInternal;
+        private readonly string m_publicId;
+        private readonly string m_uri;
+        private readonly string m_literal;
         private LiteralType m_literalType;
         private Entity m_parent;
         private bool m_isHtml;
         private int m_line;
         private char m_lastchar;
         private bool m_isWhitespace;
-        private IEntityResolver m_resolver;
+        private readonly IEntityResolver m_resolver;
 
         private Encoding m_encoding;
         private Uri m_resolvedUri;
@@ -801,7 +801,7 @@ namespace Sgml {
             return v;
         }
 
-        static int[] CtrlMap = new int[] {
+        static readonly int[] CtrlMap = new int[] {
                                              // This is the windows-1252 mapping of the code points 0x80 through 0x9f.
                                              8364, 129, 8218, 402, 8222, 8230, 8224, 8225, 710, 8240, 352, 8249, 338, 141,
                                              381, 143, 144, 8216, 8217, 8220, 8221, 8226, 8211, 8212, 732, 8482, 353, 8250, 
@@ -948,14 +948,14 @@ namespace Sgml {
     }
 
     // This class decodes an HTML/XML stream correctly.
-    internal class HtmlStream : TextReader
+    internal sealed class HtmlStream : TextReader
     {
-        private Stream stm;
-        private byte[] rawBuffer;
+        private readonly Stream stm;
+        private readonly byte[] rawBuffer;
         private int rawPos;
         private int rawUsed;
         private Encoding m_encoding;
-        private Decoder m_decoder;
+        private readonly Decoder m_decoder;
         private char[] m_buffer;
         private int used;
         private int pos;
@@ -1502,12 +1502,12 @@ namespace Sgml {
     /// </summary>
     public class ElementDecl
     {
-        private string m_name;
+        private readonly string m_name;
         private bool m_startTagOptional;
-        private bool m_endTagOptional;
-        private ContentModel m_contentModel;
-        private string[] m_inclusions;
-        private string[] m_exclusions;
+        private readonly bool m_endTagOptional;
+        private readonly ContentModel m_contentModel;
+        private readonly string[] m_inclusions;
+        private readonly string[] m_exclusions;
         private Dictionary<string, AttDef> m_attList;
 
         /// <summary>
@@ -1863,7 +1863,7 @@ namespace Sgml {
     /// </summary>
     public class Group
     {
-        private Group m_parent;
+        private readonly Group m_parent;
         private List<object> Members;
         private GroupType m_groupType;
         private Occurrence m_occurrence;
@@ -2405,12 +2405,12 @@ namespace Sgml {
     {
         private string m_name;
 
-        private Dictionary<string, ElementDecl> m_elements;
-        private Dictionary<string, Entity> m_pentities;
-        private Dictionary<string, Entity> m_entities;
-        private StringBuilder m_sb;
+        private readonly Dictionary<string, ElementDecl> m_elements;
+        private readonly Dictionary<string, Entity> m_pentities;
+        private readonly Dictionary<string, Entity> m_entities;
+        private readonly StringBuilder m_sb;
         private Entity m_current;
-        private IEntityResolver m_resolver;
+        private readonly IEntityResolver m_resolver;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="SgmlDtd"/> class.
@@ -2899,7 +2899,7 @@ namespace Sgml {
             }
         }
 
-        static string ngterm = " \r\n\t|,)";
+        static readonly string ngterm = " \r\n\t|,)";
         string[] ParseNameGroup(char ch, bool nmtokens)
         {
             List<string> names = new List<string>();
@@ -2970,7 +2970,7 @@ namespace Sgml {
             }
         }
 
-        static string dcterm = " \r\n\t>";
+        static readonly string dcterm = " \r\n\t>";
         private ContentModel ParseContentModel(char ch)
         {
             ContentModel cm = new ContentModel();
@@ -3000,7 +3000,7 @@ namespace Sgml {
             return cm;
         }
 
-        static string cmterm = " \r\n\t,&|()?+*";
+        static readonly string cmterm = " \r\n\t,&|()?+*";
         void ParseModel(char cmt, ContentModel cm)
         {
             // Called when part of the model is made up of the contents of a parameter entity
