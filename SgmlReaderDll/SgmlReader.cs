@@ -605,8 +605,7 @@ namespace Sgml
             }
             set
             {
-                DesktopEntityResolver der = m_resolver as DesktopEntityResolver;
-                if (der != null)
+                if (m_resolver is DesktopEntityResolver der)
                 {
                     der.Proxy = value;
                 }
@@ -950,7 +949,7 @@ namespace Sgml
                             // check if a 'xmlns:prefix' attribute is defined
                             string key = "xmlns:" + prefix;
                             for(int i = this.m_stack.Count - 1; i > 0; --i) {
-                                Node node = this.m_stack[i] as Node;
+                                Node node = this.m_stack[i];
                                 if((node != null) && (node.NodeType == XmlNodeType.Element)) {
                                     int index = node.GetAttribute(key);
                                     if(index >= 0) {
