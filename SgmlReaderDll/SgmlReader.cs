@@ -450,8 +450,8 @@ namespace Sgml
         /// </summary>
         public IEntityResolver Resolver
         {
-            get { return m_resolver; }
-            set { m_resolver = value; }
+            get => m_resolver;
+            set => m_resolver = value;
         }
 
         private void LazyLoadDtd(Uri baseUri)
@@ -508,40 +508,22 @@ namespace Sgml
         /// </summary>
         public string DocType
         {
-            get
-            {
-                return this.m_docType;
-            }
-            set
-            {
-                this.m_docType = value;
-            }
+            get => this.m_docType;
+            set => this.m_docType = value;
         }
 
         /// <summary>
         /// The root element of the document.
         /// </summary>
-        public string RootElementName
-        {
-            get
-            {
-                return m_rootElementName;
-            }
-        }
+        public string RootElementName => m_rootElementName;
 
         /// <summary>
         /// The PUBLIC identifier in the DOCTYPE tag
         /// </summary>
         public string PublicIdentifier
         {
-            get
-            {
-                return this.m_pubid;
-            }
-            set
-            {
-                this.m_pubid = value;
-            }
+            get => this.m_pubid;
+            set => this.m_pubid = value;
         }
 
         /// <summary>
@@ -549,14 +531,8 @@ namespace Sgml
         /// </summary>
         public string SystemLiteral
         {
-            get
-            {
-                return this.m_syslit;
-            }
-            set
-            {
-                this.m_syslit = value;
-            }
+            get => this.m_syslit;
+            set => this.m_syslit = value;
         }
 
         /// <summary>
@@ -665,14 +641,8 @@ namespace Sgml
         /// </summary>
         public CaseFolding CaseFolding
         {
-            get
-            {
-                return this.m_folding;
-            }
-            set
-            {
-                this.m_folding = value;
-            }
+            get => this.m_folding;
+            set => this.m_folding = value;
         }
 
         /// <summary>
