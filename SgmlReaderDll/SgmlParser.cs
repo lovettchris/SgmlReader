@@ -472,7 +472,7 @@ namespace Sgml {
             char ch = m_lastchar;
             if (nmtoken && ch != '_' && !char.IsLetter(ch))
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid name start character '{0}'", ch));
+                throw new SgmlParseException($"Invalid name start character '{ch}'");
             }
 
             while (ch != Entity.EOF && term.IndexOf(ch) < 0)
@@ -481,8 +481,7 @@ namespace Sgml {
                     sb.Append(ch);
                 } 
                 else {
-                    throw new SgmlParseException(
-                        string.Format(CultureInfo.CurrentUICulture, "Invalid name character '{0}'", ch));
+                    throw new SgmlParseException($"Invalid name character '{ch}'");
                 }
                 ch = ReadChar();
             }
@@ -1411,13 +1410,13 @@ namespace Sgml {
             for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
                 code = (UInt32)(((bytes[i + 3]) << 24) | (bytes[i + 2] << 16) | (bytes[i + 1] << 8) | (bytes[i]));
                 if (code > 0x10FFFF) {
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                 } else if (code > 0xFFFF) {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
                 } else {
                     if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                     } else {
                         chars[j] = (char)code;
                     }
@@ -1437,13 +1436,13 @@ namespace Sgml {
             for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
                 code = (UInt32)(((bytes[i]) << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | (bytes[i + 3]));
                 if (code > 0x10FFFF) {
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                 } else if (code > 0xFFFF) {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
                 } else {
                     if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                     } else {
                         chars[j] = (char)code;
                     }
@@ -1702,7 +1701,7 @@ namespace Sgml {
                 "EMPTY" => DeclaredContent.EMPTY,
                 "RCDATA" => DeclaredContent.RCDATA,
                 "CDATA" => DeclaredContent.CDATA,
-                _ => throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Declared content type '{0}' is not supported", dc)),
+                _ => throw new SgmlParseException($"Declared content type '{dc}' is not supported")
             };
         }
 
@@ -1848,7 +1847,7 @@ namespace Sgml {
         {
             if (!Mixed && Members.Count == 0) 
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Missing token before connector '{0}'.", c));
+                throw new SgmlParseException($"Missing token before connector '{c}'.");
             }
 
             GroupType gt = GroupType.None;
@@ -1867,7 +1866,7 @@ namespace Sgml {
 
             if (this.m_groupType != GroupType.None && this.m_groupType != gt) 
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Connector '{0}' is inconsistent with {1} group.", c, m_groupType.ToString()));
+                throw new SgmlParseException($"Connector '{c}' is inconsistent with {m_groupType} group.");
             }
 
             m_groupType = gt;
@@ -2137,7 +2136,7 @@ namespace Sgml {
         public void SetEnumeratedType(string[] enumValues, AttributeType type)
         {
             if (type != AttributeType.ENUMERATION && type != AttributeType.NOTATION)
-                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "AttributeType {0} is not valid for an attribute definition with an enumerated value.", type));
+                throw new ArgumentException($"AttributeType {type} is not valid for an attribute definition with an enumerated value.");
 
             m_enumValues = enumValues;
             m_type = type;
@@ -2170,7 +2169,7 @@ namespace Sgml {
                 "NUMBERS" => AttributeType.NUMBERS,
                 "NUTOKEN" => AttributeType.NUTOKEN,
                 "NUTOKENS" => AttributeType.NUTOKENS,
-                _ => throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Attribute type '{0}' is not supported", type)),
+                _ => throw new SgmlParseException($"Attribute type '{type}' is not supported")
             };
         }
 
@@ -2198,7 +2197,7 @@ namespace Sgml {
             }
             else 
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Attribute value '{0}' not supported", token));
+                throw new SgmlParseException($"Attribute value '{token}' not supported");
             }
 
             return hasDefault;
