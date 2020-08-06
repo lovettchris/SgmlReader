@@ -1697,20 +1697,13 @@ namespace Sgml {
         public void SetDeclaredContent(string dc)
         {
             // TODO: Validate that this can never combine with nexted groups?
-            switch (dc)
+            this.m_declaredContent = dc switch
             {
-                case "EMPTY":
-                    this.m_declaredContent = DeclaredContent.EMPTY;
-                    break;
-                case "RCDATA":
-                    this.m_declaredContent = DeclaredContent.RCDATA;
-                    break;
-                case "CDATA":
-                    this.m_declaredContent = DeclaredContent.CDATA;
-                    break;
-                default:
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Declared content type '{0}' is not supported", dc));
-            }
+                "EMPTY" => DeclaredContent.EMPTY,
+                "RCDATA" => DeclaredContent.RCDATA,
+                "CDATA" => DeclaredContent.CDATA,
+                _ => throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Declared content type '{0}' is not supported", dc)),
+            };
         }
 
         /// <summary>
@@ -2161,53 +2154,24 @@ namespace Sgml {
         /// <param name="type">The string representation of the attribute type, corresponding to the values in the <see cref="AttributeType"/> enumeration.</param>
         public void SetType(string type)
         {
-            switch (type) 
+            m_type = type switch
             {
-                case "CDATA":
-                    m_type = AttributeType.CDATA;
-                    break;
-                case "ENTITY":
-                    m_type = AttributeType.ENTITY;
-                    break;
-                case "ENTITIES":
-                    m_type = AttributeType.ENTITIES;
-                    break;
-                case "ID":
-                    m_type = AttributeType.ID;
-                    break;
-                case "IDREF":
-                    m_type = AttributeType.IDREF;
-                    break;
-                case "IDREFS":
-                    m_type = AttributeType.IDREFS;
-                    break;
-                case "NAME":
-                    m_type = AttributeType.NAME;
-                    break;
-                case "NAMES":
-                    m_type = AttributeType.NAMES;
-                    break;
-                case "NMTOKEN":
-                    m_type = AttributeType.NMTOKEN;
-                    break;
-                case "NMTOKENS":
-                    m_type = AttributeType.NMTOKENS;
-                    break;
-                case "NUMBER":
-                    m_type = AttributeType.NUMBER;
-                    break;
-                case "NUMBERS":
-                    m_type = AttributeType.NUMBERS;
-                    break;
-                case "NUTOKEN":
-                    m_type = AttributeType.NUTOKEN;
-                    break;
-                case "NUTOKENS":
-                    m_type = AttributeType.NUTOKENS;
-                    break;
-                default:
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Attribute type '{0}' is not supported", type));
-            }
+                "CDATA" => AttributeType.CDATA,
+                "ENTITY" => AttributeType.ENTITY,
+                "ENTITIES" => AttributeType.ENTITIES,
+                "ID" => AttributeType.ID,
+                "IDREF" => AttributeType.IDREF,
+                "IDREFS" => AttributeType.IDREFS,
+                "NAME" => AttributeType.NAME,
+                "NAMES" => AttributeType.NAMES,
+                "NMTOKEN" => AttributeType.NMTOKEN,
+                "NMTOKENS" => AttributeType.NMTOKENS,
+                "NUMBER" => AttributeType.NUMBER,
+                "NUMBERS" => AttributeType.NUMBERS,
+                "NUTOKEN" => AttributeType.NUTOKEN,
+                "NUTOKENS" => AttributeType.NUTOKENS,
+                _ => throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Attribute type '{0}' is not supported", type)),
+            };
         }
 
         /// <summary>
