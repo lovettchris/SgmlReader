@@ -2434,9 +2434,11 @@ namespace Sgml
         public override string ReadInnerXml()
         {
             StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
+            var settings = new XmlWriterSettings
+            {
+                Indent = true,
+                ConformanceLevel = ConformanceLevel.Fragment
+            };
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 switch (this.NodeType)
@@ -2468,9 +2470,11 @@ namespace Sgml
         /// </returns>
         public override string ReadOuterXml()
         {
-            StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
+            var sw = new StringWriter(CultureInfo.InvariantCulture);
+            var settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 xw.WriteNode(this, true);
