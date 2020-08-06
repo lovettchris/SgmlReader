@@ -201,7 +201,7 @@ namespace Sgml
         {
             get
             {
-                return (this.m_literalValue == null);
+                return (this.m_literalValue is null);
             }
         }
     }    
@@ -252,7 +252,7 @@ namespace Sgml
             // This code makes use of the high water mark for attribute objects,
             // and reuses exisint Attribute objects to avoid memory allocation.
             a = this.attributes.Push();
-            if (a == null) {
+            if (a is null) {
                 a = new Attribute();
                 this.attributes[this.attributes.Count-1] = a;
             }
@@ -429,7 +429,7 @@ namespace Sgml
         {
             get
             {
-                if (this.m_dtd == null)
+                if (this.m_dtd is null)
                 {
                     LazyLoadDtd(this.m_baseUri);
                 }
@@ -456,7 +456,7 @@ namespace Sgml
 
         private void LazyLoadDtd(Uri baseUri)
         {
-            if (this.m_dtd == null && !this.m_ignoreDtd)
+            if (this.m_dtd is null && !this.m_ignoreDtd)
             {
                 if (string.IsNullOrEmpty(this.m_syslit)
                      // no need to hit the w3.org servers in this case
@@ -600,7 +600,7 @@ namespace Sgml
         {
             get
             {
-                if (m_resolver == null) return null;
+                if (m_resolver is null) return null;
                 return ((DesktopEntityResolver)m_resolver).Proxy;
             }
             set
@@ -640,7 +640,7 @@ namespace Sgml
             {
                 this.m_href = value; 
                 Init();
-                if (this.m_baseUri == null && !string.IsNullOrWhiteSpace(value))
+                if (this.m_baseUri is null && !string.IsNullOrWhiteSpace(value))
                 {
                     this.m_baseUri = new Uri(this.m_href, UriKind.RelativeOrAbsolute);
                 }
@@ -733,11 +733,11 @@ namespace Sgml
 
         private void Init()
         {
-            if (m_nameTable == null)
+            if (m_nameTable is null)
             {
                 m_nameTable = new NameTable();
             }
-            if (m_settings == null)
+            if (m_settings is null)
             {
                 m_settings = new XmlReaderSettings();
                 m_settings.NameTable = m_nameTable;
@@ -768,7 +768,7 @@ namespace Sgml
         private Node Push(string name, XmlNodeType nt, string value)
         {
             Node result = this.m_stack.Push();
-            if (result == null)
+            if (result is null)
             {
                 result = new Node();
                 this.m_stack[this.m_stack.Count - 1] = result;
@@ -1059,7 +1059,7 @@ namespace Sgml
         {
             get
             {
-                return this.m_baseUri == null ? "" : this.m_baseUri.AbsoluteUri;
+                return this.m_baseUri is null ? "" : this.m_baseUri.AbsoluteUri;
             }
         }
 
@@ -1405,7 +1405,7 @@ namespace Sgml
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024", Justification = "This method to get the encoding does not simply read a value, but potentially causes significant processing of the input stream.")]
         public Encoding GetEncoding()
         {
-            if (this.m_current == null)
+            if (this.m_current is null)
             {
                 OpenInput();
             }
@@ -1435,7 +1435,7 @@ namespace Sgml
             if (this.m_current.ResolvedUri != null)
                 this.m_baseUri = this.m_current.ResolvedUri;
 
-            if (this.m_current.IsHtml && this.m_dtd == null)
+            if (this.m_current.IsHtml && this.m_dtd is null)
             {
                 this.m_docType = "HTML";
                 LazyLoadDtd(this.m_baseUri);
@@ -1448,7 +1448,7 @@ namespace Sgml
         /// <returns>true if the next node was read successfully; false if there are no more nodes to read.</returns>
         public override bool Read()
         {
-            if (m_current == null)
+            if (m_current is null)
             {
                 OpenInput();
             }
@@ -1649,7 +1649,7 @@ namespace Sgml
 
                         // In SGML DOCTYPE SYSTEM attribute is optional, but in XML it is required,
                         // therefore if there is no SYSTEM literal then add an empty one.
-                        if (this.GetAttribute("SYSTEM") == null && this.GetAttribute("PUBLIC") != null)
+                        if (this.GetAttribute("SYSTEM") is null && this.GetAttribute("PUBLIC") != null)
                         {
                             this.m_node.AddAttribute("SYSTEM", "", '"', this.m_folding == CaseFolding.None);
                         }
@@ -1801,7 +1801,7 @@ namespace Sgml
                 if (ValidAttributeName(aname))
                 {
                     Attribute a = n.AddAttribute(aname, value ?? aname, quote, this.m_folding == CaseFolding.None);
-                    if (a == null)
+                    if (a is null)
                     {
                         Log("Duplicate attribute '{0}' ignored", aname);
                     }

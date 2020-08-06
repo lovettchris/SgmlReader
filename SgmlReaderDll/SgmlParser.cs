@@ -107,7 +107,7 @@ namespace Sgml {
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter=true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
+            if (info is null)
                 throw new ArgumentNullException("info");
 
             info.AddValue("entityContext", m_entityContext);
@@ -430,7 +430,7 @@ namespace Sgml {
                 if (this.m_literal != null)
                     this.m_stm = new StringReader(this.m_literal);
             } 
-            else if (this.m_uri == null)
+            else if (this.m_uri is null)
             {
                 this.Error("Unresolvable entity '{0}'", this.m_name);
             }
@@ -504,10 +504,10 @@ namespace Sgml {
         /// <returns>The scanned token.</returns>
         public string ScanToken(StringBuilder sb, string term, bool nmtoken)
         {
-            if (sb == null)
+            if (sb is null)
                 throw new ArgumentNullException("sb");
 
-            if (term == null)
+            if (term is null)
                 throw new ArgumentNullException("term");
 
             sb.Length = 0;
@@ -540,7 +540,7 @@ namespace Sgml {
         /// <returns>The literal scanned from the input stream.</returns>
         public string ScanLiteral(StringBuilder sb, char quote)
         {
-            if (sb == null)
+            if (sb is null)
                 throw new ArgumentNullException("sb");
 
             sb.Length = 0;
@@ -583,7 +583,7 @@ namespace Sgml {
         /// <returns>The string read from the input stream.</returns>
         public string ScanToEnd(StringBuilder sb, string type, string terminators)
         {
-            if (terminators == null)
+            if (terminators is null)
                 throw new ArgumentNullException("terminators");
 
             if (sb != null)
@@ -964,7 +964,7 @@ namespace Sgml {
 
         public HtmlStream(Stream stm, Encoding defaultEncoding)
         {            
-            if (defaultEncoding == null) defaultEncoding = Encoding.UTF8; // default is UTF8
+            if (defaultEncoding is null) defaultEncoding = Encoding.UTF8; // default is UTF8
             if (!stm.CanSeek){
                 // Need to be able to seek to sniff correctly.
                 stm = CopyToMemoryStream(stm);
@@ -977,7 +977,7 @@ namespace Sgml {
             // Check byte order marks
             this.m_decoder = AutoDetectEncoding(rawBuffer, ref rawPos, rawUsed);
             int bom = rawPos;
-            if (this.m_decoder == null)
+            if (this.m_decoder is null)
             {
                 this.m_decoder = defaultEncoding.GetDecoder();
                 rawUsed += stm.Read(rawBuffer, 4, BUFSIZE-4);                
@@ -1198,7 +1198,7 @@ namespace Sgml {
                     SniffTerminator(">");
                 }
             } 
-            if (decoder == null) {
+            if (decoder is null) {
                 return SniffMeta();
             }
             return null;
@@ -1220,7 +1220,7 @@ namespace Sgml {
                         while (true)
                         {
                             string value = SniffAttribute(out name);
-                            if (name == null)
+                            if (name is null)
                                 break;
 
                             if (StringUtilities.EqualsIgnoreCase(name, "http-equiv"))
@@ -1583,7 +1583,7 @@ namespace Sgml {
         /// <exception cref="InvalidOperationException">If the attribute list has not yet been initialised.</exception>
         public AttDef FindAttribute(string name)
         {
-            if (m_attList == null)
+            if (m_attList is null)
                 throw new InvalidOperationException("The attribute list for the element declaration has not been initialised.");
 
             m_attList.TryGetValue(name.ToUpperInvariant(), out AttDef a);
@@ -1596,10 +1596,10 @@ namespace Sgml {
         /// <param name="list">The list of attribute definitions to add.</param>
         public void AddAttDefs(Dictionary<string, AttDef> list)
         {
-            if (list == null)
+            if (list is null)
                 throw new ArgumentNullException("list");
 
-            if (m_attList == null) 
+            if (m_attList is null) 
             {
                 m_attList = list;
             } 
@@ -2011,7 +2011,7 @@ namespace Sgml {
         /// </remarks>
         public bool CanContain(string name, SgmlDtd dtd)
         {
-            if (dtd == null)
+            if (dtd is null)
                 throw new ArgumentNullException("dtd");
 
             // Do a simple search of members.
@@ -2572,7 +2572,7 @@ namespace Sgml {
                 {
                     case Entity.EOF:
                         PopEntity();
-                        if (this.m_current == null)
+                        if (this.m_current is null)
                             return;
                         ch = this.m_current.Lastchar;
                         break;
