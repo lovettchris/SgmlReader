@@ -1503,7 +1503,7 @@ namespace Sgml {
     public class ElementDecl
     {
         private readonly string m_name;
-        private bool m_startTagOptional;
+        private readonly bool m_startTagOptional;
         private readonly bool m_endTagOptional;
         private readonly ContentModel m_contentModel;
         private readonly string[] m_inclusions;
@@ -1864,7 +1864,7 @@ namespace Sgml {
     public class Group
     {
         private readonly Group m_parent;
-        private List<object> Members;
+        private readonly List<object> Members;
         private GroupType m_groupType;
         private Occurrence m_occurrence;
         private bool Mixed;
@@ -2193,7 +2193,7 @@ namespace Sgml {
     /// </summary>
     public class AttDef
     {
-        private string m_name;
+        private readonly string m_name;
         private AttributeType m_type;
         private string[] m_enumValues;
         private string m_default;
@@ -3097,7 +3097,7 @@ namespace Sgml {
             }
         }
 
-        static string peterm = " \t\r\n>";
+        const string peterm = " \t\r\n>";
         void ParseAttList(Dictionary<string, AttDef> list, char term)
         {
             char ch = this.m_current.SkipWhitespace();
