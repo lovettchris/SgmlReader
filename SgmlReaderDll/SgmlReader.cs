@@ -484,22 +484,15 @@ namespace Sgml
                 }
             }
 
-            if (this.m_dtd != null && this.m_dtd.Name != null)
+            if (this.m_dtd?.Name is string dtdName)
             {
-                switch(this.CaseFolding)
+                this.m_rootElementName = this.CaseFolding switch
                 {
-                case CaseFolding.ToUpper:
-                    this.m_rootElementName = this.m_dtd.Name.ToUpperInvariant();
-                    break;
-                case CaseFolding.ToLower:
-                    this.m_rootElementName = this.m_dtd.Name.ToLowerInvariant();
-                    break;
-                default:
-                    this.m_rootElementName = this.m_dtd.Name;
-                    break;
-                }
-
-                this.m_isHtml = StringUtilities.EqualsIgnoreCase(this.m_dtd.Name, "html");
+                    CaseFolding.ToUpper => dtdName.ToUpperInvariant(),
+                    CaseFolding.ToLower => dtdName.ToLowerInvariant(),
+                    _ => dtdName
+                };
+                this.m_isHtml = StringUtilities.EqualsIgnoreCase(dtdName, "html");
             }
         }
 
