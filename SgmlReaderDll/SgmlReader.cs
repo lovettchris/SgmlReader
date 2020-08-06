@@ -685,15 +685,12 @@ namespace Sgml
 
         private void Init()
         {
-            if (m_nameTable is null)
+            m_nameTable ??= new NameTable();
+            m_settings ??= new XmlReaderSettings
             {
-                m_nameTable = new NameTable();
-            }
-            if (m_settings is null)
-            {
-                m_settings = new XmlReaderSettings();
-                m_settings.NameTable = m_nameTable;
-            }
+                NameTable = m_nameTable
+            };
+        
             this.m_state = State.Initial;
             this.m_stack = new HWStack<Node>(10);
             this.m_node = Push(null, XmlNodeType.Document, null);

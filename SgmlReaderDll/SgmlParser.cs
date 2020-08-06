@@ -921,7 +921,8 @@ namespace Sgml {
 
         public HtmlStream(Stream stm, Encoding defaultEncoding)
         {            
-            if (defaultEncoding is null) defaultEncoding = Encoding.UTF8; // default is UTF8
+            defaultEncoding ??= Encoding.UTF8; // default is UTF8
+
             if (!stm.CanSeek){
                 // Need to be able to seek to sniff correctly.
                 stm = CopyToMemoryStream(stm);
