@@ -108,7 +108,7 @@ namespace Sgml {
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             if (info is null)
-                throw new ArgumentNullException("info");
+                throw new ArgumentNullException(nameof(info));
 
             info.AddValue("entityContext", m_entityContext);
             base.GetObjectData(info, context);
@@ -505,10 +505,10 @@ namespace Sgml {
         public string ScanToken(StringBuilder sb, string term, bool nmtoken)
         {
             if (sb is null)
-                throw new ArgumentNullException("sb");
+                throw new ArgumentNullException(nameof(sb));
 
             if (term is null)
-                throw new ArgumentNullException("term");
+                throw new ArgumentNullException(nameof(term));
 
             sb.Length = 0;
             char ch = m_lastchar;
@@ -541,7 +541,7 @@ namespace Sgml {
         public string ScanLiteral(StringBuilder sb, char quote)
         {
             if (sb is null)
-                throw new ArgumentNullException("sb");
+                throw new ArgumentNullException(nameof(sb));
 
             sb.Length = 0;
             char ch = ReadChar();
@@ -584,7 +584,7 @@ namespace Sgml {
         public string ScanToEnd(StringBuilder sb, string type, string terminators)
         {
             if (terminators is null)
-                throw new ArgumentNullException("terminators");
+                throw new ArgumentNullException(nameof(terminators));
 
             if (sb != null)
                 sb.Length = 0;
@@ -1597,7 +1597,7 @@ namespace Sgml {
         public void AddAttDefs(Dictionary<string, AttDef> list)
         {
             if (list is null)
-                throw new ArgumentNullException("list");
+                throw new ArgumentNullException(nameof(list));
 
             if (m_attList is null) 
             {
@@ -2012,7 +2012,7 @@ namespace Sgml {
         public bool CanContain(string name, SgmlDtd dtd)
         {
             if (dtd is null)
-                throw new ArgumentNullException("dtd");
+                throw new ArgumentNullException(nameof(dtd));
 
             // Do a simple search of members.
             foreach (object obj in Members) 
