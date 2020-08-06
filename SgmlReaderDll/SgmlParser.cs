@@ -2759,7 +2759,7 @@ namespace Sgml {
             }
         }
 
-        static readonly string ngterm = " \r\n\t|,)";
+        const string ngterm = " \r\n\t|,)";
         string[] ParseNameGroup(char ch, bool nmtokens)
         {
             List<string> names = new List<string>();
@@ -2830,7 +2830,7 @@ namespace Sgml {
             }
         }
 
-        static readonly string dcterm = " \r\n\t>";
+        const string dcterm = " \r\n\t>";
         private ContentModel ParseContentModel(char ch)
         {
             ContentModel cm = new ContentModel();
@@ -2860,7 +2860,7 @@ namespace Sgml {
             return cm;
         }
 
-        static readonly string cmterm = " \r\n\t,&|()?+*";
+        const string cmterm = " \r\n\t,&|()?+*";
         void ParseModel(char cmt, ContentModel cm)
         {
             // Called when part of the model is made up of the contents of a parameter entity
