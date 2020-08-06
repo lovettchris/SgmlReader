@@ -2017,9 +2017,9 @@ namespace Sgml {
             // Do a simple search of members.
             foreach (object obj in Members) 
             {
-                if (obj is string) 
+                if (obj is string s) 
                 {
-                    if( string.Equals((string)obj, name, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
                         return true;
                 } 
             }
@@ -2027,8 +2027,7 @@ namespace Sgml {
             // that have optional start tags and over child groups.
             foreach (object obj in Members) 
             {
-                string s = obj as string;
-                if (s != null)
+                if (obj as string is string s)
                 {
                     ElementDecl e = dtd.FindElement(s);
                     if (e != null) 
