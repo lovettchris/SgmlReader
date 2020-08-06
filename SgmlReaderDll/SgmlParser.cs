@@ -218,50 +218,26 @@ namespace Sgml {
         /// <summary>
         /// The name of the entity.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_name;
-            }
-        }
+        public string Name => m_name;
 
         /// <summary>
         /// True if the entity is the html element entity.
         /// </summary>
         public bool IsHtml
         {
-            get
-            {
-                return m_isHtml;
-            }
-            set
-            {
-                m_isHtml = value;
-            }
+            get => m_isHtml;
+            set => m_isHtml = value;
         }
 
         /// <summary>
         /// The public identifier of this entity.
         /// </summary>
-        public string PublicId
-        {
-            get
-            {
-                return m_publicId;
-            }
-        }
+        public string PublicId => m_publicId;
 
         /// <summary>
         /// The Uri that is the source for this entity.
         /// </summary>
-        public string Uri
-        {
-            get
-            {
-                return m_uri;
-            }
-        }
+        public string Uri => m_uri;
 
         /// <summary>
         /// The resolved location of the DTD this entity is from.
@@ -282,35 +258,17 @@ namespace Sgml {
         /// <summary>
         /// Gets the parent Entity of this Entity.
         /// </summary>
-        public Entity Parent
-        {
-            get
-            {
-                return m_parent;
-            }
-        }
+        public Entity Parent => m_parent;
 
         /// <summary>
         /// The last character read from the input stream for this entity.
         /// </summary>
-        public char Lastchar
-        {
-            get
-            {
-                return m_lastchar;
-            }
-        }
+        public char Lastchar => m_lastchar;
 
         /// <summary>
         /// The line on which this entity was defined.
         /// </summary>
-        public int Line
-        {
-            get
-            {
-                return m_line;
-            }
-        }
+        public int Line => m_line;
 
         /// <summary>
         /// The index into the line where this entity is defined.
@@ -1532,48 +1490,24 @@ namespace Sgml {
         /// <summary>
         /// The element name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_name;
-            }
-        }
+        public string Name => m_name;
 
         /// <summary>
         /// The <see cref="Sgml.ContentModel"/> of the element declaration.
         /// </summary>
-        public ContentModel ContentModel
-        {
-            get
-            {
-                return m_contentModel;
-            }
-        }
+        public ContentModel ContentModel => m_contentModel;
 
         /// <summary>
         /// Whether the end tag of the element is optional.
         /// </summary>
         /// <value>true if the end tag of the element is optional, otherwise false.</value>
-        public bool EndTagOptional
-        {
-            get
-            {
-                return m_endTagOptional;
-            }
-        }
+        public bool EndTagOptional => m_endTagOptional;
 
         /// <summary>
         /// Whether the start tag of the element is optional.
         /// </summary>
         /// <value>true if the start tag of the element is optional, otherwise false.</value>
-        public bool StartTagOptional
-        {
-            get
-            {
-                return m_startTagOptional;
-            }
-        }
+        public bool StartTagOptional => m_startTagOptional;
 
         /// <summary>
         /// Finds the attribute definition with the specified name.
@@ -1694,24 +1628,12 @@ namespace Sgml {
         /// <summary>
         /// The number of groups on the stack.
         /// </summary>
-        public int CurrentDepth
-        {
-            get
-            {
-                return m_currentDepth;
-            }
-        }
+        public int CurrentDepth => m_currentDepth;
 
         /// <summary>
         /// The allowed child content, specifying if nested children are not allowed and if so, what content is allowed.
         /// </summary>
-        public DeclaredContent DeclaredContent
-        {
-            get
-            {
-                return m_declaredContent;
-            }
-        }
+        public DeclaredContent DeclaredContent => m_declaredContent;
 
         /// <summary>
         /// Begins processing of a nested model group.
@@ -1872,37 +1794,18 @@ namespace Sgml {
         /// <summary>
         /// The <see cref="Occurrence"/> of this group.
         /// </summary>
-        public Occurrence Occurrence
-        {
-            get
-            {
-                return m_occurrence;
-            }
-        }
+        public Occurrence Occurrence => m_occurrence;
 
         /// <summary>
         /// Checks whether the group contains only text.
         /// </summary>
         /// <value>true if the group is of mixed content and has no members, otherwise false.</value>
-        public bool TextOnly
-        {
-            get
-            {
-                return this.Mixed && Members.Count == 0;
-            }
-        }
+        public bool TextOnly => this.Mixed && Members.Count == 0;
 
         /// <summary>
         /// The parent group of this group.
         /// </summary>
-        public Group Parent
-        {
-            get
-            {
-                return m_parent;
-            }
-        }
-
+        public Group Parent => m_parent;
         /// <summary>
         /// Initialises a new Content Model Group.
         /// </summary>
@@ -2210,51 +2113,27 @@ namespace Sgml {
         /// <summary>
         /// The name of the attribute declared by this attribute definition.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_name;
-            }
-        }
+        public string Name => m_name;
 
         /// <summary>
         /// Gets of sets the default value of the attribute.
         /// </summary>
         public string Default
         {
-            get
-            {
-                return m_default;
-            }
-            set
-            {
-                m_default = value;
-            }
+            get => m_default;
+            set => m_default = value;
         }
 
         /// <summary>
         /// The constraints on the attribute's presence on an element.
         /// </summary>
-        public AttributePresence AttributePresence
-        {
-            get
-            {
-                return m_presence;
-            }
-        }
+        public AttributePresence AttributePresence => m_presence;
 
         /// <summary>
         /// Gets or sets the possible enumerated values for the attribute.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819", Justification = "Changing this would break backwards compatibility with previous code using this library.")]
-        public string[] EnumValues
-        {
-            get
-            {
-                return m_enumValues;
-            }
-        }
+        public string[] EnumValues => m_enumValues;
 
         /// <summary>
         /// Sets the attribute definition to have an enumerated value.
@@ -2274,13 +2153,7 @@ namespace Sgml {
         /// <summary>
         /// The <see cref="AttributeType"/> of the attribute declaration.
         /// </summary>
-        public AttributeType Type
-        {
-            get
-            {
-                return m_type;
-            }
-        }
+        public AttributeType Type => m_type;
 
         /// <summary>
         /// Sets the type of the attribute definition.
@@ -2431,27 +2304,15 @@ namespace Sgml {
         /// </summary>
         public string Name
         {
-            get
-            {
-                return m_name;
-            }
-            set
-            {
-                m_name = value;
-            }
+            get => m_name;
+            set => m_name = value;
         }
 
         /// <summary>
         /// Gets the XmlNameTable associated with this implementation.
         /// </summary>
         /// <value>The XmlNameTable enabling you to get the atomized version of a string within the node.</value>
-        public XmlNameTable NameTable
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public XmlNameTable NameTable => null;
 
         /// <summary>
         /// Parses a DTD and creates a <see cref="SgmlDtd"/> instance that encapsulates the DTD.
