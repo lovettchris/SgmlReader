@@ -1164,7 +1164,7 @@ namespace Sgml
                     return a.Value;
             }
 
-            throw new ArgumentOutOfRangeException("i");
+            throw new ArgumentOutOfRangeException(nameof(i));
         }
 
         /// <summary>
@@ -1240,7 +1240,7 @@ namespace Sgml
                 return;
             }
 
-            throw new ArgumentOutOfRangeException("i");
+            throw new ArgumentOutOfRangeException(nameof(i));
         }
 
         /// <summary>
