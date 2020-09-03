@@ -88,13 +88,7 @@ namespace Sgml {
         /// <summary>
         /// Contextual information detailing the entity on which the error occurred.
         /// </summary>
-        public string EntityContext
-        {
-            get
-            {
-                return m_entityContext;
-            }
-        }
+        public string EntityContext => m_entityContext;
 
 #if WINDOWS_DESKTOP
         /// <summary>
@@ -271,58 +265,28 @@ namespace Sgml {
         /// <summary>
         /// The index into the line where this entity is defined.
         /// </summary>
-        public int LinePosition
-        {
-            get
-            {
-                return this.m_absolutePos - this.m_lineStart + 1;
-            }
-        }
+        public int LinePosition => this.m_absolutePos - this.m_lineStart + 1;
 
         /// <summary>
         /// Whether this entity is an internal entity or not.
         /// </summary>
         /// <value>true if this entity is internal, otherwise false.</value>
-        public bool IsInternal
-        {
-            get
-            {
-                return m_isInternal;
-            }
-        }
-
+        public bool IsInternal => m_isInternal;
+       
         /// <summary>
         /// The literal value of this entity.
         /// </summary>
-        public string Literal
-        {
-            get
-            {
-                return m_literal;
-            }
-        }
+        public string Literal => m_literal;
 
         /// <summary>
         /// The <see cref="LiteralType"/> of this entity.
         /// </summary>
-        public LiteralType LiteralType
-        {
-            get
-            {
-                return m_literalType;
-            }
-        }
+        public LiteralType LiteralType => m_literalType;
 
         /// <summary>
         /// Whether the last char read for this entity is a whitespace character.
         /// </summary>
-        public bool IsWhitespace
-        {
-            get
-            {
-                return m_isWhitespace;
-            }
-        }
+        public bool IsWhitespace => m_isWhitespace;
         
         /// <summary>
         /// Reads the next character from the DTD stream.
@@ -694,7 +658,7 @@ namespace Sgml {
                 ch = ReadChar();
                 for (; ch != Entity.EOF && ch != ';'; ch = ReadChar())
                 {
-                    int p = 0;
+                    int p;
                     if (ch >= '0' && ch <= '9')
                     {
                         p = (int)(ch - '0');
@@ -1335,8 +1299,8 @@ namespace Sgml {
         }
 
         public override string ReadToEnd() {
-            char[] buffer = new char[100000]; // large block heap is more efficient
-            int len = 0;
+            char[] buffer = new char[100_000]; // large block heap is more efficient
+            int len;
             StringBuilder sb = new StringBuilder();
             while ((len = Read(buffer, 0, buffer.Length)) > 0) {
                 sb.Append(buffer, 0, len);
@@ -2574,7 +2538,7 @@ namespace Sgml {
             }
             string name = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
             ch = this.m_current.SkipWhitespace();
-            Entity e = null;
+            Entity e;
             if (ch == '"' || ch == '\'') 
             {
                 string literal = this.m_current.ScanLiteral(this.m_sb, ch);
@@ -2583,7 +2547,7 @@ namespace Sgml {
             else 
             {
                 string pubid = null;
-                string extid = null;
+                string extid;
                 string tok = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
                 if (Entity.IsLiteralType(tok))
                 {
