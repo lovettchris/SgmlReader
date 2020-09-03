@@ -74,14 +74,8 @@ namespace Sgml
         /// </summary>
         public int Count
         {
-            get
-            {
-                return this.m_count;
-            }
-            set
-            {
-                this.m_count = value;
-            }
+            get => this.m_count;
+            set => this.m_count = value;
         }
 
         /// <summary>
@@ -97,14 +91,8 @@ namespace Sgml
         /// <returns>The item at the requested index or null if index is out of bounds.</returns>
         public T this[int i]
         {
-            get
-            {
-                return (i >= 0 && i < this.m_size) ? m_items[i] : null;
-            }
-            set
-            {
-                this.m_items[i] = value;
-            }
+            get => (i >= 0 && i < this.m_size) ? m_items[i] : null;
+            set => this.m_items[i] = value;
         }
 
         /// <summary>
@@ -197,13 +185,7 @@ namespace Sgml
             }*/
         }
 
-        public bool IsDefault
-        {
-            get
-            {
-                return (this.m_literalValue is null);
-            }
-        }
+        public bool IsDefault => this.m_literalValue is null;
     }    
 
     /// <summary>
@@ -543,10 +525,7 @@ namespace Sgml
         /// </summary>
         public TextReader InputStream
         {
-            get
-            {
-                return this.m_inputStream;
-            }
+            get => this.m_inputStream;
             set
             {
                 this.m_inputStream = value;
@@ -595,10 +574,7 @@ namespace Sgml
         /// </summary>
         public string Href
         {
-            get
-            {
-                return this.m_href;
-            }
+            get => this.m_href;
             set
             {
                 this.m_href = value; 
@@ -1303,13 +1279,7 @@ namespace Sgml
         /// <summary>
         /// Gets whether the content is HTML or not.
         /// </summary>
-        public bool IsHtml
-        {
-            get
-            {
-                return this.m_isHtml;
-            }
-        }
+        public bool IsHtml => this.m_isHtml;
 
         /// <summary>
         /// Returns the encoding of the current entity.
@@ -2310,13 +2280,7 @@ namespace Sgml
         /// Gets a value indicating whether the reader is positioned at the end of the stream.
         /// </summary>
         /// <value>true if the reader is positioned at the end of the stream; otherwise, false.</value>
-        public override bool EOF
-        {
-            get
-            {
-                return this.m_state == State.Eof;
-            }
-        }
+        public override bool EOF => this.m_state == State.Eof;
 
         protected override void Dispose(bool disposing)
         {

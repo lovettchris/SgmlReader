@@ -952,17 +952,10 @@ namespace Sgml {
             if (bom>0){
                 stm.Read(this.rawBuffer, 0, bom);
             }
-            this.rawPos = this.rawUsed = 0;
-            
+            this.rawPos = this.rawUsed = 0;            
         }
 
-        public Encoding Encoding
-        {
-            get
-            {
-                return this.m_encoding;
-            }
-        }
+        public Encoding Encoding => this.m_encoding;
 
         private static Stream CopyToMemoryStream(Stream s)
         {
@@ -2218,13 +2211,7 @@ namespace Sgml {
             AttDefs.Add(a.Name, a);
         }
 
-        public AttDef this[string name]
-        {
-            get 
-            {
-                return (AttDef)AttDefs[name];
-            }
-        }
+        public AttDef this[string name] => (AttDef)AttDefs[name];
 
         public IEnumerator GetEnumerator()
         {
