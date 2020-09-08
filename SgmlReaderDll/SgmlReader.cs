@@ -74,14 +74,8 @@ namespace Sgml
         /// </summary>
         public int Count
         {
-            get
-            {
-                return this.m_count;
-            }
-            set
-            {
-                this.m_count = value;
-            }
+            get => this.m_count;
+            set => this.m_count = value;
         }
 
         /// <summary>
@@ -97,14 +91,8 @@ namespace Sgml
         /// <returns>The item at the requested index or null if index is out of bounds.</returns>
         public T this[int i]
         {
-            get
-            {
-                return (i >= 0 && i < this.m_size) ? m_items[i] : null;
-            }
-            set
-            {
-                this.m_items[i] = value;
-            }
+            get => (i >= 0 && i < this.m_size) ? m_items[i] : null;
+            set => this.m_items[i] = value;
         }
 
         /// <summary>
@@ -197,13 +185,7 @@ namespace Sgml
             }*/
         }
 
-        public bool IsDefault
-        {
-            get
-            {
-                return (this.m_literalValue == null);
-            }
-        }
+        public bool IsDefault => this.m_literalValue is null;
     }    
 
     /// <summary>
@@ -252,7 +234,7 @@ namespace Sgml
             // This code makes use of the high water mark for attribute objects,
             // and reuses exisint Attribute objects to avoid memory allocation.
             a = this.attributes.Push();
-            if (a == null) {
+            if (a is null) {
                 a = new Attribute();
                 this.attributes[this.attributes.Count-1] = a;
             }
@@ -429,7 +411,7 @@ namespace Sgml
         {
             get
             {
-                if (this.m_dtd == null)
+                if (this.m_dtd is null)
                 {
                     LazyLoadDtd(this.m_baseUri);
                 }
@@ -450,13 +432,13 @@ namespace Sgml
         /// </summary>
         public IEntityResolver Resolver
         {
-            get { return m_resolver; }
-            set { m_resolver = value; }
+            get => m_resolver;
+            set => m_resolver = value;
         }
 
         private void LazyLoadDtd(Uri baseUri)
         {
-            if (this.m_dtd == null && !this.m_ignoreDtd)
+            if (this.m_dtd is null && !this.m_ignoreDtd)
             {
                 if (string.IsNullOrEmpty(this.m_syslit)
                      // no need to hit the w3.org servers in this case
@@ -484,22 +466,15 @@ namespace Sgml
                 }
             }
 
-            if (this.m_dtd != null && this.m_dtd.Name != null)
+            if (this.m_dtd?.Name is string dtdName)
             {
-                switch(this.CaseFolding)
+                this.m_rootElementName = this.CaseFolding switch
                 {
-                case CaseFolding.ToUpper:
-                    this.m_rootElementName = this.m_dtd.Name.ToUpperInvariant();
-                    break;
-                case CaseFolding.ToLower:
-                    this.m_rootElementName = this.m_dtd.Name.ToLowerInvariant();
-                    break;
-                default:
-                    this.m_rootElementName = this.m_dtd.Name;
-                    break;
-                }
-
-                this.m_isHtml = StringUtilities.EqualsIgnoreCase(this.m_dtd.Name, "html");
+                    CaseFolding.ToUpper => dtdName.ToUpperInvariant(),
+                    CaseFolding.ToLower => dtdName.ToLowerInvariant(),
+                    _ => dtdName
+                };
+                this.m_isHtml = StringUtilities.EqualsIgnoreCase(dtdName, "html");
             }
         }
 
@@ -508,40 +483,22 @@ namespace Sgml
         /// </summary>
         public string DocType
         {
-            get
-            {
-                return this.m_docType;
-            }
-            set
-            {
-                this.m_docType = value;
-            }
+            get => this.m_docType;
+            set => this.m_docType = value;
         }
 
         /// <summary>
         /// The root element of the document.
         /// </summary>
-        public string RootElementName
-        {
-            get
-            {
-                return m_rootElementName;
-            }
-        }
+        public string RootElementName => m_rootElementName;
 
         /// <summary>
         /// The PUBLIC identifier in the DOCTYPE tag
         /// </summary>
         public string PublicIdentifier
         {
-            get
-            {
-                return this.m_pubid;
-            }
-            set
-            {
-                this.m_pubid = value;
-            }
+            get => this.m_pubid;
+            set => this.m_pubid = value;
         }
 
         /// <summary>
@@ -549,14 +506,8 @@ namespace Sgml
         /// </summary>
         public string SystemLiteral
         {
-            get
-            {
-                return this.m_syslit;
-            }
-            set
-            {
-                this.m_syslit = value;
-            }
+            get => this.m_syslit;
+            set => this.m_syslit = value;
         }
 
         /// <summary>
@@ -564,14 +515,8 @@ namespace Sgml
         /// </summary>
         public string InternalSubset
         {
-            get
-            {
-                return this.m_subset;
-            }
-            set
-            {
-                this.m_subset = value;
-            }
+            get => this.m_subset;
+            set => this.m_subset = value;
         }
 
         /// <summary>
@@ -580,10 +525,7 @@ namespace Sgml
         /// </summary>
         public TextReader InputStream
         {
-            get
-            {
-                return this.m_inputStream;
-            }
+            get => this.m_inputStream;
             set
             {
                 this.m_inputStream = value;
@@ -600,7 +542,7 @@ namespace Sgml
         {
             get
             {
-                if (m_resolver == null) return null;
+                if (m_resolver is null) return null;
                 return ((DesktopEntityResolver)m_resolver).Proxy;
             }
             set
@@ -632,15 +574,12 @@ namespace Sgml
         /// </summary>
         public string Href
         {
-            get
-            {
-                return this.m_href;
-            }
+            get => this.m_href;
             set
             {
                 this.m_href = value; 
                 Init();
-                if (this.m_baseUri == null && !string.IsNullOrWhiteSpace(value))
+                if (this.m_baseUri is null && !string.IsNullOrWhiteSpace(value))
                 {
                     this.m_baseUri = new Uri(this.m_href, UriKind.RelativeOrAbsolute);
                 }
@@ -652,14 +591,8 @@ namespace Sgml
         /// </summary>
         public bool StripDocType
         {
-            get
-            {
-                return this.m_stripDocType;
-            }
-            set
-            {
-                this.m_stripDocType = value;
-            }
+            get => this.m_stripDocType;
+            set => this.m_stripDocType = value;
         }
 
         /// <summary>
@@ -668,8 +601,8 @@ namespace Sgml
         /// <value><c>true</c> if DTD references should be ignored; otherwise, <c>false</c>.</value>
         public bool IgnoreDtd
         {
-            get { return m_ignoreDtd; }
-            set { m_ignoreDtd = value; }
+            get => m_ignoreDtd;
+            set => m_ignoreDtd = value;
         }
 
         /// <summary>
@@ -677,14 +610,8 @@ namespace Sgml
         /// </summary>
         public CaseFolding CaseFolding
         {
-            get
-            {
-                return this.m_folding;
-            }
-            set
-            {
-                this.m_folding = value;
-            }
+            get => this.m_folding;
+            set => this.m_folding = value;
         }
 
         /// <summary>
@@ -692,14 +619,8 @@ namespace Sgml
         /// </summary>
         public TextWriter ErrorLog
         {
-            get
-            {
-                return this.m_log;
-            }
-            set
-            {
-                this.m_log = value;
-            }
+            get => this.m_log;
+            set => this.m_log = value;
         }
 
         private void Log(string msg, params string[] args)
@@ -733,15 +654,12 @@ namespace Sgml
 
         private void Init()
         {
-            if (m_nameTable == null)
+            m_nameTable ??= new NameTable();
+            m_settings ??= new XmlReaderSettings
             {
-                m_nameTable = new NameTable();
-            }
-            if (m_settings == null)
-            {
-                m_settings = new XmlReaderSettings();
-                m_settings.NameTable = m_nameTable;
-            }
+                NameTable = m_nameTable
+            };
+        
             this.m_state = State.Initial;
             this.m_stack = new HWStack<Node>(10);
             this.m_node = Push(null, XmlNodeType.Document, null);
@@ -768,7 +686,7 @@ namespace Sgml
         private Node Push(string name, XmlNodeType nt, string value)
         {
             Node result = this.m_stack.Push();
-            if (result == null)
+            if (result is null)
             {
                 result = new Node();
                 this.m_stack[this.m_stack.Count - 1] = result;
@@ -1055,13 +973,7 @@ namespace Sgml
         /// Gets the base URI of the current node.
         /// </summary>
         /// <value>The base URI of the current node.</value>
-        public override string BaseURI
-        {
-            get
-            {
-                return this.m_baseUri == null ? "" : this.m_baseUri.AbsoluteUri;
-            }
-        }
+        public override string BaseURI => this.m_baseUri is null ? "" : this.m_baseUri.AbsoluteUri;
 
         /// <summary>
         /// Gets a value indicating whether the current node is an empty element (for example, &lt;MyElement/&gt;).
@@ -1164,14 +1076,8 @@ namespace Sgml
         /// </summary>
         public WhitespaceHandling WhitespaceHandling
         {
-            get
-            {
-                return this.m_whitespaceHandling;
-            } 
-            set
-            {
-                this.m_whitespaceHandling = value;
-            }
+            get => this.m_whitespaceHandling;
+            set => this.m_whitespaceHandling = value;
         }
 
         /// <summary>
@@ -1234,7 +1140,7 @@ namespace Sgml
                     return a.Value;
             }
 
-            throw new ArgumentOutOfRangeException("i");
+            throw new ArgumentOutOfRangeException(nameof(i));
         }
 
         /// <summary>
@@ -1242,41 +1148,24 @@ namespace Sgml
         /// </summary>
         /// <param name="i">The index of the attribute.</param>
         /// <returns>The value of the specified attribute. This method does not move the reader.</returns>
-        public override string this[int i]
-        {
-            get
-            {
-                return GetAttribute(i);
-            }
-        }
+        public override string this[int i] => GetAttribute(i);
 
         /// <summary>
         /// Gets the value of an attribute with the specified <see cref="Name"/>.
         /// </summary>
         /// <param name="name">The name of the attribute to retrieve.</param>
         /// <returns>The value of the specified attribute. If the attribute is not found, a null reference (Nothing in Visual Basic) is returned. </returns>
-        public override string this[string name]
-        { 
-            get
-            {
-                return GetAttribute(name);
-            }
-        }
-
+        public override string this[string name] => GetAttribute(name);
+       
         /// <summary>
         /// Gets the value of the attribute with the specified <see cref="LocalName"/> and <see cref="NamespaceURI"/>.
         /// </summary>
         /// <param name="name">The local name of the attribute.</param>
         /// <param name="namespaceURI">The namespace URI of the attribute.</param>
         /// <returns>The value of the specified attribute. If the attribute is not found, a null reference (Nothing in Visual Basic) is returned. This method does not move the reader.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1023", Justification = "This design is that of Microsoft's XmlReader class and overriding its method is merely continuing the same design.")]
-        public override string this[string name, string namespaceURI]
-        { 
-            get
-            {
-                return GetAttribute(name, namespaceURI);
-            }
-        }
+        [SuppressMessage("Microsoft.Design", "CA1023", Justification = "This design is that of Microsoft's XmlReader class and overriding its method is merely continuing the same design.")]
+        public override string this[string name, string namespaceURI] => GetAttribute(name, namespaceURI);
+        
 
         /// <summary>
         /// Moves to the atttribute with the specified <see cref="Name"/>.
@@ -1327,7 +1216,7 @@ namespace Sgml
                 return;
             }
 
-            throw new ArgumentOutOfRangeException("i");
+            throw new ArgumentOutOfRangeException(nameof(i));
         }
 
         /// <summary>
@@ -1390,22 +1279,16 @@ namespace Sgml
         /// <summary>
         /// Gets whether the content is HTML or not.
         /// </summary>
-        public bool IsHtml
-        {
-            get
-            {
-                return this.m_isHtml;
-            }
-        }
+        public bool IsHtml => this.m_isHtml;
 
         /// <summary>
         /// Returns the encoding of the current entity.
         /// </summary>
         /// <returns>The encoding of the current entity.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024", Justification = "This method to get the encoding does not simply read a value, but potentially causes significant processing of the input stream.")]
+        [SuppressMessage("Microsoft.Design", "CA1024", Justification = "This method to get the encoding does not simply read a value, but potentially causes significant processing of the input stream.")]
         public Encoding GetEncoding()
         {
-            if (this.m_current == null)
+            if (this.m_current is null)
             {
                 OpenInput();
             }
@@ -1435,7 +1318,7 @@ namespace Sgml
             if (this.m_current.ResolvedUri != null)
                 this.m_baseUri = this.m_current.ResolvedUri;
 
-            if (this.m_current.IsHtml && this.m_dtd == null)
+            if (this.m_current.IsHtml && this.m_dtd is null)
             {
                 this.m_docType = "HTML";
                 LazyLoadDtd(this.m_baseUri);
@@ -1448,7 +1331,7 @@ namespace Sgml
         /// <returns>true if the next node was read successfully; false if there are no more nodes to read.</returns>
         public override bool Read()
         {
-            if (m_current == null)
+            if (m_current is null)
             {
                 OpenInput();
             }
@@ -1649,7 +1532,7 @@ namespace Sgml
 
                         // In SGML DOCTYPE SYSTEM attribute is optional, but in XML it is required,
                         // therefore if there is no SYSTEM literal then add an empty one.
-                        if (this.GetAttribute("SYSTEM") == null && this.GetAttribute("PUBLIC") != null)
+                        if (this.GetAttribute("SYSTEM") is null && this.GetAttribute("PUBLIC") != null)
                         {
                             this.m_node.AddAttribute("SYSTEM", "", '"', this.m_folding == CaseFolding.None);
                         }
@@ -1801,7 +1684,7 @@ namespace Sgml
                 if (ValidAttributeName(aname))
                 {
                     Attribute a = n.AddAttribute(aname, value ?? aname, quote, this.m_folding == CaseFolding.None);
-                    if (a == null)
+                    if (a is null)
                     {
                         Log("Duplicate attribute '{0}' ignored", aname);
                     }
@@ -2397,13 +2280,7 @@ namespace Sgml
         /// Gets a value indicating whether the reader is positioned at the end of the stream.
         /// </summary>
         /// <value>true if the reader is positioned at the end of the stream; otherwise, false.</value>
-        public override bool EOF
-        {
-            get
-            {
-                return this.m_state == State.Eof;
-            }
-        }
+        public override bool EOF => this.m_state == State.Eof;
 
         protected override void Dispose(bool disposing)
         {
@@ -2481,9 +2358,11 @@ namespace Sgml
         public override string ReadInnerXml()
         {
             StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
+            var settings = new XmlWriterSettings
+            {
+                Indent = true,
+                ConformanceLevel = ConformanceLevel.Fragment
+            };
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 switch (this.NodeType)
@@ -2515,9 +2394,11 @@ namespace Sgml
         /// </returns>
         public override string ReadOuterXml()
         {
-            StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
+            var sw = new StringWriter(CultureInfo.InvariantCulture);
+            var settings = new XmlWriterSettings
+            {
+                Indent = true
+            };
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 xw.WriteNode(this, true);
@@ -2529,13 +2410,7 @@ namespace Sgml
         /// Gets the XmlNameTable associated with this implementation.
         /// </summary>
         /// <value>The XmlNameTable enabling you to get the atomized version of a string within the node.</value>
-        public override XmlNameTable NameTable
-        {
-            get
-            {
-                return m_nameTable;
-            }
-        }
+        public override XmlNameTable NameTable => m_nameTable;
 
         /// <summary>
         /// Resolves a namespace prefix in the current element's scope.

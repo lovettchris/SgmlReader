@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Sgml
 {
-
-    internal class EmbeddedResourceEntityContent : IEntityContent
+    internal sealed class EmbeddedResourceEntityContent : IEntityContent
     {
-        private Assembly assembly;
-        private string name;
-
+        private readonly Assembly assembly;
+        private readonly string name;
 
         public EmbeddedResourceEntityContent(Assembly assembly, string name)
         {
@@ -21,29 +16,11 @@ namespace Sgml
             this.name = name;
         }
 
-        public Encoding Encoding
-        {
-            get
-            {
-                return Encoding.UTF8;
-            }
-        }
+        public Encoding Encoding => Encoding.UTF8;
+        
+        public string MimeType => "text/plain";
 
-        public string MimeType
-        {
-            get
-            {
-                return "text/plain";
-            }
-        }
-
-        public Uri Redirect
-        {
-            get
-            {
-                return new Uri(name, UriKind.Relative);
-            }
-        }
+        public Uri Redirect => new Uri(name, UriKind.Relative);
 
         public Stream Open()
         {

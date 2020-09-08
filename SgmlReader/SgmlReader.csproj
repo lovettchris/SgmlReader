@@ -3,11 +3,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net45;net46;net47;net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net45;net46;netcoreapp3.1</TargetFrameworks>
     <ApplicationIcon>App.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MYKEYFILE)</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
