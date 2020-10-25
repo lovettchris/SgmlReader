@@ -7,7 +7,7 @@ using System;
 using System.Reflection;
 
 [assembly: AssemblyDescription("Converts SGML to XML via XmlReader API. SGML includes HTML and OFX. It also works with XmlDocument, XDocument and XPathDocument.")]
-[assembly: AssemblyCopyright("Copyright (c) 2002-2016, Microsoft Corporation; Copyright (c) 2007-2013, MindTouch")]
+[assembly: AssemblyCopyright("Copyright (c) 2002-2020, Microsoft Corporation; Copyright (c) 2007-2013, MindTouch")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]

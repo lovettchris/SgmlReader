@@ -14,10 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-#if !PORTABLE
 using System.Net;
-#endif
-using System.Reflection;
 using System.Text;
 using System.Xml;
 
@@ -299,29 +296,6 @@ namespace Sgml
         PseudoStartTag, // we pushed a pseudo-start tag, need to continue with previous start tag.
         Eof
     }
-
-#if WINDOWS_UWP
-    //
-    // Summary:
-    //     Specifies how white space is handled.
-    //     (Not defined in PORTABLE framework, so we added it here).
-    public enum WhitespaceHandling
-    {
-        //
-        // Summary:
-        //     Return Whitespace and SignificantWhitespace nodes. This is the default.
-        All = 0,
-        //
-        // Summary:
-        //     Return SignificantWhitespace nodes only.
-        Significant = 1,
-        //
-        // Summary:
-        //     Return no Whitespace and no SignificantWhitespace nodes.
-        None = 2
-    }
-#endif
-
 
     /// <summary>
     /// SgmlReader is an XmlReader API over any SGML document (including built in 
@@ -676,11 +650,7 @@ namespace Sgml
             this.m_rootCount = 0;
             this.m_foundRoot = false;
             this.unknownNamespaces.Clear();
-#if WINDOWS_UWP
-            this.m_resolver = new UniversalEntityResolver();
-#else
             this.m_resolver = new DesktopEntityResolver();
-#endif
         }
 
         private Node Push(string name, XmlNodeType nt, string value)
@@ -1016,11 +986,7 @@ namespace Sgml
         /// <remarks>
         /// This property applies only to an attribute node.
         /// </remarks>
-#if WINDOWS_UWP
-        public char QuoteChar
-#else
         public override char QuoteChar
-#endif
         {
             get
             {
@@ -2282,6 +2248,10 @@ namespace Sgml
         /// <value>true if the reader is positioned at the end of the stream; otherwise, false.</value>
         public override bool EOF => this.m_state == State.Eof;
 
+        /// <summary>
+        /// Disposes this object.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

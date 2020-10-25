@@ -1,50 +1,53 @@
 # SgmlReader - Convert (almost) any HTML to valid XML
 
-SgmlReader is a versatile C# .NET library written by Chris Lovett for parsing 
-SGML files using the XmlReader API including HTML and OFX data. 
-A command line utility is also provided 
-which outputs the well formed XML result. 
+SgmlReader is a versatile C# .NET library written by Chris Lovett for parsing
+SGML files using the XmlReader API including HTML and OFX data.
+A command line utility is also provided
+which outputs the well formed XML result.
 
-[MindTouch](http://mindtouch.com) uses the SgmlReader library extensively.  Over 
-the last few years they have made many improvements to it.  
+[MindTouch](http://mindtouch.com) uses the SgmlReader library extensively.  Over
+the last few years they have made many improvements to it.
 
 ## SgmlReaderDll API
 
-The SgmlReader is an implementation of the XmlReader API. So the only thing you 
-really need to know is how to construct it. SgmlReader has a default constructor, 
-then you need to set some of the properties. To load a DTD you must specify 
-DocType="HTML" or you must provide a SystemLiteral. To specify the SGML 
-document you must provide either the InputStream or Href. Everything else is 
+The SgmlReader is an implementation of the XmlReader API. So the only thing you
+really need to know is how to construct it. SgmlReader has a default constructor,
+then you need to set some of the properties. To load a DTD you must specify
+DocType="HTML" or you must provide a SystemLiteral. To specify the SGML
+document you must provide either the InputStream or Href. Everything else is
 optional. Then you can read from this reader like any other XmlReader class.
 
 ### Sample Usage
 
-    XmlDocument FromHtml(TextReader reader) {
-    
-        // setup SgmlReader
-        Sgml.SgmlReader sgmlReader = new Sgml.SgmlReader();
-        sgmlReader.DocType = "HTML";
-        sgmlReader.WhitespaceHandling = WhitespaceHandling.All;
-        sgmlReader.CaseFolding = Sgml.CaseFolding.ToLower;
-        sgmlReader.InputStream = reader;
-    
-        // create document
-        XmlDocument doc = new XmlDocument();
-        doc.PreserveWhitespace = true;
-        doc.XmlResolver = null;
-        doc.Load(sgmlReader);
-        return doc;
-    }
+```c#
+// setup SgmlReader
+Sgml.SgmlReader sgmlReader = new Sgml.SgmlReader()
+{
+    DocType = "HTML",
+    WhitespaceHandling = WhitespaceHandling.All,
+    CaseFolding = Sgml.CaseFolding.ToLower,
+    InputStream = reader
+};
+
+// create document
+XmlDocument doc = new XmlDocument()
+{
+    PreserveWhitespace = true,
+    XmlResolver = null
+};
+doc.Load(sgmlReader);
+return doc;
+```
 
 ### SgmlReader Properties
 
 * **SgmlDtd Dtd**<br/>
-Specify the SgmlDtd object directly. This allows you to cache the Dtd and share 
-it across multiple SgmlReaders. To load a DTD from a URL use the SystemLiteral 
+Specify the SgmlDtd object directly. This allows you to cache the Dtd and share
+it across multiple SgmlReaders. To load a DTD from a URL use the SystemLiteral
 property.
 * **string DocType**<br/>
-The name of root element specified in the DOCTYPE tag. If you specify "HTML" 
-then the SgmlReader will use the built-in HTML DTD. In this case you do not need 
+The name of root element specified in the DOCTYPE tag. If you specify "HTML"
+then the SgmlReader will use the built-in HTML DTD. In this case you do not need
 to specify the SystemLiteral property.
 * **string PublicIdentifier**<br/>
 The PUBLIC identifier in the DOCTYPE tag. This is optional.
@@ -53,15 +56,15 @@ The SYSTEM literal in the DOCTYPE tag identifying the location of the DTD.
 * **string InternalSubset**<br/>
 The DTD internal subset in the DOCTYPE tag. This is optional.
 * **TextReader InputStream**<br/>
-The input stream containing SGML data to parse. You must specify this property 
+The input stream containing SGML data to parse. You must specify this property
 or the Href property before calling Read().
 * **string Href**<br/>
 Specify the location of the input SGML document as a URL.
 * **string WebProxy**<br/>
-Sometimes you need to specify a proxy server in order to load data via HTTP from 
+Sometimes you need to specify a proxy server in order to load data via HTTP from
 outside the firewall. For example: "itgproxy:80".
 * **string BaseUri**<br/>
-The base Uri is used to resolve relative Uri's like the SystemLiteral and Href 
+The base Uri is used to resolve relative Uri's like the SystemLiteral and Href
 properties.
 * **TextWriter ErrorLog**<br/>
 DTD validation errors are written to this stream.
@@ -76,10 +79,10 @@ The command line executable version has the following options:
 
     sgmlreader <options> [InputUri] [OutputFile]
 
-* -e "file" : Specifies a file to write error output to.  The default is to 
-generate no errors.  The special name "$stderr" redirects errors to stderr 
+* -e "file" : Specifies a file to write error output to.  The default is to
+generate no errors.  The special name "$stderr" redirects errors to stderr
 output stream.
-* -proxy : "server"  Specifies the proxy server to use to fetch DTD's through 
+* -proxy : "server"  Specifies the proxy server to use to fetch DTD's through
 the fire wall.
 * -html : Specifies that the input is HTML.
 * -dtd "uri" : Specifies some other SGML DTD.
@@ -88,37 +91,55 @@ the fire wall.
 * -encoding name : Specify an encoding for the output file (default UTF-8)
 * -noxml : Stops generation of XML declaration in output.
 * -doctype : Copy <!DOCTYPE tag to the output.
-* InputUri : The input file name or URL. Default is stdin.  If this is a local 
+* InputUri : The input file name or URL. Default is stdin.  If this is a local
 file name then it also supports wildcards.
-* OutputFile : The optional output file name. Default is stdout.  If the 
-InputUri contains wildcards then this just specifies the output file extension, 
+* OutputFile : The optional output file name. Default is stdout.  If the
+InputUri contains wildcards then this just specifies the output file extension,
 the default being ".xml".
 
 ### Examples
 
 Converts all .htm files to corresponding .xml files using the built in HTML DTD.
 
-    sgmlreader -html *.htm *.xml
+```c#
+sgmlreader -html *.htm *.xml
+```
 
-Converts all the MSN home page to XML storing the result in the local file 
+Converts all the MSN home page to XML storing the result in the local file
 "msn.xml".
 
-    sgmlreader -html http://www.msn.com -proxy myproxy:80 msn.xml
-
-Converts the given OFX file to XML using the SGML DTD "ofx160.dtd" specified in 
+```c#
+sgmlreader -html http://www.msn.com -proxy myproxy:80 msn.xml
+```
+Converts the given OFX file to XML using the SGML DTD "ofx160.dtd" specified in
 the test.ofx file.
 
-    sgmlreader -dtd ofx160.dtd test.ofx ofx.xml
+```c#
+sgmlreader -dtd ofx160.dtd test.ofx ofx.xml
+```
+
+## UWP
+
+SgmlReaderUniversal provides a custom EntityResolver named `UniversalEntityResolver` which allows resolving resources using the 
+UWP `Windows.Storage` API's.  You will need to provide this resolver
+by setting the Resolver property on the SgmlReader.
+
+```c#
+// setup SgmlReader
+Sgml.SgmlReader sgmlReader = new Sgml.SgmlReader() {
+    Resolver = new UniversalEntityResolver()
+}
+```
 
 ## Community
 
-If you have questions, please post them on 
-[StackOverflow](http://stackoverflow.com/questions/tagged/sgmlreader) and tag 
+If you have questions, please post them on
+[StackOverflow](http://stackoverflow.com/questions/tagged/sgmlreader) and tag
 them with *sgmlreader*.  Feel free to post issues in the github issues list.
 
 If you fix an issue, please submit PR and follow these guidelines:
 
-1. Make sure the code formatting is **identical** to the existing code formatting. 
+1. Make sure the code formatting is **identical** to the existing code formatting.
 You know that you're doing it right if your code is indistinguishable from
 existing code.
 1. Run the unit test to make sure no regressions are being introduced.
@@ -128,19 +149,21 @@ existing code.
 ## Testing
 
 Please make sure all tests pass and new tests are added for areas you work on.
-See [nunit](https://nunit.org).  If you have Visual Studio, just open the 
-Test Explorer and click Run All. 
- 
-## Mono
-
-This project supports Mono builds using xbuild.  Just run xbuild SgmlReader.sln
-to build the solution and the following to run the tests:
-
-mono ./packages/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./SgmlTests/bin/Debug/SgmlTests.dll
+See [nunit](https://nunit.org).  If you have Visual Studio, just open the
+Test Explorer and click Run All.
 
 ## Release History
-*Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly 
+*Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
 redirection to account for newer versions when recompilation is not an option.
+
+### Release notes for 1.8.16 (2020-July-24)
+
+Thanks to [Jason Nelson](https://github.com/iamcarbon) for the following code cleanups:
+
+* Makes HWStack generic to reduce casts and improve codegen
+* Inlines variable declarations
+* Uses pattern matching
+* Adds readonly annotations
 
 ### Release notes for 1.8.15 (2020-Jun-1)
 
@@ -163,7 +186,7 @@ redirection to account for newer versions when recompilation is not an option.
 ### Release notes for 1.8.11 (2013-Jan-27)
 
 * Pulled latest psake and nuget tools. (Andy Sherwood)
-* Made sure Html.dtd was embedded as a resource in the build script for the 
+* Made sure Html.dtd was embedded as a resource in the build script for the
 nuget package. (Andy Sherwood)
 
 ### Release notes for 1.8.10 (2013-Jan-10)
@@ -181,7 +204,7 @@ nuget package. (Andy Sherwood)
 ### Release notes for 1.8.8 (2011-Sep-29)
 
 * Converted project files to Visual Studio 2010. (Andy Sherwood)
-* Fully nugetized. Get log4net and nunit from nuget. Build nuget package with 
+* Fully nugetized. Get log4net and nunit from nuget. Build nuget package with
 build script using psake and powershell. (Andy Sherwood)
 
 ### Release notes for 1.8.7 (2010-Apr-27)
@@ -191,7 +214,7 @@ build script using psake and powershell. (Andy Sherwood)
 ### Release notes for 1.8.6 (2010-Feb-19)
 
 * Provide setting to ignore DTD in parsed document.
-* An attribute with a missing value should be assumed to have the name of the 
+* An attribute with a missing value should be assumed to have the name of the
 attribute as value.
 * SgmlReader ExpandEntity with entities not ending in ';' and skips a character.
 * SgmlReader adds 65535 character at the end of the string.
@@ -200,17 +223,17 @@ attribute as value.
 ### Release notes for 1.8.5 (2009-Jul-19)
 
 * Unable to parse UTF-32 entities.
-* Use StringComparison.OrdinalIgnoreCase instead of 
+* Use StringComparison.OrdinalIgnoreCase instead of
 StringComparison.InvariantCultureIgnoreCase.
 
 ### Release notes for 1.8.4 (2009-May-19)
 
-* Corrupt attributes may lead to invalid attribute names, which make the 
+* Corrupt attributes may lead to invalid attribute names, which make the
 produced XML unparseable.
-* Error when content contains prefixed XML processing instructions (e.g. 
+* Error when content contains prefixed XML processing instructions (e.g.
 &lt;?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" />).
 * Added -ignore flag so tests known to fail can be ignored from the suite.
-* Added test to re-parse output to make sure it's valid XML (.Net sometimes was 
+* Added test to re-parse output to make sure it's valid XML (.Net sometimes was
 able to generate invalid XML).
 
 ### Release notes for 1.8.3 (2009-Apr-03)
@@ -220,17 +243,17 @@ able to generate invalid XML).
 ### Release notes for 1.8.2 (2008-Nov-26)
 
 * Fixed regression introduced by fixing bug 5150.
-* An extra open quote/double-quote prevents the entire element from being read 
+* An extra open quote/double-quote prevents the entire element from being read
 properly.
 * Replaced == string equality with culture invariant string.Compare().
 * Return 'null' as NameTable since none is used.
-* Added '-noformat' switch for regression tests to suppress automatic 
+* Added '-noformat' switch for regression tests to suppress automatic
 reformatting (useful for formatting tests).
 
 ### Release notes for 1.8.1 (2008-Oct-08)
 
 * Unclosed HTML comment causes infinite loop.
-* Don't use XmlNameTable with object comparisons; it becomes unreliable after a 
+* Don't use XmlNameTable with object comparisons; it becomes unreliable after a
 while.
 
 ### Release notes for 1.8.0 (2008-Jul-28)
@@ -264,15 +287,15 @@ while.
 * Added support for namespaces on elements and attributes.
 * Unknown prefixes on attributes and elements resolve to '#unknown' namespace.
 * Fix bug when parsing down-level comments, like &lt;![if IE]>.
-* Don't allow attribute with invalid names (e.g. &lt;p foo:="invalid" ;="bad">, 
+* Don't allow attribute with invalid names (e.g. &lt;p foo:="invalid" ;="bad">,
 etc.).
 
 ### Release notes for 1.7.1 (2007-Sep-25)
 
 * Added 'GetLiteralEntitiesLookup()' method.
-* Fixed bugs with namespace prefixes on attributes and elements; prefixes are 
+* Fixed bugs with namespace prefixes on attributes and elements; prefixes are
 now stripped automatically.
-* Added SgmlReader constructor with XmlNameTable argument to avoid failed 
+* Added SgmlReader constructor with XmlNameTable argument to avoid failed
 comparisons when reusing the DTD.
 * Ensured that SgmlReader is initialized identically when reusing a DTD.
 
@@ -283,13 +306,13 @@ comparisons when reusing the DTD.
 * Fix bug reported by sanchen - ExpandCharEntity was messed up on hex entities.
 * Fix bug reported by kojiishi - off by one bug in SniffName().
 * Fix bug reported by kojiishi - bug in loading XmlDocument from SgmlReader -
- this was caused by the HTML document containing an embedded &lt;?xml version='1.0'?> 
+ this was caused by the HTML document containing an embedded &lt;?xml version='1.0'?>
  declaration, so the SgmlReader now strips these.
 * Added special stripping of punctuation characters between attributes like ",".
 
 ### Release notes for 1.6
 
-* Improve wrapping of HTML content with auto-generated &lt;html>&lt;/html> 
+* Improve wrapping of HTML content with auto-generated &lt;html>&lt;/html>
 container tags.
 
 ### Release notes for 1.5
@@ -297,33 +320,33 @@ container tags.
 * Fix detection of ContentType=text/html and switch to HTML mode.
 * Fix problems parsing DOCTYPE tag when case folding is on.
 * Fix reading of XHTML DTD.
-* Fix parsing of content of type CDATA that resulted in the error message 
+* Fix parsing of content of type CDATA that resulted in the error message
 'Cannot have ']]>' inside an XML CDATA block'.
 * Fix parsing of http://www.virtuelvis.com/download/162/evilml.html.
-* Fix parsing of attributes missing the equals sign: height"4"  (thanks to 
+* Fix parsing of attributes missing the equals sign: height"4"  (thanks to
 Ulrich Schwanitz for his fix).
 * Fix 'SniffWhitespace' thanks to "Windy Winter".
 * Added TestSuite project.
 
 ### Release notes for 1.4
 
-* Added UserAgent string "Mozilla/4.0 (compatible;);" so that SgmlReader gets 
+* Added UserAgent string "Mozilla/4.0 (compatible;);" so that SgmlReader gets
 the right content from webservers.
 * Fixed handling of HTML that does not start with root &lt;html> element tag.
 * Fixed handling of built in HTML entities.
 
 ### Release notes for 1.3
 
-* Changed ToUpper to CaseFolding enum and added support for "auto-folding" based 
+* Changed ToUpper to CaseFolding enum and added support for "auto-folding" based
 on input
 * Added support for &lt;![CDATA[...]]> blocks
-* Added proper encoding support, including support for HTML &lt;META 
-http-equiv="content-type".  This means output now has the correct XML declaration 
-(unless you specify the new -noxml option) and any existing xml declarations in 
+* Added proper encoding support, including support for HTML &lt;META
+http-equiv="content-type".  This means output now has the correct XML declaration
+(unless you specify the new -noxml option) and any existing xml declarations in
 the input are stripped out so you don't end up with two.
 * Added support for ASP &lt;%...%> blocks (thanks to Dan Whalin).
-* Now strips out DOCTYPE by default since HTML DocTypes can cause problems for 
-XmlDocument when it tries to load the HTML DTD.  but added "-doctype" switch for 
+* Now strips out DOCTYPE by default since HTML DocTypes can cause problems for
+XmlDocument when it tries to load the HTML DTD.  but added "-doctype" switch for
 those who really need it to come through.
 * Fix handling of Office 2000 &lt;?xml:namespace .../> declarations.
 * Remove bogus attributes that have no name, in cases like &lt;class= "test">.
@@ -351,17 +374,17 @@ those who really need it to come through.
 
 ### Release notes for 1.0.3.26932
 
-* Implemented ReadOuterXml and ReadInnerXml and fix some bugs in dealing with 
+* Implemented ReadOuterXml and ReadInnerXml and fix some bugs in dealing with
 xmlns attributes and dealing with non-HTML tags.
 
 ### Release notes for 1.0.3
 
-* Fixed some CLS compliance problems with using SgmlReader from VB and a null 
+* Fixed some CLS compliance problems with using SgmlReader from VB and a null
 reference exception bug when loading SgmlReader from XmlDocument.
 
 ### Release notes for 1.0.2.21225
 
-* Fixed bug in handling of encodings. Now uses the correct encoding returned 
+* Fixed bug in handling of encodings. Now uses the correct encoding returned
 from the HTTP server.
 
 ### Release notes for 1.0.2.21105
@@ -370,7 +393,7 @@ from the HTTP server.
 
 ### Release notes for 1.0.2
 
-* Added fix for the way IE & Netscape deal with characters in the range 0x80 
+* Added fix for the way IE & Netscape deal with characters in the range 0x80
 through 0x9F in HTML.
 
 ### Release notes for 1.0.1

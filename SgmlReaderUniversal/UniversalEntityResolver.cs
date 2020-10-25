@@ -1,9 +1,5 @@
-﻿using Sgml;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using Windows.Storage;
 using System.Net.Http;
@@ -12,8 +8,18 @@ using Windows.UI.Xaml;
 
 namespace Sgml
 {
+    /// <summary>
+    /// A special implementation of IEntityResolver that uses the UWP Windows.Storage API's
+    /// for local file access and HttpClient for web content.
+    /// </summary>
     public class UniversalEntityResolver : IEntityResolver
     {
+        /// <summary>
+        /// Open the given Uri.  If the Uri is relative then it could be referring to either a local file or
+        /// an embedded resource.
+        /// </summary>
+        /// <param name="uri">the absolute or relative Uri of the resource to load</param>
+        /// <returns>The stream, or throws exception if the resource is not found</returns>
         public IEntityContent GetContent(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
@@ -96,7 +102,7 @@ namespace Sgml
 
         public Stream Open()
         {
-            StorageFile file = StorageFile.GetFileFromPathAsync(this.path).GetResults();
+            StorageFile file = StorageFile.GetFileFromPathAsync(this.path).GetAwaiter().GetResult();
             return file.OpenStreamForReadAsync().Result;
         }
     }

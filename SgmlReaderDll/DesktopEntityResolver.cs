@@ -90,10 +90,23 @@ namespace Sgml
         }
     }
 
+    /// <summary>
+    /// A special implementation for IEntityResolver that uses System.IO to access local files
+    /// and HttpWebRequest for web content.
+    /// </summary>
     public class DesktopEntityResolver : IEntityResolver
     {
+        /// <summary>
+        /// Get or set the WebProxy to use for web requests.
+        /// </summary>
         public WebProxy Proxy { get; set; }
 
+        /// <summary>
+        /// Open the given Uri.  If the Uri is relative then it could be referring to either a local file or
+        /// an embedded resource.
+        /// </summary>
+        /// <param name="uri">the absolute or relative Uri of the resource to load</param>
+        /// <returns>The stream, or throws exception if the resource is not found</returns>
         public IEntityContent GetContent(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
