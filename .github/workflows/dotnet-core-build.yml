@@ -20,6 +20,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore SgmlReaderCore.sln
     - name: Build
-      run: dotnet build SgmlReaderCore.sln --configuration Release --no-restore
+      run: dotnet build SgmlReaderCore.sln 
     - name: Test
-      run: dotnet test SgmlReaderCore.sln --no-restore --verbosity normal
+      run: dotnet test SgmlReaderCore.sln --verbosity normal
