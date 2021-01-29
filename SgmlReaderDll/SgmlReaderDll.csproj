@@ -5,11 +5,12 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MYKEYFILE)</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <Version>1.8.18</Version>
-    <AssemblyVersion>1.8.18</AssemblyVersion>
-    <FileVersion>1.8.18</FileVersion>
+    <Version>1.8.19</Version>
+    <AssemblyVersion>1.8.19</AssemblyVersion>
+    <FileVersion>1.8.19</FileVersion>
     <LangVersion>8.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
   
   <ItemGroup>

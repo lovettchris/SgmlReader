@@ -6,6 +6,9 @@
     <LangVersion>8</LangVersion>
     <DocumentationFile>SgmlReaderCore.xml</DocumentationFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.8.19</Version>
+    <AssemblyVersion>1.8.19</AssemblyVersion>
+    <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
