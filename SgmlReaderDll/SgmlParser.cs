@@ -10,13 +10,11 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Net;
 #if WINDOWS_DESKTOP
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -90,13 +88,7 @@ namespace Sgml {
         /// <summary>
         /// Contextual information detailing the entity on which the error occurred.
         /// </summary>
-        public string EntityContext
-        {
-            get
-            {
-                return m_entityContext;
-            }
-        }
+        public string EntityContext => m_entityContext;
 
 #if WINDOWS_DESKTOP
         /// <summary>
@@ -107,8 +99,8 @@ namespace Sgml {
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter=true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            if (info == null)
-                throw new ArgumentNullException("info");
+            if (info is null)
+                throw new ArgumentNullException(nameof(info));
 
             info.AddValue("entityContext", m_entityContext);
             base.GetObjectData(info, context);
@@ -177,6 +169,7 @@ namespace Sgml {
         /// <param name="name">The name of the entity.</param>
         /// <param name="pubid">The public id of the entity.</param>
         /// <param name="uri">The uri of the entity.</param>
+        /// <param name="resolver">The resolver to use for loading this entity</param>
         public Entity(string name, string pubid, string uri, IEntityResolver resolver)
         {
             m_name = name;
@@ -191,6 +184,7 @@ namespace Sgml {
         /// </summary>
         /// <param name="name">The name of the entity.</param>
         /// <param name="literal">The literal value of the entity.</param>
+        /// <param name="resolver">The resolver to use for loading this entity</param>
         public Entity(string name, string literal, IEntityResolver resolver)
         {
             m_name = name;
@@ -205,6 +199,7 @@ namespace Sgml {
         /// <param name="name">The name of the entity.</param>
         /// <param name="baseUri">The baseUri for the entity to read from the TextReader.</param>
         /// <param name="stm">The TextReader to read the entity from.</param>
+        /// <param name="resolver">The resolver to use for loading this entity</param>
         public Entity(string name, Uri baseUri, TextReader stm, IEntityResolver resolver)
         {
             m_name = name;
@@ -218,50 +213,26 @@ namespace Sgml {
         /// <summary>
         /// The name of the entity.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_name;
-            }
-        }
+        public string Name => m_name;
 
         /// <summary>
         /// True if the entity is the html element entity.
         /// </summary>
         public bool IsHtml
         {
-            get
-            {
-                return m_isHtml;
-            }
-            set
-            {
-                m_isHtml = value;
-            }
+            get => m_isHtml;
+            set => m_isHtml = value;
         }
 
         /// <summary>
         /// The public identifier of this entity.
         /// </summary>
-        public string PublicId
-        {
-            get
-            {
-                return m_publicId;
-            }
-        }
+        public string PublicId => m_publicId;
 
         /// <summary>
         /// The Uri that is the source for this entity.
         /// </summary>
-        public string Uri
-        {
-            get
-            {
-                return m_uri;
-            }
-        }
+        public string Uri => m_uri;
 
         /// <summary>
         /// The resolved location of the DTD this entity is from.
@@ -282,91 +253,43 @@ namespace Sgml {
         /// <summary>
         /// Gets the parent Entity of this Entity.
         /// </summary>
-        public Entity Parent
-        {
-            get
-            {
-                return m_parent;
-            }
-        }
+        public Entity Parent => m_parent;
 
         /// <summary>
         /// The last character read from the input stream for this entity.
         /// </summary>
-        public char Lastchar
-        {
-            get
-            {
-                return m_lastchar;
-            }
-        }
+        public char Lastchar => m_lastchar;
 
         /// <summary>
         /// The line on which this entity was defined.
         /// </summary>
-        public int Line
-        {
-            get
-            {
-                return m_line;
-            }
-        }
+        public int Line => m_line;
 
         /// <summary>
         /// The index into the line where this entity is defined.
         /// </summary>
-        public int LinePosition
-        {
-            get
-            {
-                return this.m_absolutePos - this.m_lineStart + 1;
-            }
-        }
+        public int LinePosition => this.m_absolutePos - this.m_lineStart + 1;
 
         /// <summary>
         /// Whether this entity is an internal entity or not.
         /// </summary>
         /// <value>true if this entity is internal, otherwise false.</value>
-        public bool IsInternal
-        {
-            get
-            {
-                return m_isInternal;
-            }
-        }
-
+        public bool IsInternal => m_isInternal;
+       
         /// <summary>
         /// The literal value of this entity.
         /// </summary>
-        public string Literal
-        {
-            get
-            {
-                return m_literal;
-            }
-        }
+        public string Literal => m_literal;
 
         /// <summary>
         /// The <see cref="LiteralType"/> of this entity.
         /// </summary>
-        public LiteralType LiteralType
-        {
-            get
-            {
-                return m_literalType;
-            }
-        }
+        public LiteralType LiteralType => m_literalType;
 
         /// <summary>
         /// Whether the last char read for this entity is a whitespace character.
         /// </summary>
-        public bool IsWhitespace
-        {
-            get
-            {
-                return m_isWhitespace;
-            }
-        }
+        public bool IsWhitespace => m_isWhitespace;
         
         /// <summary>
         /// Reads the next character from the DTD stream.
@@ -430,7 +353,7 @@ namespace Sgml {
                 if (this.m_literal != null)
                     this.m_stm = new StringReader(this.m_literal);
             } 
-            else if (this.m_uri == null)
+            else if (this.m_uri is null)
             {
                 this.Error("Unresolvable entity '{0}'", this.m_name);
             }
@@ -504,17 +427,17 @@ namespace Sgml {
         /// <returns>The scanned token.</returns>
         public string ScanToken(StringBuilder sb, string term, bool nmtoken)
         {
-            if (sb == null)
-                throw new ArgumentNullException("sb");
+            if (sb is null)
+                throw new ArgumentNullException(nameof(sb));
 
-            if (term == null)
-                throw new ArgumentNullException("term");
+            if (term is null)
+                throw new ArgumentNullException(nameof(term));
 
             sb.Length = 0;
             char ch = m_lastchar;
             if (nmtoken && ch != '_' && !char.IsLetter(ch))
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid name start character '{0}'", ch));
+                throw new SgmlParseException($"Invalid name start character '{ch}'");
             }
 
             while (ch != Entity.EOF && term.IndexOf(ch) < 0)
@@ -523,8 +446,7 @@ namespace Sgml {
                     sb.Append(ch);
                 } 
                 else {
-                    throw new SgmlParseException(
-                        string.Format(CultureInfo.CurrentUICulture, "Invalid name character '{0}'", ch));
+                    throw new SgmlParseException($"Invalid name character '{ch}'");
                 }
                 ch = ReadChar();
             }
@@ -540,8 +462,8 @@ namespace Sgml {
         /// <returns>The literal scanned from the input stream.</returns>
         public string ScanLiteral(StringBuilder sb, char quote)
         {
-            if (sb == null)
-                throw new ArgumentNullException("sb");
+            if (sb is null)
+                throw new ArgumentNullException(nameof(sb));
 
             sb.Length = 0;
             char ch = ReadChar();
@@ -583,8 +505,8 @@ namespace Sgml {
         /// <returns>The string read from the input stream.</returns>
         public string ScanToEnd(StringBuilder sb, string type, string terminators)
         {
-            if (terminators == null)
-                throw new ArgumentNullException("terminators");
+            if (terminators is null)
+                throw new ArgumentNullException(nameof(terminators));
 
             if (sb != null)
                 sb.Length = 0;
@@ -739,7 +661,7 @@ namespace Sgml {
                 ch = ReadChar();
                 for (; ch != Entity.EOF && ch != ';'; ch = ReadChar())
                 {
-                    int p = 0;
+                    int p;
                     if (ch >= '0' && ch <= '9')
                     {
                         p = (int)(ch - '0');
@@ -964,7 +886,8 @@ namespace Sgml {
 
         public HtmlStream(Stream stm, Encoding defaultEncoding)
         {            
-            if (defaultEncoding == null) defaultEncoding = Encoding.UTF8; // default is UTF8
+            defaultEncoding ??= Encoding.UTF8; // default is UTF8
+
             if (!stm.CanSeek){
                 // Need to be able to seek to sniff correctly.
                 stm = CopyToMemoryStream(stm);
@@ -977,7 +900,7 @@ namespace Sgml {
             // Check byte order marks
             this.m_decoder = AutoDetectEncoding(rawBuffer, ref rawPos, rawUsed);
             int bom = rawPos;
-            if (this.m_decoder == null)
+            if (this.m_decoder is null)
             {
                 this.m_decoder = defaultEncoding.GetDecoder();
                 rawUsed += stm.Read(rawBuffer, 4, BUFSIZE-4);                
@@ -996,17 +919,10 @@ namespace Sgml {
             if (bom>0){
                 stm.Read(this.rawBuffer, 0, bom);
             }
-            this.rawPos = this.rawUsed = 0;
-            
+            this.rawPos = this.rawUsed = 0;            
         }
 
-        public Encoding Encoding
-        {
-            get
-            {
-                return this.m_encoding;
-            }
-        }
+        public Encoding Encoding => this.m_encoding;
 
         private static Stream CopyToMemoryStream(Stream s)
         {
@@ -1198,7 +1114,7 @@ namespace Sgml {
                     SniffTerminator(">");
                 }
             } 
-            if (decoder == null) {
+            if (decoder is null) {
                 return SniffMeta();
             }
             return null;
@@ -1220,7 +1136,7 @@ namespace Sgml {
                         while (true)
                         {
                             string value = SniffAttribute(out name);
-                            if (name == null)
+                            if (name is null)
                                 break;
 
                             if (StringUtilities.EqualsIgnoreCase(name, "http-equiv"))
@@ -1386,8 +1302,8 @@ namespace Sgml {
         }
 
         public override string ReadToEnd() {
-            char[] buffer = new char[100000]; // large block heap is more efficient
-            int len = 0;
+            char[] buffer = new char[100_000]; // large block heap is more efficient
+            int len;
             StringBuilder sb = new StringBuilder();
             while ((len = Read(buffer, 0, buffer.Length)) > 0) {
                 sb.Append(buffer, 0, len);
@@ -1453,13 +1369,13 @@ namespace Sgml {
             for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
                 code = (UInt32)(((bytes[i + 3]) << 24) | (bytes[i + 2] << 16) | (bytes[i + 1] << 8) | (bytes[i]));
                 if (code > 0x10FFFF) {
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                 } else if (code > 0xFFFF) {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
                 } else {
                     if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                     } else {
                         chars[j] = (char)code;
                     }
@@ -1479,13 +1395,13 @@ namespace Sgml {
             for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
                 code = (UInt32)(((bytes[i]) << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | (bytes[i + 3]));
                 if (code > 0x10FFFF) {
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                 } else if (code > 0xFFFF) {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
                 } else {
                     if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Invalid character 0x{0:x} in encoding", code));
+                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
                     } else {
                         chars[j] = (char)code;
                     }
@@ -1503,7 +1419,7 @@ namespace Sgml {
     public class ElementDecl
     {
         private readonly string m_name;
-        private bool m_startTagOptional;
+        private readonly bool m_startTagOptional;
         private readonly bool m_endTagOptional;
         private readonly ContentModel m_contentModel;
         private readonly string[] m_inclusions;
@@ -1532,48 +1448,24 @@ namespace Sgml {
         /// <summary>
         /// The element name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_name;
-            }
-        }
+        public string Name => m_name;
 
         /// <summary>
         /// The <see cref="Sgml.ContentModel"/> of the element declaration.
         /// </summary>
-        public ContentModel ContentModel
-        {
-            get
-            {
-                return m_contentModel;
-            }
-        }
+        public ContentModel ContentModel => m_contentModel;
 
         /// <summary>
         /// Whether the end tag of the element is optional.
         /// </summary>
         /// <value>true if the end tag of the element is optional, otherwise false.</value>
-        public bool EndTagOptional
-        {
-            get
-            {
-                return m_endTagOptional;
-            }
-        }
+        public bool EndTagOptional => m_endTagOptional;
 
         /// <summary>
         /// Whether the start tag of the element is optional.
         /// </summary>
         /// <value>true if the start tag of the element is optional, otherwise false.</value>
-        public bool StartTagOptional
-        {
-            get
-            {
-                return m_startTagOptional;
-            }
-        }
+        public bool StartTagOptional => m_startTagOptional;
 
         /// <summary>
         /// Finds the attribute definition with the specified name.
@@ -1583,7 +1475,7 @@ namespace Sgml {
         /// <exception cref="InvalidOperationException">If the attribute list has not yet been initialised.</exception>
         public AttDef FindAttribute(string name)
         {
-            if (m_attList == null)
+            if (m_attList is null)
                 throw new InvalidOperationException("The attribute list for the element declaration has not been initialised.");
 
             m_attList.TryGetValue(name.ToUpperInvariant(), out AttDef a);
@@ -1596,10 +1488,10 @@ namespace Sgml {
         /// <param name="list">The list of attribute definitions to add.</param>
         public void AddAttDefs(Dictionary<string, AttDef> list)
         {
-            if (list == null)
-                throw new ArgumentNullException("list");
+            if (list is null)
+                throw new ArgumentNullException(nameof(list));
 
-            if (m_attList == null) 
+            if (m_attList is null) 
             {
                 m_attList = list;
             } 
@@ -1694,24 +1586,12 @@ namespace Sgml {
         /// <summary>
         /// The number of groups on the stack.
         /// </summary>
-        public int CurrentDepth
-        {
-            get
-            {
-                return m_currentDepth;
-            }
-        }
+        public int CurrentDepth => m_currentDepth;
 
         /// <summary>
         /// The allowed child content, specifying if nested children are not allowed and if so, what content is allowed.
         /// </summary>
-        public DeclaredContent DeclaredContent
-        {
-            get
-            {
-                return m_declaredContent;
-            }
-        }
+        public DeclaredContent DeclaredContent => m_declaredContent;
 
         /// <summary>
         /// Begins processing of a nested model group.
@@ -1775,20 +1655,13 @@ namespace Sgml {
         public void SetDeclaredContent(string dc)
         {
             // TODO: Validate that this can never combine with nexted groups?
-            switch (dc)
+            this.m_declaredContent = dc switch
             {
-                case "EMPTY":
-                    this.m_declaredContent = DeclaredContent.EMPTY;
-                    break;
-                case "RCDATA":
-                    this.m_declaredContent = DeclaredContent.RCDATA;
-                    break;
-                case "CDATA":
-                    this.m_declaredContent = DeclaredContent.CDATA;
-                    break;
-                default:
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Declared content type '{0}' is not supported", dc));
-            }
+                "EMPTY" => DeclaredContent.EMPTY,
+                "RCDATA" => DeclaredContent.RCDATA,
+                "CDATA" => DeclaredContent.CDATA,
+                _ => throw new SgmlParseException($"Declared content type '{dc}' is not supported")
+            };
         }
 
         /// <summary>
@@ -1864,7 +1737,7 @@ namespace Sgml {
     public class Group
     {
         private readonly Group m_parent;
-        private List<object> Members;
+        private readonly List<object> Members;
         private GroupType m_groupType;
         private Occurrence m_occurrence;
         private bool Mixed;
@@ -1872,37 +1745,18 @@ namespace Sgml {
         /// <summary>
         /// The <see cref="Occurrence"/> of this group.
         /// </summary>
-        public Occurrence Occurrence
-        {
-            get
-            {
-                return m_occurrence;
-            }
-        }
+        public Occurrence Occurrence => m_occurrence;
 
         /// <summary>
         /// Checks whether the group contains only text.
         /// </summary>
         /// <value>true if the group is of mixed content and has no members, otherwise false.</value>
-        public bool TextOnly
-        {
-            get
-            {
-                return this.Mixed && Members.Count == 0;
-            }
-        }
+        public bool TextOnly => this.Mixed && Members.Count == 0;
 
         /// <summary>
         /// The parent group of this group.
         /// </summary>
-        public Group Parent
-        {
-            get
-            {
-                return m_parent;
-            }
-        }
-
+        public Group Parent => m_parent;
         /// <summary>
         /// Initialises a new Content Model Group.
         /// </summary>
@@ -1952,7 +1806,7 @@ namespace Sgml {
         {
             if (!Mixed && Members.Count == 0) 
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Missing token before connector '{0}'.", c));
+                throw new SgmlParseException($"Missing token before connector '{c}'.");
             }
 
             GroupType gt = GroupType.None;
@@ -1971,7 +1825,7 @@ namespace Sgml {
 
             if (this.m_groupType != GroupType.None && this.m_groupType != gt) 
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Connector '{0}' is inconsistent with {1} group.", c, m_groupType.ToString()));
+                throw new SgmlParseException($"Connector '{c}' is inconsistent with {m_groupType} group.");
             }
 
             m_groupType = gt;
@@ -2011,15 +1865,15 @@ namespace Sgml {
         /// </remarks>
         public bool CanContain(string name, SgmlDtd dtd)
         {
-            if (dtd == null)
-                throw new ArgumentNullException("dtd");
+            if (dtd is null)
+                throw new ArgumentNullException(nameof(dtd));
 
             // Do a simple search of members.
             foreach (object obj in Members) 
             {
-                if (obj is string) 
+                if (obj is string s) 
                 {
-                    if( string.Equals((string)obj, name, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
                         return true;
                 } 
             }
@@ -2027,8 +1881,7 @@ namespace Sgml {
             // that have optional start tags and over child groups.
             foreach (object obj in Members) 
             {
-                string s = obj as string;
-                if (s != null)
+                if (obj as string is string s)
                 {
                     ElementDecl e = dtd.FindElement(s);
                     if (e != null) 
@@ -2193,7 +2046,7 @@ namespace Sgml {
     /// </summary>
     public class AttDef
     {
-        private string m_name;
+        private readonly string m_name;
         private AttributeType m_type;
         private string[] m_enumValues;
         private string m_default;
@@ -2211,51 +2064,27 @@ namespace Sgml {
         /// <summary>
         /// The name of the attribute declared by this attribute definition.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_name;
-            }
-        }
+        public string Name => m_name;
 
         /// <summary>
         /// Gets of sets the default value of the attribute.
         /// </summary>
         public string Default
         {
-            get
-            {
-                return m_default;
-            }
-            set
-            {
-                m_default = value;
-            }
+            get => m_default;
+            set => m_default = value;
         }
 
         /// <summary>
         /// The constraints on the attribute's presence on an element.
         /// </summary>
-        public AttributePresence AttributePresence
-        {
-            get
-            {
-                return m_presence;
-            }
-        }
+        public AttributePresence AttributePresence => m_presence;
 
         /// <summary>
         /// Gets or sets the possible enumerated values for the attribute.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1819", Justification = "Changing this would break backwards compatibility with previous code using this library.")]
-        public string[] EnumValues
-        {
-            get
-            {
-                return m_enumValues;
-            }
-        }
+        public string[] EnumValues => m_enumValues;
 
         /// <summary>
         /// Sets the attribute definition to have an enumerated value.
@@ -2266,7 +2095,7 @@ namespace Sgml {
         public void SetEnumeratedType(string[] enumValues, AttributeType type)
         {
             if (type != AttributeType.ENUMERATION && type != AttributeType.NOTATION)
-                throw new ArgumentException(string.Format(CultureInfo.CurrentUICulture, "AttributeType {0} is not valid for an attribute definition with an enumerated value.", type));
+                throw new ArgumentException($"AttributeType {type} is not valid for an attribute definition with an enumerated value.");
 
             m_enumValues = enumValues;
             m_type = type;
@@ -2275,13 +2104,7 @@ namespace Sgml {
         /// <summary>
         /// The <see cref="AttributeType"/> of the attribute declaration.
         /// </summary>
-        public AttributeType Type
-        {
-            get
-            {
-                return m_type;
-            }
-        }
+        public AttributeType Type => m_type;
 
         /// <summary>
         /// Sets the type of the attribute definition.
@@ -2289,53 +2112,24 @@ namespace Sgml {
         /// <param name="type">The string representation of the attribute type, corresponding to the values in the <see cref="AttributeType"/> enumeration.</param>
         public void SetType(string type)
         {
-            switch (type) 
+            m_type = type switch
             {
-                case "CDATA":
-                    m_type = AttributeType.CDATA;
-                    break;
-                case "ENTITY":
-                    m_type = AttributeType.ENTITY;
-                    break;
-                case "ENTITIES":
-                    m_type = AttributeType.ENTITIES;
-                    break;
-                case "ID":
-                    m_type = AttributeType.ID;
-                    break;
-                case "IDREF":
-                    m_type = AttributeType.IDREF;
-                    break;
-                case "IDREFS":
-                    m_type = AttributeType.IDREFS;
-                    break;
-                case "NAME":
-                    m_type = AttributeType.NAME;
-                    break;
-                case "NAMES":
-                    m_type = AttributeType.NAMES;
-                    break;
-                case "NMTOKEN":
-                    m_type = AttributeType.NMTOKEN;
-                    break;
-                case "NMTOKENS":
-                    m_type = AttributeType.NMTOKENS;
-                    break;
-                case "NUMBER":
-                    m_type = AttributeType.NUMBER;
-                    break;
-                case "NUMBERS":
-                    m_type = AttributeType.NUMBERS;
-                    break;
-                case "NUTOKEN":
-                    m_type = AttributeType.NUTOKEN;
-                    break;
-                case "NUTOKENS":
-                    m_type = AttributeType.NUTOKENS;
-                    break;
-                default:
-                    throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Attribute type '{0}' is not supported", type));
-            }
+                "CDATA" => AttributeType.CDATA,
+                "ENTITY" => AttributeType.ENTITY,
+                "ENTITIES" => AttributeType.ENTITIES,
+                "ID" => AttributeType.ID,
+                "IDREF" => AttributeType.IDREF,
+                "IDREFS" => AttributeType.IDREFS,
+                "NAME" => AttributeType.NAME,
+                "NAMES" => AttributeType.NAMES,
+                "NMTOKEN" => AttributeType.NMTOKEN,
+                "NMTOKENS" => AttributeType.NMTOKENS,
+                "NUMBER" => AttributeType.NUMBER,
+                "NUMBERS" => AttributeType.NUMBERS,
+                "NUTOKEN" => AttributeType.NUTOKEN,
+                "NUTOKENS" => AttributeType.NUTOKENS,
+                _ => throw new SgmlParseException($"Attribute type '{type}' is not supported")
+            };
         }
 
         /// <summary>
@@ -2362,7 +2156,7 @@ namespace Sgml {
             }
             else 
             {
-                throw new SgmlParseException(string.Format(CultureInfo.CurrentUICulture, "Attribute value '{0}' not supported", token));
+                throw new SgmlParseException($"Attribute value '{token}' not supported");
             }
 
             return hasDefault;
@@ -2384,13 +2178,7 @@ namespace Sgml {
             AttDefs.Add(a.Name, a);
         }
 
-        public AttDef this[string name]
-        {
-            get 
-            {
-                return (AttDef)AttDefs[name];
-            }
-        }
+        public AttDef this[string name] => (AttDef)AttDefs[name];
 
         public IEnumerator GetEnumerator()
         {
@@ -2417,6 +2205,7 @@ namespace Sgml {
         /// </summary>
         /// <param name="name">The name of the DTD.</param>
         /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
+        /// <param name="resolver">The resolver to use for loading this entity</param>
         public SgmlDtd(string name, XmlNameTable nt, IEntityResolver resolver)
         {
             this.m_name = name;
@@ -2432,27 +2221,15 @@ namespace Sgml {
         /// </summary>
         public string Name
         {
-            get
-            {
-                return m_name;
-            }
-            set
-            {
-                m_name = value;
-            }
+            get => m_name;
+            set => m_name = value;
         }
 
         /// <summary>
         /// Gets the XmlNameTable associated with this implementation.
         /// </summary>
         /// <value>The XmlNameTable enabling you to get the atomized version of a string within the node.</value>
-        public XmlNameTable NameTable
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public XmlNameTable NameTable => null;
 
         /// <summary>
         /// Parses a DTD and creates a <see cref="SgmlDtd"/> instance that encapsulates the DTD.
@@ -2463,6 +2240,7 @@ namespace Sgml {
         /// <param name="url"></param>
         /// <param name="subset"></param>
         /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
+        /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
         public static SgmlDtd Parse(Uri baseUri, string name, string pubid, string url, string subset, XmlNameTable nt, IEntityResolver resolver)
         {
@@ -2497,6 +2275,7 @@ namespace Sgml {
         /// <param name="input">The reader to load the DTD from.</param>
         /// <param name="subset"></param>
         /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
+        /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "The entities created here are not temporary and should not be disposed here.")]
         public static SgmlDtd Parse(Uri baseUri, string name, TextReader input, string subset, XmlNameTable nt, IEntityResolver resolver)
@@ -2572,7 +2351,7 @@ namespace Sgml {
                 {
                     case Entity.EOF:
                         PopEntity();
-                        if (this.m_current == null)
+                        if (this.m_current is null)
                             return;
                         ch = this.m_current.Lastchar;
                         break;
@@ -2765,7 +2544,7 @@ namespace Sgml {
             }
             string name = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
             ch = this.m_current.SkipWhitespace();
-            Entity e = null;
+            Entity e;
             if (ch == '"' || ch == '\'') 
             {
                 string literal = this.m_current.ScanLiteral(this.m_sb, ch);
@@ -2774,7 +2553,7 @@ namespace Sgml {
             else 
             {
                 string pubid = null;
-                string extid = null;
+                string extid;
                 string tok = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
                 if (Entity.IsLiteralType(tok))
                 {
@@ -2899,7 +2678,7 @@ namespace Sgml {
             }
         }
 
-        static readonly string ngterm = " \r\n\t|,)";
+        const string ngterm = " \r\n\t|,)";
         string[] ParseNameGroup(char ch, bool nmtokens)
         {
             List<string> names = new List<string>();
@@ -2970,7 +2749,7 @@ namespace Sgml {
             }
         }
 
-        static readonly string dcterm = " \r\n\t>";
+        const string dcterm = " \r\n\t>";
         private ContentModel ParseContentModel(char ch)
         {
             ContentModel cm = new ContentModel();
@@ -3000,7 +2779,7 @@ namespace Sgml {
             return cm;
         }
 
-        static readonly string cmterm = " \r\n\t,&|()?+*";
+        const string cmterm = " \r\n\t,&|()?+*";
         void ParseModel(char cmt, ContentModel cm)
         {
             // Called when part of the model is made up of the contents of a parameter entity
@@ -3097,7 +2876,7 @@ namespace Sgml {
             }
         }
 
-        static string peterm = " \t\r\n>";
+        const string peterm = " \t\r\n>";
         void ParseAttList(Dictionary<string, AttDef> list, char term)
         {
             char ch = this.m_current.SkipWhitespace();

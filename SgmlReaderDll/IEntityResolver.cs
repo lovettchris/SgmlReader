@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Sgml
 {
@@ -23,6 +20,9 @@ namespace Sgml
         IEntityContent GetContent(Uri uri);
     }
 
+    /// <summary>
+    /// An interface that represents a loadable XML entity returned from IEntityResolver.
+    /// </summary>
     public interface IEntityContent
     {
         /// <summary>

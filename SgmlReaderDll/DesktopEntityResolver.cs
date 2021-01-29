@@ -1,12 +1,8 @@
-﻿using Sgml;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Sgml
 {
@@ -19,30 +15,11 @@ namespace Sgml
             this.path = path;
         }
 
-        public Encoding Encoding
-        {
-            get
-            {
-                return Encoding.UTF8;
-            }
+        public Encoding Encoding => Encoding.UTF8;
 
-        }
+        public string MimeType => string.Empty;
 
-        public string MimeType
-        {
-            get
-            {
-                return "";
-            }
-        }
-
-        public Uri Redirect
-        {
-            get
-            {
-                return new Uri(path);
-            }
-        }
+        public Uri Redirect => new Uri(path);
 
         public Stream Open()
         {
@@ -58,7 +35,6 @@ namespace Sgml
         {
             this.response = response;
         }
-
 
         public Encoding Encoding
         {
@@ -106,13 +82,7 @@ namespace Sgml
             }
         }
 
-        public Uri Redirect
-        {
-            get
-            {
-                return response.ResponseUri;
-            }
-        }
+        public Uri Redirect => response.ResponseUri;
 
         public Stream Open()
         {
@@ -120,14 +90,23 @@ namespace Sgml
         }
     }
 
+    /// <summary>
+    /// A special implementation for IEntityResolver that uses System.IO to access local files
+    /// and HttpWebRequest for web content.
+    /// </summary>
     public class DesktopEntityResolver : IEntityResolver
     {
-        public DesktopEntityResolver()
-        {
-        }
-
+        /// <summary>
+        /// Get or set the WebProxy to use for web requests.
+        /// </summary>
         public WebProxy Proxy { get; set; }
 
+        /// <summary>
+        /// Open the given Uri.  If the Uri is relative then it could be referring to either a local file or
+        /// an embedded resource.
+        /// </summary>
+        /// <param name="uri">the absolute or relative Uri of the resource to load</param>
+        /// <returns>The stream, or throws exception if the resource is not found</returns>
         public IEntityContent GetContent(Uri uri)
         {
             if (!uri.IsAbsoluteUri)

@@ -83,7 +83,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SgmlReaderDll\SgmlReaderDll.csproj" />
+    <ProjectReference Include="..\SgmlReaderCore\SgmlReaderCore.csproj" />
   </ItemGroup>
 
 </Project>

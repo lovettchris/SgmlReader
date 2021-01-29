@@ -19,22 +19,25 @@ optional. Then you can read from this reader like any other XmlReader class.
 
 ### Sample Usage
 
-    XmlDocument FromHtml(TextReader reader) {
+```c#
+// setup SgmlReader
+Sgml.SgmlReader sgmlReader = new Sgml.SgmlReader()
+{
+    DocType = "HTML",
+    WhitespaceHandling = WhitespaceHandling.All,
+    CaseFolding = Sgml.CaseFolding.ToLower,
+    InputStream = reader
+};
 
-        // setup SgmlReader
-        Sgml.SgmlReader sgmlReader = new Sgml.SgmlReader();
-        sgmlReader.DocType = "HTML";
-        sgmlReader.WhitespaceHandling = WhitespaceHandling.All;
-        sgmlReader.CaseFolding = Sgml.CaseFolding.ToLower;
-        sgmlReader.InputStream = reader;
-
-        // create document
-        XmlDocument doc = new XmlDocument();
-        doc.PreserveWhitespace = true;
-        doc.XmlResolver = null;
-        doc.Load(sgmlReader);
-        return doc;
-    }
+// create document
+XmlDocument doc = new XmlDocument()
+{
+    PreserveWhitespace = true,
+    XmlResolver = null
+};
+doc.Load(sgmlReader);
+return doc;
+```
 
 ### SgmlReader Properties
 
@@ -98,17 +101,35 @@ the default being ".xml".
 
 Converts all .htm files to corresponding .xml files using the built in HTML DTD.
 
-    sgmlreader -html *.htm *.xml
+```c#
+sgmlreader -html *.htm *.xml
+```
 
 Converts all the MSN home page to XML storing the result in the local file
 "msn.xml".
 
-    sgmlreader -html http://www.msn.com -proxy myproxy:80 msn.xml
-
+```c#
+sgmlreader -html http://www.msn.com -proxy myproxy:80 msn.xml
+```
 Converts the given OFX file to XML using the SGML DTD "ofx160.dtd" specified in
 the test.ofx file.
 
-    sgmlreader -dtd ofx160.dtd test.ofx ofx.xml
+```c#
+sgmlreader -dtd ofx160.dtd test.ofx ofx.xml
+```
+
+## UWP
+
+SgmlReaderUniversal provides a custom EntityResolver named `UniversalEntityResolver` which allows resolving resources using the 
+UWP `Windows.Storage` API's.  You will need to provide this resolver
+by setting the Resolver property on the SgmlReader.
+
+```c#
+// setup SgmlReader
+Sgml.SgmlReader sgmlReader = new Sgml.SgmlReader() {
+    Resolver = new UniversalEntityResolver()
+}
+```
 
 ## Community
 
@@ -130,13 +151,6 @@ existing code.
 Please make sure all tests pass and new tests are added for areas you work on.
 See [nunit](https://nunit.org).  If you have Visual Studio, just open the
 Test Explorer and click Run All.
-
-## Mono
-
-This project supports Mono builds using xbuild.  Just run xbuild SgmlReader.sln
-to build the solution and the following to run the tests:
-
-mono ./packages/NUnit.ConsoleRunner.3.4.1/tools/nunit3-console.exe ./SgmlTests/bin/Debug/SgmlTests.dll
 
 ## Release History
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly

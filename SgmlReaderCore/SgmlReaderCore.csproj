@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Common/version.props" />
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <LangVersion>8</LangVersion>
+    <DocumentationFile>SgmlReaderCore.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Html.dtd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SgmlReaderDll\EmbeddedResourceEntityContent.cs" Link="EmbeddedResourceEntityContent.cs" />
+    <Compile Include="..\SgmlReaderDll\IEntityResolver.cs" Link="IEntityResolver.cs" />
+    <Compile Include="..\SgmlReaderDll\SgmlParser.cs" Link="SgmlParser.cs" />
+    <Compile Include="..\SgmlReaderDll\SgmlReader.cs" Link="SgmlReader.cs" />
+    <Compile Include="..\SgmlReaderDll\DesktopEntityResolver.cs" Link="DesktopEntityResolver.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Html.dtd" />
+  </ItemGroup>
+
+</Project>

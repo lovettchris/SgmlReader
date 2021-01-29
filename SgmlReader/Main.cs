@@ -146,17 +146,12 @@ namespace Sgml {
             }
 
 
-            if (this.encoding == null) {
-                this.encoding = reader.GetEncoding();
-            }
+            this.encoding ??= reader.GetEncoding();
 
-            XmlTextWriter w = null;
-            if (output != null) {
-                w = new XmlTextWriter(output, this.encoding);          
-            } 
-            else {
-                w = new XmlTextWriter(Console.Out);
-            }
+            XmlTextWriter w = output != null
+                ? new XmlTextWriter(output, this.encoding)
+                : new XmlTextWriter(Console.Out);
+
             if (formatted) w.Formatting = Formatting.Indented;
             if (!noxmldecl) {
                 w.WriteStartDocument();

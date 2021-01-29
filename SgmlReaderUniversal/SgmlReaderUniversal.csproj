@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\SgmlReaderUniversal.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,6 +36,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\SgmlReaderUniversal.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -120,18 +122,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\SgmlReaderDll\EmbeddedResourceEntityContent.cs">
-      <Link>EmbeddedResourceEntityContent.cs</Link>
-    </Compile>
-    <Compile Include="..\SgmlReaderDll\IEntityResolver.cs">
-      <Link>IEntityResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\SgmlReaderDll\SgmlParser.cs">
-      <Link>SgmlParser.cs</Link>
-    </Compile>
-    <Compile Include="..\SgmlReaderDll\SgmlReader.cs">
-      <Link>SgmlReader.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UniversalEntityResolver.cs" />
     <EmbeddedResource Include="Properties\SgmlReaderUniversal.rd.xml" />
@@ -142,9 +132,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\SgmlReaderDll\Html.dtd">
-      <Link>Html.dtd</Link>
-    </None>
+    <ProjectReference Include="..\SgmlReaderCore\SgmlReaderCore.csproj">
+      <Project>{8572b8dd-b915-44de-8b61-0ab3772f9c55}</Project>
+      <Name>SgmlReaderCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
