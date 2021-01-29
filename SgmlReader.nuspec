@@ -2,11 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Microsoft.Xml.SgmlReader</id>
-    <version>1.8.16.0</version>
+    <version>1.8.18.0</version>
     <title>Microsoft.Xml.SgmlReader</title>
     <authors>Chris Lovett, Steve Bjorg</authors>
     <owners>Chris Lovett</owners>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/lovettchris/SgmlReader</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>
@@ -16,7 +16,7 @@
       SgmlReader is a .NET library that is handy for converting SGML into well formed XML.
     </summary>
     <releaseNotes>https://github.com/lovettchris/SgmlReader/blob/master/README.md</releaseNotes>
-    <copyright>Copyright © 2002-2020, Microsoft Corporation; Copyright © 2007-2013, MindTouch</copyright>
+    <copyright>Copyright © 2002-2021, Microsoft Corporation; Copyright © 2007-2013, MindTouch</copyright>
     <language>en-US</language>
     <references>
     </references>
@@ -29,6 +29,7 @@
       <group targetFramework=".NETFramework4.7" />
       <group targetFramework=".NETFramework4.8" />
       <group targetFramework=".NETCoreApp3.1" />
+      <group targetFramework=".NET5.0" />
       <group targetFramework="UAP0.0" />
     </dependencies>
   </metadata>
@@ -44,6 +45,9 @@
     
     <file src="SgmlReader\bin\Release\net48\SgmlReaderDll.dll" target="lib\net48\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net48\SgmlReader.exe" target="lib\net48\SgmlReader.exe" />
+
+    <file src="SgmlReader\bin\Release\net48\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.dll" />
+    <file src="SgmlReader\bin\Release\net48\SgmlReader.exe" target="lib\net5.0\SgmlReader.exe" />
 
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.dll" target="lib\netcoreapp3.1\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReader.exe" target="lib\netcoreapp3.1\SgmlReader.exe" />

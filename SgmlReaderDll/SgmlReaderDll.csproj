@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Common/version.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47;net48;netstandard2.0;netstandard2.1;</TargetFrameworks>
+    <TargetFrameworks>net45;net46;net47;net48;net5.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MYKEYFILE)</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <Version>1.8.18</Version>
+    <AssemblyVersion>1.8.18</AssemblyVersion>
+    <FileVersion>1.8.18</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

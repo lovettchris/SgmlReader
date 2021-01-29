@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft Corporation")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright (c) 2002-2020, Microsoft Corporation; Copyright (c) 2007-2013, MindTouch")]
+[assembly: AssemblyCopyright("Copyright (c) 2002-2021, Microsoft Corporation; Copyright (c) 2007-2013, MindTouch")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
@@ -23,6 +23,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.8.15")]
-[assembly: AssemblyFileVersion("1.8.15")]
+[assembly: AssemblyVersion("1.8.18")]
+[assembly: AssemblyFileVersion("1.8.18")]
 [assembly: ComVisible(false)]
