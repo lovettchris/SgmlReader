@@ -2168,22 +2168,22 @@ namespace Sgml
                 // TODO (steveb): don't lookup amp, gt, lt, quote
                 switch(name) {
                 case "amp":
-                    sb.Append("&");
+                    sb.Append('&');
                     if(ch != terminator && ch != '&' && ch != Entity.EOF)
                         ch = this.m_current.ReadChar();
                     return;
                 case "lt":
-                    sb.Append("<");
+                    sb.Append('<');
                     if(ch != terminator && ch != '&' && ch != Entity.EOF)
                         ch = this.m_current.ReadChar();
                     return;
                 case "gt":
-                    sb.Append(">");
+                    sb.Append('>');
                     if(ch != terminator && ch != '&' && ch != Entity.EOF)
                         ch = this.m_current.ReadChar();
                     return;
                 case "quot":
-                    sb.Append("\"");
+                    sb.Append('"');
                     if(ch != terminator && ch != '&' && ch != Entity.EOF)
                         ch = this.m_current.ReadChar();
                     return;
@@ -2223,7 +2223,7 @@ namespace Sgml
                 }
                 // Entity is not defined, so just keep it in with the rest of the
                 // text.
-                sb.Append("&");
+                sb.Append('&');
                 sb.Append(name);
                 if(ch != terminator && ch != '&' && ch != Entity.EOF)
                 {
