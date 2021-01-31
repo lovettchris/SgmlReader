@@ -312,6 +312,7 @@ namespace SGMLTests {
             Test("56.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
+        [Test]
         public void Read_html_with_invalid_entity_reference_57()
         {
             Test("57.test", XmlRender.Passthrough, CaseFolding.None, null, true);
@@ -380,12 +381,13 @@ namespace SGMLTests {
         [Test]
         public void Test_fragment_parsing()
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.ConformanceLevel = ConformanceLevel.Fragment;
-            StringReader stream = new StringReader("<html><head></head><body></body></html> <script></script>");
+            var settings = new XmlReaderSettings {
+                ConformanceLevel = ConformanceLevel.Fragment
+            };
+            var stream = new StringReader("<html><head></head><body></body></html> <script></script>");
 
             int count = 0;
-            SgmlReader reader = new SgmlReader(settings);
+            var reader = new SgmlReader(settings);
             reader.DocType = "html";
             reader.InputStream = stream;
             while (reader.Read())
