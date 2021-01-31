@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47;net48;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <Version>1.8.19</Version>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
@@ -83,7 +83,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SgmlReader\SgmlReader.csproj" />
+    <ProjectReference Include="..\SgmlReaderCore\SgmlReaderCore.csproj" />
   </ItemGroup>
 
 </Project>
