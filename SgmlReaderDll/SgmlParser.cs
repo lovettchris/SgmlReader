@@ -438,10 +438,12 @@ namespace Sgml {
 
             while (ch != Entity.EOF && term.IndexOf(ch) < 0)
             {
-                if (!nmtoken || ch is '_' or '.' or '-' or ':' || char.IsLetterOrDigit(ch)) {
+                if (!nmtoken || ch is '_' or '.' or '-' or ':' || char.IsLetterOrDigit(ch)) 
+                {
                     sb.Append(ch);
                 } 
-                else {
+                else
+                {
                     throw new SgmlParseException($"Invalid name character '{ch}'");
                 }
                 ch = ReadChar();
@@ -780,14 +782,10 @@ namespace Sgml {
             StringBuilder sb = new StringBuilder();
             while (p != null)
             {
-                string msg;
-                if (p.m_isInternal)
-                {
-                    msg = string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of internal entity '{2}'", p.m_line, p.LinePosition, p.m_name);
-                } 
-                else {
-                    msg = string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of '{2}' entity at [{3}]", p.m_line, p.LinePosition, p.m_name, p.ResolvedUri.AbsolutePath);
-                }
+                string msg = p.m_isInternal
+                    ? string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of internal entity '{2}'", p.m_line, p.LinePosition, p.m_name)
+                    : string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of '{2}' entity at [{3}]", p.m_line, p.LinePosition, p.m_name, p.ResolvedUri.AbsolutePath);
+                
                 sb.Append(msg);
                 p = p.Parent;
             }
@@ -903,8 +901,9 @@ namespace Sgml {
                 DecodeBlock();
                 // Now sniff to see if there is an XML declaration or HTML <META> tag.
                 Decoder sd = SniffEncoding();
-                if (sd != null) {
-                    this.m_decoder = sd;
+                if (sd != null)
+                {
+                    m_decoder = sd;
                 }
             }            
 
@@ -934,30 +933,38 @@ namespace Sgml {
             return r;
         }
 
-        internal void DecodeBlock() {
+        internal void DecodeBlock() 
+        {
             // shift current chars to beginning.
-            if (pos > 0) {
-                if (pos < used) {
-                    System.Array.Copy(m_buffer, pos, m_buffer, 0, used - pos);
+            if (pos > 0)
+            {
+                if (pos < used) 
+                {
+                    Array.Copy(m_buffer, pos, m_buffer, 0, used - pos);
                 }
                 used -= pos;
                 pos = 0;
             }
             int len = m_decoder.GetCharCount(rawBuffer, rawPos, rawUsed - rawPos);
             int available = m_buffer.Length - used;
-            if (available < len) {
+            if (available < len)
+            {
                 char[] newbuf = new char[m_buffer.Length + len];
-                System.Array.Copy(m_buffer, pos, newbuf, 0, used - pos);
+                Array.Copy(m_buffer, pos, newbuf, 0, used - pos);
                 m_buffer = newbuf;
             }
             used = pos + m_decoder.GetChars(rawBuffer, rawPos, rawUsed - rawPos, m_buffer, pos);
             rawPos = rawUsed; // consumed the whole buffer!
         }
-        internal static Decoder AutoDetectEncoding(byte[] buffer, ref int index, int length) {
-            if (4 <= (length - index)) {
+
+        internal static Decoder AutoDetectEncoding(byte[] buffer, ref int index, int length) 
+        {
+            if (4 <= (length - index))
+            {
                 uint w = (uint)buffer[index + 0] << 24 | (uint)buffer[index + 1] << 16 | (uint)buffer[index + 2] << 8 | (uint)buffer[index + 3];
                 // see if it's a 4-byte encoding
-                switch (w) {
+                switch (w)
+                {
                     case 0xfefffeff: 
                         index += 4; 
                         return new Ucs4DecoderBigEngian();
@@ -973,12 +980,14 @@ namespace Sgml {
                         goto case 0xfffefffe;
                 }
                 w >>= 8;
-                if (w == 0xefbbbf) {
+                if (w == 0xefbbbf) 
+                {
                     index += 3;
                     return Encoding.UTF8.GetDecoder();
                 }
                 w >>= 8;
-                switch (w) {
+                switch (w) 
+                {
                     case 0xfeff: 
                         index += 2; 
                         return UnicodeEncoding.BigEndianUnicode.GetDecoder();
@@ -996,25 +1005,33 @@ namespace Sgml {
             }
             return null;
         }
-        private int ReadChar() {
+
+        private int ReadChar() 
+        {
             // Read only up to end of current buffer then stop.
             if (pos < used) return m_buffer[pos++];
             return EOF;
         }
-        private int PeekChar() {
+
+        private int PeekChar()
+        {
             int ch = ReadChar();
-            if (ch != EOF) {
+            if (ch != EOF) 
+            {
                 pos--;
             }
             return ch;
         }
-        private bool SniffPattern(string pattern) {
+        private bool SniffPattern(string pattern)
+        {
             int ch = PeekChar();
             if (ch != pattern[0]) return false;
-            for (int i = 0, n = pattern.Length; ch != EOF && i < n; i++) {
+            for (int i = 0, n = pattern.Length; ch != EOF && i < n; i++) 
+            {
                 ch = ReadChar();
                 char m = pattern[i];
-                if (ch != m) {
+                if (ch != m) 
+                {
                     return false;
                 }
             }
@@ -1023,7 +1040,8 @@ namespace Sgml {
         private void SniffWhitespace() 
         {
             char ch = (char)PeekChar();
-            while (ch is ' ' or '\t' or '\r' or '\n') {
+            while (ch is ' ' or '\t' or '\r' or '\n')
+            {
                 int i = pos;
                 ch = (char)ReadChar();
                 if (ch != ' ' && ch != '\t' && ch != '\r' && ch != '\n')
@@ -1039,46 +1057,59 @@ namespace Sgml {
                 ReadChar();// consume quote char
                 int i = this.pos;
                 int ch = ReadChar();
-                while (ch != EOF && ch != quoteChar) {
+                while (ch != EOF && ch != quoteChar)
+                {
                     ch = ReadChar();
                 }
                 return (pos>i) ? new string(m_buffer, i, pos - i - 1) : "";
             }
             return null;
         }
-        private string SniffAttribute(string name) {
+
+        private string SniffAttribute(string name) 
+        {
             SniffWhitespace();
             string id = SniffName();
-            if (string.Equals(name, id, StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(name, id, StringComparison.OrdinalIgnoreCase))
+            {
                 SniffWhitespace();
-                if (SniffPattern("=")) {
+                if (SniffPattern("=")) 
+                {
                     SniffWhitespace();
                     return SniffLiteral();
                 }
             }
             return null;
         }
-        private string SniffAttribute(out string name) {
+        private string SniffAttribute(out string name) 
+        {
             SniffWhitespace();
             name = SniffName();
-            if (name != null){
+            if (name != null)
+            {
                 SniffWhitespace();
-                if (SniffPattern("=")) {
+                if (SniffPattern("=")) 
+                {
                     SniffWhitespace();
                     return SniffLiteral();
                 }
             }
             return null;
         }
-        private void SniffTerminator(string term) {
+        private void SniffTerminator(string term) 
+        {
             int ch = ReadChar();
             int i = 0;
             int n = term.Length;
-            while (i < n && ch != EOF) {
-                if (term[i] == ch) {
+            while (i < n && ch != EOF) 
+            {
+                if (term[i] == ch)
+                {
                     i++;
                     if (i == n) break;
-                } else {
+                } 
+                else 
+                {
                     i = 0; // reset.
                 }
                 ch = ReadChar();
@@ -1113,7 +1144,8 @@ namespace Sgml {
                     SniffTerminator(">");
                 }
             } 
-            if (decoder is null) {
+            if (decoder is null) 
+            {
                 return SniffMeta();
             }
             return null;
@@ -1215,12 +1247,14 @@ namespace Sgml {
             {
                 pos++;
                 SkipWhitespace();
-                if (pos < used) {
+                if (pos < used) 
+                {
                     char quote = m_buffer[pos];
                     pos++;
                     int start = pos;
                     SkipTo(quote);
-                    if (pos < used) {
+                    if (pos < used) 
+                    {
                         string result = new string(m_buffer, start, pos - start);
                         pos++;
                         return result;
@@ -1229,9 +1263,12 @@ namespace Sgml {
             }
             return null;
         }
-        public override int Peek() {
+
+        public override int Peek() 
+        {
             int result = Read();
-            if (result != EOF) {
+            if (result != EOF)
+            {
                 pos--;
             }
             return result;
@@ -1249,14 +1286,17 @@ namespace Sgml {
             return -1;
         }
 
-        public override int Read(char[] buffer, int start, int length) {
-            if (pos == used) {
+        public override int Read(char[] buffer, int start, int length) 
+        {
+            if (pos == used) 
+            {
                 rawUsed = stm.Read(rawBuffer, 0, rawBuffer.Length);
                 rawPos = 0;
                 if (rawUsed == 0) return -1;
                 DecodeBlock();
             }
-            if (pos < used) {
+            if (pos < used) 
+            {
                 length = Math.Min(used - pos, length);
                 Array.Copy(this.m_buffer, pos, buffer, start, length);
                 pos += length;
@@ -1275,20 +1315,25 @@ namespace Sgml {
         {
             int i = 0;
             int ch = ReadChar();
-            while (ch != EOF) {
+            while (ch != EOF)
+            {
                 buffer[i+start] = (char)ch;
                 i++;
                 if (i+start == length) 
                     break; // buffer is full
 
-                if (ch == '\r' ) {
-                    if (PeekChar() == '\n') {
+                if (ch == '\r') 
+                {
+                    if (PeekChar() == '\n') 
+                    {
                         ch = ReadChar();
                         buffer[i + start] = (char)ch;
                         i++;
                     }
                     break;
-                } else if (ch == '\n') {
+                } 
+                else if (ch == '\n') 
+                {
                     break;
                 }
                 ch = ReadChar();
@@ -1296,11 +1341,13 @@ namespace Sgml {
             return i;
         }
 
-        public override string ReadToEnd() {
+        public override string ReadToEnd()
+        {
             char[] buffer = new char[100_000]; // large block heap is more efficient
             int len;
-            StringBuilder sb = new StringBuilder();
-            while ((len = Read(buffer, 0, buffer.Length)) > 0) {
+            var sb = new StringBuilder();
+            while ((len = Read(buffer, 0, buffer.Length)) > 0) 
+            {
                 sb.Append(buffer, 0, len);
             }
             return sb.ToString();
@@ -1316,15 +1363,20 @@ namespace Sgml {
     internal abstract class Ucs4Decoder : Decoder {
         internal byte[] temp = new byte[4];
         internal int tempBytes = 0;
-        public override int GetCharCount(byte[] bytes, int index, int count) {
+        public override int GetCharCount(byte[] bytes, int index, int count) 
+        {
             return (count + tempBytes) / 4;
         }
         internal abstract int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex);
-        public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) {
+
+        public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
+        {
             int i = tempBytes;
 
-            if (tempBytes > 0) {
-                for (; i < 4; i++) {
+            if (tempBytes > 0)
+            {
+                for (; i < 4; i++) 
+                {
                     temp[i] = bytes[byteIndex];
                     byteIndex++;
                     byteCount--;
@@ -1342,13 +1394,16 @@ namespace Sgml {
             tempBytes = 0;
 
             if (byteIndex >= 0)
-                for (; byteIndex < byteCount; byteIndex++) {
+                for (; byteIndex < byteCount; byteIndex++)
+                {
                     temp[tempBytes] = bytes[byteIndex];
                     tempBytes++;
                 }
             return i;
         }
-        internal static char UnicodeToUTF16(UInt32 code) {
+
+        internal static char UnicodeToUTF16(UInt32 code) 
+        {
             byte lowerByte, higherByte;
             lowerByte = (byte)(0xD7C0 + (code >> 10));
             higherByte = (byte)(0xDC00 | code & 0x3ff);
@@ -1356,24 +1411,32 @@ namespace Sgml {
         }
     }
 
-    internal class Ucs4DecoderBigEngian : Ucs4Decoder {
-        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) {
+    internal class Ucs4DecoderBigEngian : Ucs4Decoder 
+    {
+        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) 
+        {
             UInt32 code;
             int i, j;
             byteCount += byteIndex;
-            for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
+            for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) 
+            {
                 code = (UInt32)(((bytes[i + 3]) << 24) | (bytes[i + 2] << 16) | (bytes[i + 1] << 8) | (bytes[i]));
-                if (code > 0x10FFFF) {
+                if (code > 0x10FFFF) 
+                {
                     throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                } else if (code > 0xFFFF) {
+                } 
+                else if (code > 0xFFFF) 
+                {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
-                } else {
-                    if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                    } else {
-                        chars[j] = (char)code;
-                    }
+                } 
+                else if (code >= 0xD800 && code <= 0xDFFF) 
+                {
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
+                }
+                else
+                {                   
+                    chars[j] = (char)code;                    
                 }
                 j++;
                 i += 4;
@@ -1382,25 +1445,33 @@ namespace Sgml {
         }
     }
 
-    internal class Ucs4DecoderLittleEndian : Ucs4Decoder {
-        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) {
+    internal class Ucs4DecoderLittleEndian : Ucs4Decoder
+    {
+        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) 
+        {
             UInt32 code;
             int i, j;
             byteCount += byteIndex;
-            for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
+            for (i = byteIndex, j = charIndex; i + 3 < byteCount; )
+            {
                 code = (UInt32)(((bytes[i]) << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | (bytes[i + 3]));
-                if (code > 0x10FFFF) {
+                if (code > 0x10FFFF) 
+                {
                     throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                } else if (code > 0xFFFF) {
+                } 
+                else if (code > 0xFFFF) 
+                {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
-                } else {
-                    if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                    } else {
-                        chars[j] = (char)code;
-                    }
-                }
+                } 
+                else if (code >= 0xD800 && code <= 0xDFFF) 
+                {
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
+                } 
+                else 
+                {
+                    chars[j] = (char)code;
+                }                
                 j++;
                 i += 4;
             }
@@ -2584,7 +2655,8 @@ namespace Sgml {
             ch = char.ToUpperInvariant(this.m_current.SkipWhitespace());
             bool sto = false;
             bool eto = false;
-            if (ch is 'O' or '-') {
+            if (ch is 'O' or '-')
+            {
                 sto = (ch == 'O'); // start tag optional?   
                 this.m_current.ReadChar();
                 ch = char.ToUpperInvariant(this.m_current.SkipWhitespace());
@@ -2983,7 +3055,8 @@ namespace Sgml {
 
     internal static class StringUtilities
     {
-        public static bool EqualsIgnoreCase(string a, string b){
+        public static bool EqualsIgnoreCase(string a, string b)
+        {
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }
     }

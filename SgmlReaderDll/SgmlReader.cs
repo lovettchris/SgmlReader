@@ -205,7 +205,8 @@ namespace Sgml
         /// Attribute objects are reused during parsing to reduce memory allocations, 
         /// hence the Reset method. 
         /// </summary>
-        public void Reset(string name, XmlNodeType nt, string value) {           
+        public void Reset(string name, XmlNodeType nt, string value) 
+        {           
             this.Value = value;
             this.Name = name;
             this.NodeType = nt;
@@ -216,7 +217,8 @@ namespace Sgml
             this.DtdType = null;
         }
 
-        public Attribute AddAttribute(string name, string value, char quotechar, bool caseInsensitive) {
+        public Attribute AddAttribute(string name, string value, char quotechar, bool caseInsensitive) 
+        {
             Attribute a;
             // check for duplicates!
             for (int i = 0, n = this.attributes.Count; i < n; i++) {
@@ -259,7 +261,8 @@ namespace Sgml
 
         public int AttributeCount => this.attributes.Count;
 
-        public int GetAttribute(string name) {
+        public int GetAttribute(string name) 
+        {
             for (int i = 0, n = this.attributes.Count; i < n; i++) {
                 Attribute a = this.attributes[i];
                 if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)) {
@@ -269,7 +272,8 @@ namespace Sgml
             return -1;
         }
 
-        public Attribute GetAttribute(int i) {
+        public Attribute GetAttribute(int i) 
+        {
             if (i>=0 && i<this.attributes.Count) {
                 Attribute a = this.attributes[i];
                 return a;
@@ -870,9 +874,12 @@ namespace Sgml
                 if (result != null)
                 {
                     int colon = result.IndexOf(':');
-                    if(colon != -1) {
+                    if(colon != -1)
+                    {
                         result = result.Substring(0, colon);
-                    } else {
+                    } 
+                    else 
+                    {
                         result = string.Empty;
                     }
                 }
