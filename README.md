@@ -156,6 +156,11 @@ Test Explorer and click Run All.
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
 redirection to account for newer versions when recompilation is not an option.
 
+### Release notes for 1.8.19 (2021-Jan-29)
+
+* Add direct support for .NET 5.0 version of SgmlReader.
+* Fix automated security alert in unit test project by updating log4net version.
+
 ### Release notes for 1.8.16 (2020-July-24)
 
 Thanks to [Jason Nelson](https://github.com/iamcarbon) for the following code cleanups:

@@ -39,6 +39,10 @@ namespace Sgml {
             return;
         }
 
+        /// <summary>
+        /// Run the SgmlReader command line tool with the given command line arguments.
+        /// </summary>
+        /// <param name="args"></param>
         public void Run(string[] args) {
             SgmlReader reader = new SgmlReader();
             string inputUri = null;
