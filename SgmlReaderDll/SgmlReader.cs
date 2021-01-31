@@ -411,7 +411,7 @@ namespace Sgml
             {
                 if (string.IsNullOrEmpty(this.m_syslit)
                      // no need to hit the w3.org servers in this case
-                     || this.m_syslit == "http://www.w3.org/TR/html4/loose.dtd")
+                     || m_syslit is "http://www.w3.org/TR/html4/loose.dtd")
                 {
                     if (this.m_docType != null && StringUtilities.EqualsIgnoreCase(this.m_docType, "html"))
                     {
@@ -722,7 +722,7 @@ namespace Sgml
                 {
                     return XmlNodeType.Text;
                 }
-                else if (this.m_state == State.EndTag || this.m_state == State.AutoClose)
+                else if (this.m_state is State.EndTag or State.AutoClose)
                 {
                     return XmlNodeType.EndElement;
                 }
@@ -826,7 +826,7 @@ namespace Sgml
                     return string.Empty;
                 default: {
                         string value;
-                        if((NodeType == XmlNodeType.Attribute) || (NodeType == XmlNodeType.Element)) {
+                        if((NodeType is XmlNodeType.Attribute or XmlNodeType.Element)) {
 
                             // check if a 'xmlns:prefix' attribute is defined
                             string key = "xmlns:" + prefix;
@@ -887,12 +887,12 @@ namespace Sgml
         { 
             get
             {
-                if (this.m_state == State.Attr || this.m_state == State.AttrValue)
+                if (m_state is State.Attr or State.AttrValue)
                 {
                     return true;
                 }
 
-                return (this.m_node.Value != null);
+                return (m_node.Value is not null);
             }
         }
 
@@ -903,12 +903,12 @@ namespace Sgml
         {
             get
             {
-                if (this.m_state == State.Attr || this.m_state == State.AttrValue)
+                if (m_state is State.Attr or State.AttrValue)
                 {
-                    return this.m_a.Value;
+                    return m_a.Value;
                 }
 
-                return this.m_node.Value;
+                return m_node.Value;
             }
         }
 
@@ -946,7 +946,7 @@ namespace Sgml
         {
             get
             {
-                if (this.m_state == State.Markup || this.m_state == State.Attr || this.m_state == State.AttrValue)
+                if (m_state is State.Markup or State.Attr or State.AttrValue)
                 {
                     return this.m_node.IsEmpty;
                 }
@@ -966,10 +966,9 @@ namespace Sgml
         {
             get
             {
-                if (this.m_state == State.Attr || this.m_state == State.AttrValue)
-                    return this.m_a.IsDefault;
-
-                return false;
+                return (m_state is State.Attr or State.AttrValue)
+                    ? m_a.IsDefault
+                    : false;
             }
         }
 
@@ -1048,11 +1047,11 @@ namespace Sgml
         {
             get
             {
-                if (this.m_state == State.Attr || this.m_state == State.AttrValue)
+                if (m_state is State.Attr or State.AttrValue)
                     //For compatibility with mono
-                    return this.m_node.AttributeCount;
-                else if (this.m_node.NodeType == XmlNodeType.Element || this.m_node.NodeType == XmlNodeType.DocumentType)
-                    return this.m_node.AttributeCount;
+                    return m_node.AttributeCount;
+                else if (m_node.NodeType is XmlNodeType.Element or XmlNodeType.DocumentType)
+                    return m_node.AttributeCount;
                 else
                     return 0;
             }
@@ -1224,14 +1223,14 @@ namespace Sgml
         /// </returns>
         public override bool MoveToElement()
         {
-            if (this.m_state == State.Attr || this.m_state == State.AttrValue)
+            if (m_state is State.Attr or State.AttrValue)
             {
-                this.m_state = this.m_node.CurrentState;
-                this.m_a = null;
+                m_state = m_node.CurrentState;
+                m_a = null;
                 return true;
             }
             else
-                return (this.m_node.NodeType == XmlNodeType.Element);
+                return m_node.NodeType == XmlNodeType.Element;
         }
 
         /// <summary>
@@ -1400,9 +1399,7 @@ namespace Sgml
                     return true;
                 }
             }
-            if (!m_foundRoot && (this.NodeType == XmlNodeType.Element ||
-                    this.NodeType == XmlNodeType.Text ||
-                    this.NodeType == XmlNodeType.CDATA))
+            if (!m_foundRoot && (this.NodeType is XmlNodeType.Element or XmlNodeType.Text or XmlNodeType.CDATA))
             {
                 m_foundRoot = true;
                 if (this.IsHtml && (this.NodeType != XmlNodeType.Element ||
@@ -1608,17 +1605,15 @@ namespace Sgml
 
                 string aname = ScanName(SgmlReader.aterm);
                 ch = this.m_current.SkipWhitespace();
-                if (string.Equals(aname, ",", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(aname, "=", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(aname, ":", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(aname, ";", StringComparison.OrdinalIgnoreCase))
+
+                if (aname.Length == 1 && aname[0] is ',' or '=' or ':' or ';')
                 {
                     continue;
                 }
 
                 string value = null;
                 char quote = '\0';
-                if (ch == '=' || ch == '"' || ch == '\'')
+                if (ch is '=' or '"' or '\'')
                 {
                     if (ch == '=' )
                     {
@@ -1626,7 +1621,7 @@ namespace Sgml
                         ch = this.m_current.SkipWhitespace();
                     }
 
-                    if (ch == '\'' || ch == '\"')
+                    if (ch is '\'' or '\"')
                     {
                         quote = ch;
                         value = ScanLiteral(this.m_sb, ch);
@@ -1816,7 +1811,7 @@ namespace Sgml
                     if (string.Equals(token, "PUBLIC", StringComparison.OrdinalIgnoreCase))
                     {
                         ch = this.m_current.SkipWhitespace();
-                        if (ch == '\"' || ch == '\'')
+                        if (ch is '\"' or '\'')
                         {
                             pubid = this.m_current.ScanLiteral(this.m_sb, ch);
                             this.m_node.AddAttribute(token, pubid, ch, this.m_folding == CaseFolding.None);
@@ -1828,7 +1823,7 @@ namespace Sgml
                         this.m_current.ScanToEnd(null, "DOCTYPE", ">");
                     }
                     ch = this.m_current.SkipWhitespace();
-                    if (ch == '\"' || ch == '\'')
+                    if (ch is '\"' or '\'')
                     {
                         token = "SYSTEM";
                         syslit = this.m_current.ScanLiteral(this.m_sb, ch);
@@ -1912,7 +1907,7 @@ namespace Sgml
                 if (ch == '<')
                 {
                     ch = this.m_current.ReadChar();
-                    if (ch == '/' || ch == '!' || ch == '?' || char.IsLetter(ch))
+                    if (ch is '/' or '!' or '?' || char.IsLetter(ch))
                     {
                         // Hit a tag, so return XmlNodeType.Text token
                         // and remember we partially started a new tag.
@@ -2158,7 +2153,7 @@ namespace Sgml
             {
                 this.m_name.Length = 0;
                 while (ch != Entity.EOF &&
-                    (char.IsLetter(ch) || ch == '_' || ch == '-') || ((this.m_name.Length > 0) && char.IsDigit(ch)))
+                    (char.IsLetter(ch) || ch is '_' or '-') || ((this.m_name.Length > 0) && char.IsDigit(ch)))
                 {
                     this.m_name.Append(ch);
                     ch = this.m_current.ReadChar();

@@ -306,7 +306,7 @@ namespace Sgml {
                 this.m_lineStart = this.m_absolutePos + 1;
                 this.m_line++;
             } 
-            else if (ch == ' ' || ch == '\t')
+            else if (ch is ' ' or '\t')
             {
                 m_isWhitespace = true;
                 if (m_lastchar == 0xd)
@@ -407,7 +407,7 @@ namespace Sgml {
         public char SkipWhitespace()
         {
             char ch = m_lastchar;
-            while (ch != Entity.EOF && (ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t'))
+            while (ch != Entity.EOF && (ch is ' ' or '\r' or '\n' or '\t'))
             {
                 ch = ReadChar();
             }
@@ -438,7 +438,7 @@ namespace Sgml {
 
             while (ch != Entity.EOF && term.IndexOf(ch) < 0)
             {
-                if (!nmtoken || ch == '_' || ch == '.' || ch == '-' || ch == ':' || char.IsLetterOrDigit(ch)) {
+                if (!nmtoken || ch is '_' or '.' or '-' or ':' || char.IsLetterOrDigit(ch)) {
                     sb.Append(ch);
                 } 
                 else {
@@ -1020,9 +1020,10 @@ namespace Sgml {
             }
             return true;
         }
-        private void SniffWhitespace() {
+        private void SniffWhitespace() 
+        {
             char ch = (char)PeekChar();
-            while (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') {
+            while (ch is ' ' or '\t' or '\r' or '\n') {
                 int i = pos;
                 ch = (char)ReadChar();
                 if (ch != ' ' && ch != '\t' && ch != '\r' && ch != '\n')
@@ -1030,9 +1031,11 @@ namespace Sgml {
             }
         }
 
-        private string SniffLiteral() {
+        private string SniffLiteral() 
+        {
             int quoteChar = PeekChar();
-            if (quoteChar == '\'' || quoteChar == '"') {
+            if (quoteChar is '\'' or '"') 
+            {
                 ReadChar();// consume quote char
                 int i = this.pos;
                 int ch = ReadChar();
@@ -1182,7 +1185,7 @@ namespace Sgml {
                 return null;
             char ch = (char)c;
             int start = pos;
-            while (pos < used - 1 && (char.IsLetterOrDigit(ch) || ch == '-' || ch == '_' || ch == ':'))
+            while (pos < used - 1 && (char.IsLetterOrDigit(ch) || ch is '-' or '_' or ':'))
                 ch = m_buffer[++pos];
 
             if (start == pos)
@@ -1194,7 +1197,7 @@ namespace Sgml {
         internal void SkipWhitespace()
         {
             char ch = (char)PeekChar();
-            while (pos < used - 1 && (ch == ' ' || ch == '\r' || ch == '\n'))
+            while (pos < used - 1 && (ch is ' ' or '\r' or '\n'))
                 ch = m_buffer[++pos];
         }
 
@@ -2512,7 +2515,7 @@ namespace Sgml {
             string name = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
             ch = this.m_current.SkipWhitespace();
             Entity e;
-            if (ch == '"' || ch == '\'') 
+            if (ch is '"' or '\'') 
             {
                 string literal = this.m_current.ScanLiteral(this.m_sb, ch);
                 e = new Entity(name, literal, m_resolver);                
@@ -2534,10 +2537,10 @@ namespace Sgml {
                     extid = tok;
                     if (string.Equals(extid, "PUBLIC", StringComparison.OrdinalIgnoreCase)) 
                     {
-                        ch = this.m_current.SkipWhitespace();
-                        if (ch == '"' || ch == '\'') 
+                        ch = m_current.SkipWhitespace();
+                        if (ch is '"' or '\'') 
                         {
-                            pubid = this.m_current.ScanLiteral(this.m_sb, ch);
+                            pubid = m_current.ScanLiteral(this.m_sb, ch);
                         } 
                         else 
                         {
@@ -2550,7 +2553,7 @@ namespace Sgml {
                     }
                     string uri = null;
                     ch = this.m_current.SkipWhitespace();
-                    if (ch == '"' || ch == '\'') 
+                    if (ch is '"' or '\'') 
                     {
                         uri = this.m_current.ScanLiteral(this.m_sb, ch);
                     } 
@@ -2581,11 +2584,11 @@ namespace Sgml {
             ch = char.ToUpperInvariant(this.m_current.SkipWhitespace());
             bool sto = false;
             bool eto = false;
-            if (ch == 'O' || ch == '-') {
+            if (ch is 'O' or '-') {
                 sto = (ch == 'O'); // start tag optional?   
                 this.m_current.ReadChar();
                 ch = char.ToUpperInvariant(this.m_current.SkipWhitespace());
-                if (ch == 'O' || ch == '-'){
+                if (ch is 'O' or '-'){
                     eto = (ch == 'O'); // end tag optional? 
                     ch = this.m_current.ReadChar();
                 }
@@ -2673,7 +2676,10 @@ namespace Sgml {
                         names.Add(token);
                     }
                     ch = this.m_current.SkipWhitespace();
-                    if (ch == '|' || ch == ',') ch = this.m_current.ReadChar();
+                    if (ch is '|' or ',')
+                    {
+                        ch = this.m_current.ReadChar();
+                    }
                 }
                 this.m_current.ReadChar(); // consume ')'
             } 
@@ -2724,8 +2730,8 @@ namespace Sgml {
             {
                 this.m_current.ReadChar();
                 ParseModel(')', cm);
-                ch = this.m_current.ReadChar();
-                if (ch == '?' || ch == '+' || ch == '*') 
+                ch = m_current.ReadChar();
+                if (ch is '?' or '+' or '*') 
                 {
                     cm.AddOccurrence(ch);
                     this.m_current.ReadChar();
@@ -2776,7 +2782,7 @@ namespace Sgml {
                 else if (ch == ')') 
                 {
                     ch = this.m_current.ReadChar();// consume ')'
-                    if (ch == '*' || ch == '+' || ch == '?') 
+                    if (ch is '*' or '+' or '?') 
                     {
                         cm.AddOccurrence(ch);
                         ch = this.m_current.ReadChar();
@@ -2787,7 +2793,7 @@ namespace Sgml {
                     }
                     ch = this.m_current.SkipWhitespace();
                 }
-                else if (ch == ',' || ch == '|' || ch == '&') 
+                else if (ch is ',' or '|' or '&') 
                 {
                     cm.AddConnector(ch);
                     this.m_current.ReadChar(); // skip connector
@@ -2808,7 +2814,7 @@ namespace Sgml {
 
                     token = token.ToUpperInvariant();
                     ch = this.m_current.Lastchar;
-                    if (ch == '?' || ch == '+' || ch == '*') 
+                    if (ch is '?' or '+' or '*') 
                     {
                         cm.PushGroup();
                         cm.AddSymbol(token);
@@ -2958,7 +2964,7 @@ namespace Sgml {
             } 
             if (hasdef) 
             {
-                if (ch == '\'' || ch == '"') 
+                if (ch is '\'' or '"') 
                 {
                     string lit = this.m_current.ScanLiteral(this.m_sb, ch);
                     attdef.Default = lit;
