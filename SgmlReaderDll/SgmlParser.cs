@@ -887,7 +887,7 @@ namespace Sgml {
                 stm = CopyToMemoryStream(stm);
             }
             this.stm = stm;
-            rawBuffer = new Byte[BUFSIZE];
+            rawBuffer = new byte[BUFSIZE];
             rawUsed = stm.Read(rawBuffer, 0, 4); // maximum byte order mark
             this.m_buffer = new char[BUFSIZE];
 
@@ -1009,8 +1009,9 @@ namespace Sgml {
         private int ReadChar() 
         {
             // Read only up to end of current buffer then stop.
-            if (pos < used) return m_buffer[pos++];
-            return EOF;
+            return (pos < used) 
+                ? m_buffer[pos++]
+                : EOF;
         }
 
         private int PeekChar()
@@ -1484,10 +1485,6 @@ namespace Sgml {
     /// </summary>
     public class ElementDecl
     {
-        private readonly string m_name;
-        private readonly bool m_startTagOptional;
-        private readonly bool m_endTagOptional;
-        private readonly ContentModel m_contentModel;
         private readonly string[] m_inclusions;
         private readonly string[] m_exclusions;
         private Dictionary<string, AttDef> m_attList;
@@ -1503,10 +1500,10 @@ namespace Sgml {
         /// <param name="exclusions"></param>
         public ElementDecl(string name, bool sto, bool eto, ContentModel cm, string[] inclusions, string[] exclusions)
         {
-            m_name = name;
-            m_startTagOptional = sto;
-            m_endTagOptional = eto;
-            m_contentModel = cm;
+            Name = name;
+            StartTagOptional = sto;
+            EndTagOptional = eto;
+            ContentModel = cm;
             m_inclusions = inclusions;
             m_exclusions = exclusions;
         }
@@ -1514,24 +1511,24 @@ namespace Sgml {
         /// <summary>
         /// The element name.
         /// </summary>
-        public string Name => m_name;
+        public string Name { get; }
 
         /// <summary>
         /// The <see cref="Sgml.ContentModel"/> of the element declaration.
         /// </summary>
-        public ContentModel ContentModel => m_contentModel;
+        public ContentModel ContentModel { get; }
 
         /// <summary>
         /// Whether the end tag of the element is optional.
         /// </summary>
         /// <value>true if the end tag of the element is optional, otherwise false.</value>
-        public bool EndTagOptional => m_endTagOptional;
+        public bool EndTagOptional { get; }
 
         /// <summary>
         /// Whether the start tag of the element is optional.
         /// </summary>
         /// <value>true if the start tag of the element is optional, otherwise false.</value>
-        public bool StartTagOptional => m_startTagOptional;
+        public bool StartTagOptional { get; }
 
         /// <summary>
         /// Finds the attribute definition with the specified name.
@@ -1582,7 +1579,7 @@ namespace Sgml {
         public bool CanContain(string name, SgmlDtd dtd)
         {            
             // return true if this element is allowed to contain the given element.
-            if (m_exclusions != null) 
+            if (m_exclusions is not null) 
             {
                 foreach (string s in m_exclusions) 
                 {
@@ -1591,7 +1588,7 @@ namespace Sgml {
                 }
             }
 
-            if (m_inclusions != null) 
+            if (m_inclusions is not null) 
             {
                 foreach (string s in m_inclusions) 
                 {
@@ -1599,7 +1596,7 @@ namespace Sgml {
                         return true;
                 }
             }
-            return m_contentModel.CanContain(name, dtd);
+            return ContentModel.CanContain(name, dtd);
         }
     }
 
