@@ -345,7 +345,7 @@ namespace Sgml
         private CaseFolding m_folding = CaseFolding.None;
         private bool m_stripDocType = true;
         //private string m_startTag;
-        private readonly Dictionary<string, string> unknownNamespaces = new Dictionary<string,string>();
+        private readonly Dictionary<string, string> unknownNamespaces = new ();
         private XmlNameTable m_nameTable;
         private IEntityResolver m_resolver;
 
@@ -2198,7 +2198,7 @@ namespace Sgml
 
                 if (this.m_dtd != null && !string.IsNullOrEmpty(name))
                 {
-                    Entity e = (Entity)this.m_dtd.FindEntity(name);
+                    Entity e = this.m_dtd.FindEntity(name);
                     if (e != null)
                     {
                         if (e.IsInternal)
@@ -2211,7 +2211,7 @@ namespace Sgml
                         } 
                         else
                         {
-                            Entity ex = new Entity(name, e.PublicId, e.Uri, this.m_resolver);
+                            var ex = new Entity(name, e.PublicId, e.Uri, this.m_resolver);
                             e.Open(this.m_current, new Uri(e.Uri));
                             this.m_current = ex;
                             this.m_current.ReadChar();
@@ -2320,7 +2320,7 @@ namespace Sgml
         /// </returns>
         public override string ReadInnerXml()
         {
-            StringWriter sw = new StringWriter(CultureInfo.InvariantCulture);
+            var sw = new StringWriter(CultureInfo.InvariantCulture);
             var settings = new XmlWriterSettings
             {
                 Indent = true,
