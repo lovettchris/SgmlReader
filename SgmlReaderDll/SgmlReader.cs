@@ -78,7 +78,6 @@ namespace Sgml
         /// <summary>
         /// The size (capacity) of the stack.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         public int Size => this.m_size;
 
         /// <summary>
@@ -134,7 +133,6 @@ namespace Sgml
         /// Remove a specific item from the stack.
         /// </summary>
         /// <param name="i">The index of the item to remove.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         public void RemoveAt(int i)
         {
             this.m_items[i] = default(T);
@@ -239,7 +237,6 @@ namespace Sgml
             return a;
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         public void RemoveAttribute(string name)
         {
             for (int i = 0, n = this.attributes.Count; i < n; i++)
@@ -306,8 +303,6 @@ namespace Sgml
         /// <summary>
         /// The value returned when a namespace is queried and none has been specified.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "SgmlReader's standards for constants are different to Microsoft's and in line with older C++ style constants naming conventions.  Visually, constants using this style are more easily identifiable as such.")]
-        [SuppressMessage("Microsoft.Naming", "CA1707", Justification = "SgmlReader's standards for constants are different to Microsoft's and in line with older C++ style constants naming conventions.  Visually, constants using this style are more easily identifiable as such.")]
         public const string UNDEFINED_NAMESPACE = "#unknown";
 
         private XmlReaderSettings m_settings;
@@ -783,7 +778,6 @@ namespace Sgml
         /// <remarks>
         /// If not positioned on a node or attribute, <see cref="UNDEFINED_NAMESPACE"/> is returned.
         /// </remarks>
-        [SuppressMessage("Microsoft.Performance", "CA1820", Justification="Cannot use IsNullOrEmpty in a switch statement and swapping the elegance of switch for a load of 'if's is not worth it.")]
         public override string NamespaceURI
         {
             get
@@ -1129,9 +1123,7 @@ namespace Sgml
         /// <param name="name">The local name of the attribute.</param>
         /// <param name="namespaceURI">The namespace URI of the attribute.</param>
         /// <returns>The value of the specified attribute. If the attribute is not found, a null reference (Nothing in Visual Basic) is returned. This method does not move the reader.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1023", Justification = "This design is that of Microsoft's XmlReader class and overriding its method is merely continuing the same design.")]
         public override string this[string name, string namespaceURI] => GetAttribute(name, namespaceURI);
-        
 
         /// <summary>
         /// Moves to the atttribute with the specified <see cref="Name"/>.
@@ -1251,7 +1243,6 @@ namespace Sgml
         /// Returns the encoding of the current entity.
         /// </summary>
         /// <returns>The encoding of the current entity.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024", Justification = "This method to get the encoding does not simply read a value, but potentially causes significant processing of the input stream.")]
         public Encoding GetEncoding()
         {
             if (this.m_current is null)
