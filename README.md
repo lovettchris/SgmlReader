@@ -1,23 +1,28 @@
 # SgmlReader - Convert (almost) any HTML to valid XML
 
-SgmlReader is a versatile C# .NET library written by Chris Lovett for parsing
-SGML files using the XmlReader API including HTML and OFX data.
-A command line utility is also provided
-which outputs the well formed XML result.
+SgmlReader is a versatile C# .NET library written by Chris Lovett for parsing SGML files using the
+XmlReader API including HTML and OFX data. A command line utility is also provided which outputs the
+well formed XML result.
 
-[MindTouch](http://mindtouch.com) uses the SgmlReader library extensively.  Over
-the last few years they have made many improvements to it.
+[MindTouch](http://mindtouch.com) uses the SgmlReader library extensively.  They have also made many
+improvements to it.
 
 ## SgmlReaderDll API
 
-The SgmlReader is an implementation of the XmlReader API. So the only thing you
-really need to know is how to construct it. SgmlReader has a default constructor,
-then you need to set some of the properties. To load a DTD you must specify
-DocType="HTML" or you must provide a SystemLiteral. To specify the SGML
-document you must provide either the InputStream or Href. Everything else is
+The SgmlReader is an implementation of the XmlReader API. So the only thing you really need to know
+is how to construct it. SgmlReader has a default constructor, then you need to set some of the
+properties. To load a DTD you must specify DocType="HTML" or you must provide a SystemLiteral. To
+specify the SGML document you must provide either the InputStream or Href. Everything else is
 optional. Then you can read from this reader like any other XmlReader class.
 
-### Sample Usage
+## Nuget Package
+
+This code is packaged and published at
+[https://www.nuget.org/packages/Microsoft.Xml.SgmlReader/](https://www.nuget.org/packages/Microsoft.Xml.SgmlReader/)
+for your convenience.  Using Visual Studio, Manage Nuget Packages simply search for the online
+package named "Microsoft.Xml.SgmlReader" add it to your project and you are good to go.
+
+## Sample Usage
 
 ```c#
 // setup SgmlReader
@@ -39,37 +44,26 @@ doc.Load(sgmlReader);
 return doc;
 ```
 
-### SgmlReader Properties
+## SgmlReader Properties
 
-* **SgmlDtd Dtd**<br/>
-Specify the SgmlDtd object directly. This allows you to cache the Dtd and share
-it across multiple SgmlReaders. To load a DTD from a URL use the SystemLiteral
-property.
-* **string DocType**<br/>
-The name of root element specified in the DOCTYPE tag. If you specify "HTML"
-then the SgmlReader will use the built-in HTML DTD. In this case you do not need
-to specify the SystemLiteral property.
-* **string PublicIdentifier**<br/>
-The PUBLIC identifier in the DOCTYPE tag. This is optional.
-* **string SystemLiteral**<br/>
-The SYSTEM literal in the DOCTYPE tag identifying the location of the DTD.
-* **string InternalSubset**<br/>
-The DTD internal subset in the DOCTYPE tag. This is optional.
-* **TextReader InputStream**<br/>
-The input stream containing SGML data to parse. You must specify this property
-or the Href property before calling Read().
-* **string Href**<br/>
-Specify the location of the input SGML document as a URL.
-* **string WebProxy**<br/>
-Sometimes you need to specify a proxy server in order to load data via HTTP from
-outside the firewall. For example: "itgproxy:80".
-* **string BaseUri**<br/>
-The base Uri is used to resolve relative Uri's like the SystemLiteral and Href
-properties.
-* **TextWriter ErrorLog**<br/>
-DTD validation errors are written to this stream.
-* **string ErrorLogFile**<br/>
-DTD validation errors are written to this log file.
+| Property Name | Description |
+| -------------- | :--------- |
+| **SgmlDtd Dtd** | Specify the SgmlDtd object directly. This allows you to cache the Dtd and share it across multiple SgmlReaders. To load a DTD from a URL use the SystemLiteral property. |
+| **string DocType** | The name of root element specified in the DOCTYPE tag. If you specify "HTML" then the SgmlReader will use the built-in HTML DTD. In this case you do not need to specify the SystemLiteral property. |
+| **string PublicIdentifier** | The PUBLIC identifier in the DOCTYPE tag. This is optional. |
+| **string SystemLiteral** | The SYSTEM literal in the DOCTYPE tag identifying the location of the DTD. |
+| **string InternalSubset** | The DTD internal subset in the DOCTYPE tag. This is optional. |
+| **TextReader InputStream** | The input stream containing SGML data to parse. You must specify this property
+or the Href property before calling Read(). |
+| **string Href** | Specify the location of the input SGML document as a URL. |
+| **string WebProxy** | Sometimes you need to specify a proxy server in order to load data via HTTP from
+outside the firewall. For example: "itgproxy:80". |
+| **string BaseUri** | The base Uri is used to resolve relative Uri's like the SystemLiteral and Href
+properties. |
+| **TextWriter ErrorLog** | DTD validation errors are written to this stream. |
+| **string ErrorLogFile** | DTD validation errors are written to this log file. |
+
+<br/>
 
 ## SgmlReader.exe Command Line Tool
 
