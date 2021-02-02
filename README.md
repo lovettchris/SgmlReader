@@ -48,20 +48,17 @@ return doc;
 
 | Property Name | Description |
 | -------------- | :--------- |
-| **SgmlDtd Dtd** | Specify the SgmlDtd object directly. This allows you to cache the Dtd and share it across multiple SgmlReaders. To load a DTD from a URL use the SystemLiteral property. |
-| **string DocType** | The name of root element specified in the DOCTYPE tag. If you specify "HTML" then the SgmlReader will use the built-in HTML DTD. In this case you do not need to specify the SystemLiteral property. |
-| **string PublicIdentifier** | The PUBLIC identifier in the DOCTYPE tag. This is optional. |
-| **string SystemLiteral** | The SYSTEM literal in the DOCTYPE tag identifying the location of the DTD. |
-| **string InternalSubset** | The DTD internal subset in the DOCTYPE tag. This is optional. |
-| **TextReader InputStream** | The input stream containing SGML data to parse. You must specify this property
-or the Href property before calling Read(). |
-| **string Href** | Specify the location of the input SGML document as a URL. |
-| **string WebProxy** | Sometimes you need to specify a proxy server in order to load data via HTTP from
-outside the firewall. For example: "itgproxy:80". |
-| **string BaseUri** | The base Uri is used to resolve relative Uri's like the SystemLiteral and Href
-properties. |
-| **TextWriter ErrorLog** | DTD validation errors are written to this stream. |
-| **string ErrorLogFile** | DTD validation errors are written to this log file. |
+| SgmlDtd Dtd | Specify the SgmlDtd object directly. This allows you to cache the Dtd and share it across multiple SgmlReaders. To load a DTD from a URL use the SystemLiteral property. |
+| string DocType | The name of root element specified in the DOCTYPE tag. If you specify "HTML" then the SgmlReader will use the built-in HTML DTD. In this case you do not need to specify the SystemLiteral property. |
+| string PublicIdentifier | The PUBLIC identifier in the DOCTYPE tag. This is optional. |
+| string SystemLiteral | The SYSTEM literal in the DOCTYPE tag identifying the location of the DTD. |
+| string InternalSubset | The DTD internal subset in the DOCTYPE tag. This is optional. |
+| TextReader InputStream | The input stream containing SGML data to parse. You must specify this property or the Href property before calling Read(). |
+| string Href | Specify the location of the input SGML document as a URL. |
+| string WebProxy | Sometimes you need to specify a proxy server in order to load data via HTTP from outside the firewall. For example: "itgproxy:80". |
+| string BaseUri | The base Uri is used to resolve relative Uri's like the SystemLiteral and Href properties. |
+| TextWriter ErrorLog | DTD validation errors are written to this stream. |
+| string ErrorLogFile | DTD validation errors are written to this log file. |
 
 <br/>
 
@@ -72,25 +69,22 @@ properties. |
 The command line executable version has the following options:
 
     sgmlreader <options> [InputUri] [OutputFile]
+    
+| Argument Name | Description |
+| -------------- | :--------- |
+| -e "file" | Specifies a file to write error output to.  The default is to generate no errors.  The special name "$stderr" redirects errors to stderr output stream. |
+| -proxy    | "server"  Specifies the proxy server to use to fetch DTD's through the fire wall. |
+| -html     | Specifies that the input is HTML. |
+| -dtd "uri"| Specifies some other SGML DTD. |
+| -base     | Add an HTML base tag to the output. |
+| -pretty   | Pretty print the output. |
+| -encoding name | Specify an encoding for the output file (default UTF-8) |
+| -noxml    | Stops generation of XML declaration in output. |
+| -doctype  | Copy &lt;!DOCTYPE tag to the output. |
+| InputUri  | The input file name or URL. Default is stdin.  If this is a local file name then it also supports wildcards. |
+| OutputFile | The optional output file name. Default is stdout.  If the InputUri contains wildcards then this just specifies the output file extension, the default being ".xml". |
 
-* -e "file" : Specifies a file to write error output to.  The default is to
-generate no errors.  The special name "$stderr" redirects errors to stderr
-output stream.
-* -proxy : "server"  Specifies the proxy server to use to fetch DTD's through
-the fire wall.
-* -html : Specifies that the input is HTML.
-* -dtd "uri" : Specifies some other SGML DTD.
-* -base : Add an HTML base tag to the output.
-* -pretty : Pretty print the output.
-* -encoding name : Specify an encoding for the output file (default UTF-8)
-* -noxml : Stops generation of XML declaration in output.
-* -doctype : Copy <!DOCTYPE tag to the output.
-* InputUri : The input file name or URL. Default is stdin.  If this is a local
-file name then it also supports wildcards.
-* OutputFile : The optional output file name. Default is stdout.  If the
-InputUri contains wildcards then this just specifies the output file extension,
-the default being ".xml".
-
+<br/>
 ### Examples
 
 Converts all .htm files to corresponding .xml files using the built in HTML DTD.
