@@ -1869,19 +1869,13 @@ namespace Sgml
                 throw new SgmlParseException($"Missing token before connector '{c}'.");
             }
 
-            GroupType gt = GroupType.None;
-            switch (c) 
+            GroupType gt = c switch
             {
-                case ',': 
-                    gt = GroupType.Sequence;
-                    break;
-                case '|':
-                    gt = GroupType.Or;
-                    break;
-                case '&':
-                    gt = GroupType.And;
-                    break;
-            }
+                ',' => GroupType.Sequence,
+                '|' => GroupType.Or,
+                '&' => GroupType.And,
+                _   => GroupType.None
+            };
 
             if (_groupType != GroupType.None && _groupType != gt) 
             {
@@ -1897,21 +1891,13 @@ namespace Sgml
         /// <param name="c">The occurrence character.</param>
         public void AddOccurrence(char c)
         {
-            Occurrence o = Occurrence.Required;
-            switch (c) 
+            _occurrence = c switch
             {
-                case '?': 
-                    o = Occurrence.Optional;
-                    break;
-                case '+':
-                    o = Occurrence.OneOrMore;
-                    break;
-                case '*':
-                    o = Occurrence.ZeroOrMore;
-                    break;
-            }
-
-            _occurrence = o;
+                '?' => Occurrence.Optional,
+                '+' => Occurrence.OneOrMore,
+                '*' => Occurrence.ZeroOrMore,
+                _   => Occurrence.Required
+            };
         }
 
         /// <summary>

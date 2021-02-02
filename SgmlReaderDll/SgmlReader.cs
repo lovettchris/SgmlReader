@@ -719,20 +719,13 @@ namespace Sgml
         {
             get
             {
-                if (_state == State.Attr)
+                return _state switch
                 {
-                    return XmlNodeType.Attribute;
-                }
-                else if (_state == State.AttrValue)
-                {
-                    return XmlNodeType.Text;
-                }
-                else if (_state is State.EndTag or State.AutoClose)
-                {
-                    return XmlNodeType.EndElement;
-                }
-
-                return _node.NodeType;
+                    State.Attr => XmlNodeType.Attribute,
+                    State.AttrValue => XmlNodeType.Text,
+                    State.EndTag or State.AutoClose => XmlNodeType.EndElement,
+                    _ => _node.NodeType
+                };
             }
         }
 
