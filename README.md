@@ -147,7 +147,7 @@ redirection to account for newer versions when recompilation is not an option.
 
 ### Release notes for 1.8.20 (2021-Feb-2)
 
-* Lots of code cleanups by Jason Nelson (https://github.com/iamcarbon) bringing
+* Lots of code cleanups by [Jason Nelson](https://github.com/iamcarbon) bringing
 the code up to stuff with lovely new C# 8 language features.
 
 ### Release notes for 1.8.19 (2021-Jan-29)
