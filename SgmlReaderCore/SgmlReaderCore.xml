@@ -372,9 +372,9 @@
             Initialises a new element declaration instance.
             </summary>
             <param name="name">The name of the element.</param>
-            <param name="sto">Whether the start tag is optional.</param>
-            <param name="eto">Whether the end tag is optional.</param>
-            <param name="cm">The <see cref="P:Sgml.ElementDecl.ContentModel"/> of the element.</param>
+            <param name="startTagOptional">Whether the start tag is optional.</param>
+            <param name="endTagOptional">Whether the end tag is optional.</param>
+            <param name="contentModel">The <see cref="P:Sgml.ElementDecl.ContentModel"/> of the element.</param>
             <param name="inclusions"></param>
             <param name="exclusions"></param>
         </member>

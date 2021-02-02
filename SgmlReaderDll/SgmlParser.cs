@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 #if WINDOWS_DESKTOP
@@ -22,7 +21,8 @@ using System.Security.Permissions;
 using System.Text;
 using System.Xml;
 
-namespace Sgml {
+namespace Sgml
+{
     /// <summary>
     /// Thrown if any errors occur while parsing the source.
     /// </summary>
@@ -116,19 +116,16 @@ namespace Sgml {
         /// <summary>
         /// CDATA text literals.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         CDATA,
 
         /// <summary>
         /// SDATA entities.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         SDATA,
 
         /// <summary>
         /// The contents of a Processing Instruction.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         PI
     };
 
@@ -140,28 +137,27 @@ namespace Sgml {
         /// <summary>
         /// The character indicating End Of File.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "The capitalisation is correct since EOF is an acronym.")]
         public const char EOF = (char)65535;
 
-        private readonly string m_name;
-        private readonly bool m_isInternal;
-        private readonly string m_publicId;
-        private readonly string m_uri;
-        private readonly string m_literal;
-        private LiteralType m_literalType;
-        private Entity m_parent;
-        private bool m_isHtml;
-        private int m_line;
-        private char m_lastchar;
-        private bool m_isWhitespace;
-        private readonly IEntityResolver m_resolver;
+        private readonly string _name;
+        private readonly bool _isInternal;
+        private readonly string _publicId;
+        private readonly string _uri;
+        private readonly string _literal;
+        private LiteralType _literalType;
+        private Entity _parent;
+        private bool _isHtml;
+        private int _line;
+        private char _lastchar;
+        private bool _isWhitespace;
+        private readonly IEntityResolver _resolver;
 
-        private Encoding m_encoding;
-        private Uri m_resolvedUri;
-        private TextReader m_stm;
-        private bool m_weOwnTheStream;
-        private int m_lineStart;
-        private int m_absolutePos;
+        private Encoding _encoding;
+        private Uri _resolvedUri;
+        private TextReader _stm;
+        private bool _weOwnTheStream;
+        private int _lineStart;
+        private int _absolutePos;
 
         /// <summary>
         /// Initialises a new instance of an Entity declared in a DTD.
@@ -172,11 +168,11 @@ namespace Sgml {
         /// <param name="resolver">The resolver to use for loading this entity</param>
         public Entity(string name, string pubid, string uri, IEntityResolver resolver)
         {
-            m_name = name;
-            m_publicId = pubid;
-            m_uri = uri;
-            m_isHtml = (name != null && StringUtilities.EqualsIgnoreCase(name, "html"));
-            m_resolver = resolver;
+            _name = name;
+            _publicId = pubid;
+            _uri = uri;
+            _isHtml = (name != null && StringUtilities.EqualsIgnoreCase(name, "html"));
+            _resolver = resolver;
         }
 
         /// <summary>
@@ -187,10 +183,10 @@ namespace Sgml {
         /// <param name="resolver">The resolver to use for loading this entity</param>
         public Entity(string name, string literal, IEntityResolver resolver)
         {
-            m_name = name;
-            m_literal = literal;
-            m_isInternal = true;
-            m_resolver = resolver;
+            _name = name;
+            _literal = literal;
+            _isInternal = true;
+            _resolver = resolver;
         }
 
         /// <summary>
@@ -202,37 +198,37 @@ namespace Sgml {
         /// <param name="resolver">The resolver to use for loading this entity</param>
         public Entity(string name, Uri baseUri, TextReader stm, IEntityResolver resolver)
         {
-            m_name = name;
-            m_isInternal = true;
-            m_stm = stm;
-            m_resolvedUri = baseUri;
-            m_isHtml = string.Equals(name, "html", StringComparison.OrdinalIgnoreCase);
-            m_resolver = resolver;
+            _name = name;
+            _isInternal = true;
+            _stm = stm;
+            _resolvedUri = baseUri;
+            _isHtml = string.Equals(name, "html", StringComparison.OrdinalIgnoreCase);
+            _resolver = resolver;
         }
 
         /// <summary>
         /// The name of the entity.
         /// </summary>
-        public string Name => m_name;
+        public string Name => _name;
 
         /// <summary>
         /// True if the entity is the html element entity.
         /// </summary>
         public bool IsHtml
         {
-            get => m_isHtml;
-            set => m_isHtml = value;
+            get => _isHtml;
+            set => _isHtml = value;
         }
 
         /// <summary>
         /// The public identifier of this entity.
         /// </summary>
-        public string PublicId => m_publicId;
+        public string PublicId => _publicId;
 
         /// <summary>
         /// The Uri that is the source for this entity.
         /// </summary>
-        public string Uri => m_uri;
+        public string Uri => _uri;
 
         /// <summary>
         /// The resolved location of the DTD this entity is from.
@@ -241,10 +237,10 @@ namespace Sgml {
         {
             get
             {
-                if (this.m_resolvedUri != null)
-                    return this.m_resolvedUri;
-                else if (m_parent != null)
-                    return m_parent.ResolvedUri;
+                if (_resolvedUri != null)
+                    return _resolvedUri;
+                else if (_parent != null)
+                    return _parent.ResolvedUri;
                 else
                     return null;
             }
@@ -253,43 +249,43 @@ namespace Sgml {
         /// <summary>
         /// Gets the parent Entity of this Entity.
         /// </summary>
-        public Entity Parent => m_parent;
+        public Entity Parent => _parent;
 
         /// <summary>
         /// The last character read from the input stream for this entity.
         /// </summary>
-        public char Lastchar => m_lastchar;
+        public char Lastchar => _lastchar;
 
         /// <summary>
         /// The line on which this entity was defined.
         /// </summary>
-        public int Line => m_line;
+        public int Line => _line;
 
         /// <summary>
         /// The index into the line where this entity is defined.
         /// </summary>
-        public int LinePosition => this.m_absolutePos - this.m_lineStart + 1;
+        public int LinePosition => _absolutePos - _lineStart + 1;
 
         /// <summary>
         /// Whether this entity is an internal entity or not.
         /// </summary>
         /// <value>true if this entity is internal, otherwise false.</value>
-        public bool IsInternal => m_isInternal;
+        public bool IsInternal => _isInternal;
        
         /// <summary>
         /// The literal value of this entity.
         /// </summary>
-        public string Literal => m_literal;
+        public string Literal => _literal;
 
         /// <summary>
         /// The <see cref="LiteralType"/> of this entity.
         /// </summary>
-        public LiteralType LiteralType => m_literalType;
+        public LiteralType LiteralType => _literalType;
 
         /// <summary>
         /// Whether the last char read for this entity is a whitespace character.
         /// </summary>
-        public bool IsWhitespace => m_isWhitespace;
+        public bool IsWhitespace => _isWhitespace;
         
         /// <summary>
         /// Reads the next character from the DTD stream.
@@ -297,43 +293,43 @@ namespace Sgml {
         /// <returns>The next character from the DTD stream.</returns>
         public char ReadChar()
         {
-            char ch = (char)this.m_stm.Read();
+            char ch = (char)_stm.Read();
             if (ch == 0)
             {
                 // convert nulls to whitespace, since they are not valid in XML anyway.
                 ch = ' ';
             }
-            this.m_absolutePos++;
+            _absolutePos++;
             if (ch == 0xa)
             {
-                m_isWhitespace = true;
-                this.m_lineStart = this.m_absolutePos + 1;
-                this.m_line++;
+                _isWhitespace = true;
+                _lineStart = _absolutePos + 1;
+                _line++;
             } 
-            else if (ch == ' ' || ch == '\t')
+            else if (ch is ' ' or '\t')
             {
-                m_isWhitespace = true;
-                if (m_lastchar == 0xd)
+                _isWhitespace = true;
+                if (_lastchar == 0xd)
                 {
-                    this.m_lineStart = this.m_absolutePos;
-                    m_line++;
+                    _lineStart = _absolutePos;
+                    _line++;
                 }
             }
             else if (ch == 0xd)
             {
-                m_isWhitespace = true;
+                _isWhitespace = true;
             }
             else
             {
-                m_isWhitespace = false;
-                if (m_lastchar == 0xd)
+                _isWhitespace = false;
+                if (_lastchar == 0xd)
                 {
-                    m_line++;
-                    this.m_lineStart = this.m_absolutePos;
+                    _line++;
+                    _lineStart = _absolutePos;
                 }
             } 
 
-            m_lastchar = ch;
+            _lastchar = ch;
             return ch;
         }
 
@@ -344,64 +340,60 @@ namespace Sgml {
         /// <param name="baseUri">The base Uri for processing this entity within.</param>
         public void Open(Entity parent, Uri baseUri)
         {
-            this.m_parent = parent;
+            _parent = parent;
             if (parent != null)
-                this.m_isHtml = parent.IsHtml;
-            this.m_line = 1;
-            if (m_isInternal)
+                _isHtml = parent.IsHtml;
+            _line = 1;
+            if (_isInternal)
             {
-                if (this.m_literal != null)
-                    this.m_stm = new StringReader(this.m_literal);
+                if (_literal != null)
+                    _stm = new StringReader(_literal);
             } 
-            else if (this.m_uri is null)
+            else if (_uri is null)
             {
-                this.Error("Unresolvable entity '{0}'", this.m_name);
+                this.Error("Unresolvable entity '{0}'", _name);
             }
             else
             {
                 if (baseUri != null)
                 {
-                    this.m_resolvedUri = new Uri(baseUri, this.m_uri);
+                    _resolvedUri = new Uri(baseUri, _uri);
                 }
                 else
                 {
-                    this.m_resolvedUri = new Uri(this.m_uri, UriKind.RelativeOrAbsolute);
+                    _resolvedUri = new Uri(_uri, UriKind.RelativeOrAbsolute);
                 }
 
-                IEntityContent content = m_resolver.GetContent(this.ResolvedUri);
+                IEntityContent content = _resolver.GetContent(this.ResolvedUri);
                 Stream stream = content.Open();
 
                 if (StringUtilities.EqualsIgnoreCase(content.MimeType, "text/html"))
                 {
-                    this.m_isHtml = true;
+                    _isHtml = true;
                 }
-                this.m_resolvedUri = content.Redirect;
+                _resolvedUri = content.Redirect;
 
-                this.m_weOwnTheStream = true;
-                HtmlStream html = new HtmlStream(stream, content.Encoding);
-                this.m_encoding = html.Encoding;
-                this.m_stm = html;
+                _weOwnTheStream = true;
+                var html = new HtmlStream(stream, content.Encoding);
+                _encoding = html.Encoding;
+                _stm = html;
             }
         }
 
         /// <summary>
         /// Gets the character encoding for this entity.
         /// </summary>
-        public Encoding Encoding
-        {
-            get
-            {
-                return this.m_encoding;
-            }
-        }
-        
+        public Encoding Encoding => _encoding;
+
         /// <summary>
         /// Closes the reader from which the entity is being read.
         /// </summary>
         public void Close()
         {
-            if (this.m_weOwnTheStream) 
-                this.m_stm.Dispose();
+            if (_weOwnTheStream)
+            {
+                _stm.Dispose();
+            }
         }
 
         /// <summary>
@@ -410,8 +402,8 @@ namespace Sgml {
         /// <returns>The next character that is not whitespace.</returns>
         public char SkipWhitespace()
         {
-            char ch = m_lastchar;
-            while (ch != Entity.EOF && (ch == ' ' || ch == '\r' || ch == '\n' || ch == '\t'))
+            char ch = _lastchar;
+            while (ch != Entity.EOF && (ch is ' ' or '\r' or '\n' or '\t'))
             {
                 ch = ReadChar();
             }
@@ -434,7 +426,7 @@ namespace Sgml {
                 throw new ArgumentNullException(nameof(term));
 
             sb.Length = 0;
-            char ch = m_lastchar;
+            char ch = _lastchar;
             if (nmtoken && ch != '_' && !char.IsLetter(ch))
             {
                 throw new SgmlParseException($"Invalid name start character '{ch}'");
@@ -442,10 +434,12 @@ namespace Sgml {
 
             while (ch != Entity.EOF && term.IndexOf(ch) < 0)
             {
-                if (!nmtoken || ch == '_' || ch == '.' || ch == '-' || ch == ':' || char.IsLetterOrDigit(ch)) {
+                if (!nmtoken || ch is '_' or '.' or '-' or ':' || char.IsLetterOrDigit(ch)) 
+                {
                     sb.Append(ch);
                 } 
-                else {
+                else
+                {
                     throw new SgmlParseException($"Invalid name character '{ch}'");
                 }
                 ch = ReadChar();
@@ -476,7 +470,7 @@ namespace Sgml {
                     {
                         string charent = ExpandCharEntity();
                         sb.Append(charent);
-                        ch = this.m_lastchar;
+                        ch = _lastchar;
                     } 
                     else
                     {
@@ -511,7 +505,7 @@ namespace Sgml {
             if (sb != null)
                 sb.Length = 0;
 
-            int start = m_line;
+            int start = _line;
             // This method scans over a chunk of text looking for the
             // termination sequence specified by the 'terminators' parameter.
             char ch = ReadChar();            
@@ -607,7 +601,7 @@ namespace Sgml {
             }
 
             // HACK ALERT: IE and Netscape map the unicode characters 
-            if (this.m_isHtml && v >= 0x80 & v <= 0x9F)
+            if (_isHtml && v >= 0x80 & v <= 0x9F)
             {
                 // This range of control characters is mapped to Windows-1252!
                 int i = v - 0x80;
@@ -618,7 +612,7 @@ namespace Sgml {
             if (0xD800 <= v && v <= 0xDBFF)
             {
                 // high surrogate
-                if (m_lastchar == '&')
+                if (_lastchar == '&')
                 {
                     char ch = ReadChar();
                     if (ch == '#')
@@ -641,7 +635,7 @@ namespace Sgml {
                 }
                 else
                 {
-                    Error("Premature {0} parsing surrogate pair", m_lastchar);
+                    Error("Premature {0} parsing surrogate pair", _lastchar);
                 }
             }
 
@@ -784,14 +778,10 @@ namespace Sgml {
             StringBuilder sb = new StringBuilder();
             while (p != null)
             {
-                string msg;
-                if (p.m_isInternal)
-                {
-                    msg = string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of internal entity '{2}'", p.m_line, p.LinePosition, p.m_name);
-                } 
-                else {
-                    msg = string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of '{2}' entity at [{3}]", p.m_line, p.LinePosition, p.m_name, p.ResolvedUri.AbsolutePath);
-                }
+                string msg = p._isInternal
+                    ? string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of internal entity '{2}'", p._line, p.LinePosition, p._name)
+                    : string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of '{2}' entity at [{3}]", p._line, p.LinePosition, p._name, p.ResolvedUri.AbsolutePath);
+                
                 sb.Append(msg);
                 p = p.Parent;
             }
@@ -820,13 +810,13 @@ namespace Sgml {
             switch (token)
             {
                 case "CDATA":
-                    this.m_literalType = LiteralType.CDATA;
+                    _literalType = LiteralType.CDATA;
                     break;
                 case "SDATA":
-                    this.m_literalType = LiteralType.SDATA;
+                    _literalType = LiteralType.SDATA;
                     break;
                 case "PI":
-                    this.m_literalType = LiteralType.PI;
+                    _literalType = LiteralType.PI;
                     break;
             }
         }
@@ -858,10 +848,10 @@ namespace Sgml {
         {
             if (isDisposing)
             {
-                if (m_stm != null)
+                if (_stm != null)
                 {
-                    m_stm.Dispose();
-                    m_stm = null;
+                    _stm.Dispose();
+                    _stm = null;
                 }
             }
         }
@@ -872,15 +862,15 @@ namespace Sgml {
     // This class decodes an HTML/XML stream correctly.
     internal sealed class HtmlStream : TextReader
     {
-        private readonly Stream stm;
-        private readonly byte[] rawBuffer;
-        private int rawPos;
-        private int rawUsed;
-        private Encoding m_encoding;
-        private readonly Decoder m_decoder;
-        private char[] m_buffer;
-        private int used;
-        private int pos;
+        private readonly Stream _stm;
+        private readonly byte[] _rawBuffer;
+        private int _rawPos;
+        private int _rawUsed;
+        private Encoding _encoding;
+        private readonly Decoder _decoder;
+        private char[] _buffer;
+        private int _used;
+        private int _position;
         private const int BUFSIZE = 16384;
         private const int EOF = -1;
 
@@ -888,46 +878,49 @@ namespace Sgml {
         {            
             defaultEncoding ??= Encoding.UTF8; // default is UTF8
 
-            if (!stm.CanSeek){
+            if (!stm.CanSeek)
+            {
                 // Need to be able to seek to sniff correctly.
                 stm = CopyToMemoryStream(stm);
             }
-            this.stm = stm;
-            rawBuffer = new Byte[BUFSIZE];
-            rawUsed = stm.Read(rawBuffer, 0, 4); // maximum byte order mark
-            this.m_buffer = new char[BUFSIZE];
+            _stm = stm;
+            _rawBuffer = new byte[BUFSIZE];
+            _rawUsed = stm.Read(_rawBuffer, 0, 4); // maximum byte order mark
+            _buffer = new char[BUFSIZE];
 
             // Check byte order marks
-            this.m_decoder = AutoDetectEncoding(rawBuffer, ref rawPos, rawUsed);
-            int bom = rawPos;
-            if (this.m_decoder is null)
+            _decoder = AutoDetectEncoding(_rawBuffer, ref _rawPos, _rawUsed);
+            int bom = _rawPos;
+            if (_decoder is null)
             {
-                this.m_decoder = defaultEncoding.GetDecoder();
-                rawUsed += stm.Read(rawBuffer, 4, BUFSIZE-4);                
+                _decoder = defaultEncoding.GetDecoder();
+                _rawUsed += stm.Read(_rawBuffer, 4, BUFSIZE-4);                
                 DecodeBlock();
                 // Now sniff to see if there is an XML declaration or HTML <META> tag.
                 Decoder sd = SniffEncoding();
-                if (sd != null) {
-                    this.m_decoder = sd;
+                if (sd != null)
+                {
+                    _decoder = sd;
                 }
             }            
 
             // Reset to get ready for Read()
-            this.stm.Seek(0, SeekOrigin.Begin);
-            this.pos = this.used = 0;
+            _stm.Seek(0, SeekOrigin.Begin);
+            _position = _used = 0;
             // skip bom
-            if (bom>0){
-                stm.Read(this.rawBuffer, 0, bom);
+            if (bom > 0)
+            {
+                stm.Read(_rawBuffer, 0, bom);
             }
-            this.rawPos = this.rawUsed = 0;            
+            _rawPos = _rawUsed = 0;            
         }
 
-        public Encoding Encoding => this.m_encoding;
+        public Encoding Encoding => _encoding;
 
         private static Stream CopyToMemoryStream(Stream s)
         {
             int size = 100000; // large heap is more efficient
-            byte[] copyBuff = new byte[size];
+            var copyBuff = new byte[size];
             int len;
             MemoryStream r = new MemoryStream();
             while ((len = s.Read(copyBuff, 0, size)) > 0)
@@ -938,30 +931,38 @@ namespace Sgml {
             return r;
         }
 
-        internal void DecodeBlock() {
+        internal void DecodeBlock() 
+        {
             // shift current chars to beginning.
-            if (pos > 0) {
-                if (pos < used) {
-                    System.Array.Copy(m_buffer, pos, m_buffer, 0, used - pos);
+            if (_position > 0)
+            {
+                if (_position < _used) 
+                {
+                    Array.Copy(_buffer, _position, _buffer, 0, _used - _position);
                 }
-                used -= pos;
-                pos = 0;
+                _used -= _position;
+                _position = 0;
             }
-            int len = m_decoder.GetCharCount(rawBuffer, rawPos, rawUsed - rawPos);
-            int available = m_buffer.Length - used;
-            if (available < len) {
-                char[] newbuf = new char[m_buffer.Length + len];
-                System.Array.Copy(m_buffer, pos, newbuf, 0, used - pos);
-                m_buffer = newbuf;
+            int len = _decoder.GetCharCount(_rawBuffer, _rawPos, _rawUsed - _rawPos);
+            int available = _buffer.Length - _used;
+            if (available < len)
+            {
+                char[] newbuf = new char[_buffer.Length + len];
+                Array.Copy(_buffer, _position, newbuf, 0, _used - _position);
+                _buffer = newbuf;
             }
-            used = pos + m_decoder.GetChars(rawBuffer, rawPos, rawUsed - rawPos, m_buffer, pos);
-            rawPos = rawUsed; // consumed the whole buffer!
+            _used = _position + _decoder.GetChars(_rawBuffer, _rawPos, _rawUsed - _rawPos, _buffer, _position);
+            _rawPos = _rawUsed; // consumed the whole buffer!
         }
-        internal static Decoder AutoDetectEncoding(byte[] buffer, ref int index, int length) {
-            if (4 <= (length - index)) {
+
+        internal static Decoder AutoDetectEncoding(byte[] buffer, ref int index, int length) 
+        {
+            if (4 <= (length - index))
+            {
                 uint w = (uint)buffer[index + 0] << 24 | (uint)buffer[index + 1] << 16 | (uint)buffer[index + 2] << 8 | (uint)buffer[index + 3];
                 // see if it's a 4-byte encoding
-                switch (w) {
+                switch (w)
+                {
                     case 0xfefffeff: 
                         index += 4; 
                         return new Ucs4DecoderBigEngian();
@@ -977,12 +978,14 @@ namespace Sgml {
                         goto case 0xfffefffe;
                 }
                 w >>= 8;
-                if (w == 0xefbbbf) {
+                if (w == 0xefbbbf) 
+                {
                     index += 3;
                     return Encoding.UTF8.GetDecoder();
                 }
                 w >>= 8;
-                switch (w) {
+                switch (w) 
+                {
                     case 0xfeff: 
                         index += 2; 
                         return UnicodeEncoding.BigEndianUnicode.GetDecoder();
@@ -1000,86 +1003,112 @@ namespace Sgml {
             }
             return null;
         }
-        private int ReadChar() {
+
+        private int ReadChar() 
+        {
             // Read only up to end of current buffer then stop.
-            if (pos < used) return m_buffer[pos++];
-            return EOF;
+            return (_position < _used) 
+                ? _buffer[_position++]
+                : EOF;
         }
-        private int PeekChar() {
+
+        private int PeekChar()
+        {
             int ch = ReadChar();
-            if (ch != EOF) {
-                pos--;
+            if (ch != EOF) 
+            {
+                _position--;
             }
             return ch;
         }
-        private bool SniffPattern(string pattern) {
+        private bool SniffPattern(string pattern)
+        {
             int ch = PeekChar();
             if (ch != pattern[0]) return false;
-            for (int i = 0, n = pattern.Length; ch != EOF && i < n; i++) {
+            for (int i = 0, n = pattern.Length; ch != EOF && i < n; i++) 
+            {
                 ch = ReadChar();
                 char m = pattern[i];
-                if (ch != m) {
+                if (ch != m) 
+                {
                     return false;
                 }
             }
             return true;
         }
-        private void SniffWhitespace() {
+        private void SniffWhitespace() 
+        {
             char ch = (char)PeekChar();
-            while (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n') {
-                int i = pos;
+            while (ch is ' ' or '\t' or '\r' or '\n')
+            {
+                int i = _position;
                 ch = (char)ReadChar();
                 if (ch != ' ' && ch != '\t' && ch != '\r' && ch != '\n')
-                    pos = i;
+                    _position = i;
             }
         }
 
-        private string SniffLiteral() {
+        private string SniffLiteral() 
+        {
             int quoteChar = PeekChar();
-            if (quoteChar == '\'' || quoteChar == '"') {
+            if (quoteChar is '\'' or '"') 
+            {
                 ReadChar();// consume quote char
-                int i = this.pos;
+                int i = _position;
                 int ch = ReadChar();
-                while (ch != EOF && ch != quoteChar) {
+                while (ch != EOF && ch != quoteChar)
+                {
                     ch = ReadChar();
                 }
-                return (pos>i) ? new string(m_buffer, i, pos - i - 1) : "";
+                return (_position>i) ? new string(_buffer, i, _position - i - 1) : "";
             }
             return null;
         }
-        private string SniffAttribute(string name) {
+
+        private string SniffAttribute(string name) 
+        {
             SniffWhitespace();
             string id = SniffName();
-            if (string.Equals(name, id, StringComparison.OrdinalIgnoreCase)) {
+            if (string.Equals(name, id, StringComparison.OrdinalIgnoreCase))
+            {
                 SniffWhitespace();
-                if (SniffPattern("=")) {
+                if (SniffPattern("=")) 
+                {
                     SniffWhitespace();
                     return SniffLiteral();
                 }
             }
             return null;
         }
-        private string SniffAttribute(out string name) {
+        private string SniffAttribute(out string name) 
+        {
             SniffWhitespace();
             name = SniffName();
-            if (name != null){
+            if (name != null)
+            {
                 SniffWhitespace();
-                if (SniffPattern("=")) {
+                if (SniffPattern("=")) 
+                {
                     SniffWhitespace();
                     return SniffLiteral();
                 }
             }
             return null;
         }
-        private void SniffTerminator(string term) {
+        private void SniffTerminator(string term) 
+        {
             int ch = ReadChar();
             int i = 0;
             int n = term.Length;
-            while (i < n && ch != EOF) {
-                if (term[i] == ch) {
+            while (i < n && ch != EOF) 
+            {
+                if (term[i] == ch)
+                {
                     i++;
                     if (i == n) break;
-                } else {
+                } 
+                else 
+                {
                     i = 0; // reset.
                 }
                 ch = ReadChar();
@@ -1102,7 +1131,7 @@ namespace Sgml {
                             Encoding enc = Encoding.GetEncoding(encoding);
                             if (enc != null)
                             {
-                                this.m_encoding = enc;
+                                _encoding = enc;
                                 return enc.GetDecoder();
                             }
                         }
@@ -1114,7 +1143,8 @@ namespace Sgml {
                     SniffTerminator(">");
                 }
             } 
-            if (decoder is null) {
+            if (decoder is null) 
+            {
                 return SniffMeta();
             }
             return null;
@@ -1165,9 +1195,9 @@ namespace Sgml {
                                     try
                                     {
                                         Encoding e = Encoding.GetEncoding(charset);
-                                        this.m_encoding = e;
+                                        _encoding = e;
                                         return e.GetDecoder();
-                                    } catch (ArgumentException) {}
+                                    } catch (ArgumentException) { }
                                 }                                
                             }
                         }
@@ -1185,85 +1215,90 @@ namespace Sgml {
             if (c == EOF)
                 return null;
             char ch = (char)c;
-            int start = pos;
-            while (pos < used - 1 && (char.IsLetterOrDigit(ch) || ch == '-' || ch == '_' || ch == ':'))
-                ch = m_buffer[++pos];
+            int start = _position;
+            while (_position < _used - 1 && (char.IsLetterOrDigit(ch) || ch is '-' or '_' or ':'))
+                ch = _buffer[++_position];
 
-            if (start == pos)
+            if (start == _position)
                 return null;
 
-            return new string(m_buffer, start, pos - start);
+            return new string(_buffer, start, _position - start);
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         internal void SkipWhitespace()
         {
             char ch = (char)PeekChar();
-            while (pos < used - 1 && (ch == ' ' || ch == '\r' || ch == '\n'))
-                ch = m_buffer[++pos];
+            while (_position < _used - 1 && (ch is ' ' or '\r' or '\n'))
+                ch = _buffer[++_position];
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         internal void SkipTo(char what)
         {
             char ch = (char)PeekChar();
-            while (pos < used - 1 && (ch != what))
-                ch = m_buffer[++pos];
+            while (_position < _used - 1 && (ch != what))
+                ch = _buffer[++_position];
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         internal string ParseAttribute()
         {
             SkipTo('=');
-            if (pos < used)
+            if (_position < _used)
             {
-                pos++;
+                _position++;
                 SkipWhitespace();
-                if (pos < used) {
-                    char quote = m_buffer[pos];
-                    pos++;
-                    int start = pos;
+                if (_position < _used) 
+                {
+                    char quote = _buffer[_position];
+                    _position++;
+                    int start = _position;
                     SkipTo(quote);
-                    if (pos < used) {
-                        string result = new string(m_buffer, start, pos - start);
-                        pos++;
+                    if (_position < _used) 
+                    {
+                        string result = new string(_buffer, start, _position - start);
+                        _position++;
                         return result;
                     }
                 }
             }
             return null;
         }
-        public override int Peek() {
+
+        public override int Peek() 
+        {
             int result = Read();
-            if (result != EOF) {
-                pos--;
+            if (result != EOF)
+            {
+                _position--;
             }
             return result;
         }
         public override int Read()
         {
-            if (pos == used)
+            if (_position == _used)
             {
-                rawUsed = stm.Read(rawBuffer, 0, rawBuffer.Length);
-                rawPos = 0;
-                if (rawUsed == 0) return EOF;
+                _rawUsed = _stm.Read(_rawBuffer, 0, _rawBuffer.Length);
+                _rawPos = 0;
+                if (_rawUsed == 0) return EOF;
                 DecodeBlock();
             }
-            if (pos < used) return m_buffer[pos++];
+            if (_position < _used) return _buffer[_position++];
             return -1;
         }
 
-        public override int Read(char[] buffer, int start, int length) {
-            if (pos == used) {
-                rawUsed = stm.Read(rawBuffer, 0, rawBuffer.Length);
-                rawPos = 0;
-                if (rawUsed == 0) return -1;
+        public override int Read(char[] buffer, int start, int length) 
+        {
+            if (_position == _used) 
+            {
+                _rawUsed = _stm.Read(_rawBuffer, 0, _rawBuffer.Length);
+                _rawPos = 0;
+                if (_rawUsed == 0) return -1;
                 DecodeBlock();
             }
-            if (pos < used) {
-                length = Math.Min(used - pos, length);
-                Array.Copy(this.m_buffer, pos, buffer, start, length);
-                pos += length;
+            if (_position < _used) 
+            {
+                length = Math.Min(_used - _position, length);
+                Array.Copy(_buffer, _position, buffer, start, length);
+                _position += length;
                 return length;
             }
             return 0;
@@ -1275,25 +1310,29 @@ namespace Sgml {
         }
 
         // Read up to end of line, or full buffer, whichever comes first.
-        [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Kept for potential future usage.")]
         public int ReadLine(char[] buffer, int start, int length)
         {
             int i = 0;
             int ch = ReadChar();
-            while (ch != EOF) {
+            while (ch != EOF)
+            {
                 buffer[i+start] = (char)ch;
                 i++;
                 if (i+start == length) 
                     break; // buffer is full
 
-                if (ch == '\r' ) {
-                    if (PeekChar() == '\n') {
+                if (ch == '\r') 
+                {
+                    if (PeekChar() == '\n') 
+                    {
                         ch = ReadChar();
                         buffer[i + start] = (char)ch;
                         i++;
                     }
                     break;
-                } else if (ch == '\n') {
+                } 
+                else if (ch == '\n') 
+                {
                     break;
                 }
                 ch = ReadChar();
@@ -1301,11 +1340,13 @@ namespace Sgml {
             return i;
         }
 
-        public override string ReadToEnd() {
+        public override string ReadToEnd()
+        {
             char[] buffer = new char[100_000]; // large block heap is more efficient
             int len;
-            StringBuilder sb = new StringBuilder();
-            while ((len = Read(buffer, 0, buffer.Length)) > 0) {
+            var sb = new StringBuilder();
+            while ((len = Read(buffer, 0, buffer.Length)) > 0) 
+            {
                 sb.Append(buffer, 0, len);
             }
             return sb.ToString();
@@ -1314,22 +1355,27 @@ namespace Sgml {
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            stm.Dispose();
+            _stm.Dispose();
         }
     }
 
     internal abstract class Ucs4Decoder : Decoder {
         internal byte[] temp = new byte[4];
         internal int tempBytes = 0;
-        public override int GetCharCount(byte[] bytes, int index, int count) {
+        public override int GetCharCount(byte[] bytes, int index, int count) 
+        {
             return (count + tempBytes) / 4;
         }
         internal abstract int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex);
-        public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) {
+
+        public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
+        {
             int i = tempBytes;
 
-            if (tempBytes > 0) {
-                for (; i < 4; i++) {
+            if (tempBytes > 0)
+            {
+                for (; i < 4; i++) 
+                {
                     temp[i] = bytes[byteIndex];
                     byteIndex++;
                     byteCount--;
@@ -1347,13 +1393,16 @@ namespace Sgml {
             tempBytes = 0;
 
             if (byteIndex >= 0)
-                for (; byteIndex < byteCount; byteIndex++) {
+                for (; byteIndex < byteCount; byteIndex++)
+                {
                     temp[tempBytes] = bytes[byteIndex];
                     tempBytes++;
                 }
             return i;
         }
-        internal static char UnicodeToUTF16(UInt32 code) {
+
+        internal static char UnicodeToUTF16(UInt32 code) 
+        {
             byte lowerByte, higherByte;
             lowerByte = (byte)(0xD7C0 + (code >> 10));
             higherByte = (byte)(0xDC00 | code & 0x3ff);
@@ -1361,24 +1410,32 @@ namespace Sgml {
         }
     }
 
-    internal class Ucs4DecoderBigEngian : Ucs4Decoder {
-        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) {
+    internal class Ucs4DecoderBigEngian : Ucs4Decoder 
+    {
+        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) 
+        {
             UInt32 code;
             int i, j;
             byteCount += byteIndex;
-            for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
+            for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) 
+            {
                 code = (UInt32)(((bytes[i + 3]) << 24) | (bytes[i + 2] << 16) | (bytes[i + 1] << 8) | (bytes[i]));
-                if (code > 0x10FFFF) {
+                if (code > 0x10FFFF) 
+                {
                     throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                } else if (code > 0xFFFF) {
+                } 
+                else if (code > 0xFFFF) 
+                {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
-                } else {
-                    if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                    } else {
-                        chars[j] = (char)code;
-                    }
+                } 
+                else if (code >= 0xD800 && code <= 0xDFFF) 
+                {
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
+                }
+                else
+                {                   
+                    chars[j] = (char)code;                    
                 }
                 j++;
                 i += 4;
@@ -1387,25 +1444,33 @@ namespace Sgml {
         }
     }
 
-    internal class Ucs4DecoderLittleEndian : Ucs4Decoder {
-        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) {
+    internal class Ucs4DecoderLittleEndian : Ucs4Decoder
+    {
+        internal override int GetFullChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) 
+        {
             UInt32 code;
             int i, j;
             byteCount += byteIndex;
-            for (i = byteIndex, j = charIndex; i + 3 < byteCount; ) {
+            for (i = byteIndex, j = charIndex; i + 3 < byteCount; )
+            {
                 code = (UInt32)(((bytes[i]) << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | (bytes[i + 3]));
-                if (code > 0x10FFFF) {
+                if (code > 0x10FFFF) 
+                {
                     throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                } else if (code > 0xFFFF) {
+                } 
+                else if (code > 0xFFFF) 
+                {
                     chars[j] = UnicodeToUTF16(code);
                     j++;
-                } else {
-                    if (code >= 0xD800 && code <= 0xDFFF) {
-                        throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
-                    } else {
-                        chars[j] = (char)code;
-                    }
-                }
+                } 
+                else if (code >= 0xD800 && code <= 0xDFFF) 
+                {
+                    throw new SgmlParseException($"Invalid character 0x{code:x} in encoding");
+                } 
+                else 
+                {
+                    chars[j] = (char)code;
+                }                
                 j++;
                 i += 4;
             }
@@ -1418,54 +1483,54 @@ namespace Sgml {
     /// </summary>
     public class ElementDecl
     {
-        private readonly string m_name;
-        private readonly bool m_startTagOptional;
-        private readonly bool m_endTagOptional;
-        private readonly ContentModel m_contentModel;
-        private readonly string[] m_inclusions;
-        private readonly string[] m_exclusions;
-        private Dictionary<string, AttDef> m_attList;
+        private readonly string _name;
+        private readonly bool _startTagOptional;
+        private readonly bool _endTagOptional;
+        private readonly ContentModel _contentModel;
+        private readonly string[] _inclusions;
+        private readonly string[] _exclusions;
+        private Dictionary<string, AttDef> _attList;
 
         /// <summary>
         /// Initialises a new element declaration instance.
         /// </summary>
         /// <param name="name">The name of the element.</param>
-        /// <param name="sto">Whether the start tag is optional.</param>
-        /// <param name="eto">Whether the end tag is optional.</param>
-        /// <param name="cm">The <see cref="ContentModel"/> of the element.</param>
+        /// <param name="startTagOptional">Whether the start tag is optional.</param>
+        /// <param name="endTagOptional">Whether the end tag is optional.</param>
+        /// <param name="contentModel">The <see cref="ContentModel"/> of the element.</param>
         /// <param name="inclusions"></param>
         /// <param name="exclusions"></param>
-        public ElementDecl(string name, bool sto, bool eto, ContentModel cm, string[] inclusions, string[] exclusions)
+        public ElementDecl(string name, bool startTagOptional, bool endTagOptional, ContentModel contentModel, string[] inclusions, string[] exclusions)
         {
-            m_name = name;
-            m_startTagOptional = sto;
-            m_endTagOptional = eto;
-            m_contentModel = cm;
-            m_inclusions = inclusions;
-            m_exclusions = exclusions;
+            _name = name;
+            _startTagOptional = startTagOptional;
+            _endTagOptional = endTagOptional;
+            _contentModel = contentModel;
+            _inclusions = inclusions;
+            _exclusions = exclusions;
         }
 
         /// <summary>
         /// The element name.
         /// </summary>
-        public string Name => m_name;
+        public string Name => _name;
 
         /// <summary>
         /// The <see cref="Sgml.ContentModel"/> of the element declaration.
         /// </summary>
-        public ContentModel ContentModel => m_contentModel;
+        public ContentModel ContentModel => _contentModel;
 
         /// <summary>
         /// Whether the end tag of the element is optional.
         /// </summary>
         /// <value>true if the end tag of the element is optional, otherwise false.</value>
-        public bool EndTagOptional => m_endTagOptional;
+        public bool EndTagOptional => _endTagOptional;
 
         /// <summary>
         /// Whether the start tag of the element is optional.
         /// </summary>
         /// <value>true if the start tag of the element is optional, otherwise false.</value>
-        public bool StartTagOptional => m_startTagOptional;
+        public bool StartTagOptional => _startTagOptional; 
 
         /// <summary>
         /// Finds the attribute definition with the specified name.
@@ -1475,10 +1540,10 @@ namespace Sgml {
         /// <exception cref="InvalidOperationException">If the attribute list has not yet been initialised.</exception>
         public AttDef FindAttribute(string name)
         {
-            if (m_attList is null)
+            if (_attList is null)
                 throw new InvalidOperationException("The attribute list for the element declaration has not been initialised.");
 
-            m_attList.TryGetValue(name.ToUpperInvariant(), out AttDef a);
+            _attList.TryGetValue(name.ToUpperInvariant(), out AttDef a);
             return a;
         }
 
@@ -1491,17 +1556,17 @@ namespace Sgml {
             if (list is null)
                 throw new ArgumentNullException(nameof(list));
 
-            if (m_attList is null) 
+            if (_attList is null) 
             {
-                m_attList = list;
+                _attList = list;
             } 
             else 
             {
                 foreach (AttDef a in list.Values) 
                 {
-                    if (!m_attList.ContainsKey(a.Name)) 
+                    if (!_attList.ContainsKey(a.Name)) 
                     {
-                        m_attList.Add(a.Name, a);
+                        _attList.Add(a.Name, a);
                     }
                 }
             }
@@ -1516,24 +1581,24 @@ namespace Sgml {
         public bool CanContain(string name, SgmlDtd dtd)
         {            
             // return true if this element is allowed to contain the given element.
-            if (m_exclusions != null) 
+            if (_exclusions is not null) 
             {
-                foreach (string s in m_exclusions) 
+                foreach (string s in _exclusions) 
                 {
                     if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
                         return false;
                 }
             }
 
-            if (m_inclusions != null) 
+            if (_inclusions is not null) 
             {
-                foreach (string s in m_inclusions) 
+                foreach (string s in _inclusions) 
                 {
                     if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
                         return true;
                 }
             }
-            return m_contentModel.CanContain(name, dtd);
+            return _contentModel.CanContain(name, dtd);
         }
     }
 
@@ -1550,19 +1615,16 @@ namespace Sgml {
         /// <summary>
         /// Character data (CDATA), which contains only valid SGML characters.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         CDATA,
         
         /// <summary>
         /// Replaceable character data (RCDATA), which can contain text, character references and/or general entity references that resolve to character data.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         RCDATA,
         
         /// <summary>
         /// Empty element (EMPTY), i.e. having no contents, or contents that can be generated by the program.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         EMPTY
     }
 
@@ -1571,35 +1633,35 @@ namespace Sgml {
     /// </summary>
     public class ContentModel
     {
-        private DeclaredContent m_declaredContent;
-        private int m_currentDepth;
-        private Group m_model;
+        private DeclaredContent _declaredContent;
+        private int _currentDepth;
+        private Group _model;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="ContentModel"/> class.
         /// </summary>
         public ContentModel()
         {
-            m_model = new Group(null);
+            _model = new Group(null);
         }
 
         /// <summary>
         /// The number of groups on the stack.
         /// </summary>
-        public int CurrentDepth => m_currentDepth;
+        public int CurrentDepth => _currentDepth;
 
         /// <summary>
         /// The allowed child content, specifying if nested children are not allowed and if so, what content is allowed.
         /// </summary>
-        public DeclaredContent DeclaredContent => m_declaredContent;
+        public DeclaredContent DeclaredContent => _declaredContent;
 
         /// <summary>
         /// Begins processing of a nested model group.
         /// </summary>
         public void PushGroup()
         {
-            m_model = new Group(m_model);
-            m_currentDepth++;
+            _model = new Group(_model);
+            _currentDepth++;
         }
 
         /// <summary>
@@ -1608,13 +1670,13 @@ namespace Sgml {
         /// <returns>The current depth of the group nesting, or -1 if there are no more groups to pop.</returns>
         public int PopGroup()
         {
-            if (m_currentDepth == 0)
+            if (_currentDepth == 0)
                 return -1;
 
-            m_currentDepth--;
-            m_model.Parent.AddGroup(m_model);
-            m_model = m_model.Parent;
-            return m_currentDepth;
+            _currentDepth--;
+            _model.Parent.AddGroup(_model);
+            _model = _model.Parent;
+            return _currentDepth;
         }
 
         /// <summary>
@@ -1623,7 +1685,7 @@ namespace Sgml {
         /// <param name="sym">The symbol to add.</param>
         public void AddSymbol(string sym)
         {
-            m_model.AddSymbol(sym);
+            _model.AddSymbol(sym);
         }
 
         /// <summary>
@@ -1636,7 +1698,7 @@ namespace Sgml {
         /// </exception>
         public void AddConnector(char c)
         {
-            m_model.AddConnector(c);
+            _model.AddConnector(c);
         }
 
         /// <summary>
@@ -1645,7 +1707,7 @@ namespace Sgml {
         /// <param name="c">The occurrence character.</param>
         public void AddOccurrence(char c)
         {
-            m_model.AddOccurrence(c);
+            _model.AddOccurrence(c);
         }
 
         /// <summary>
@@ -1655,7 +1717,7 @@ namespace Sgml {
         public void SetDeclaredContent(string dc)
         {
             // TODO: Validate that this can never combine with nexted groups?
-            this.m_declaredContent = dc switch
+            _declaredContent = dc switch
             {
                 "EMPTY" => DeclaredContent.EMPTY,
                 "RCDATA" => DeclaredContent.RCDATA,
@@ -1672,10 +1734,10 @@ namespace Sgml {
         /// <returns>true if an element using this group can contain the element, otherwise false.</returns>
         public bool CanContain(string name, SgmlDtd dtd)
         {
-            if (m_declaredContent != DeclaredContent.Default)
+            if (_declaredContent != DeclaredContent.Default)
                 return false; // empty or text only node.
 
-            return m_model.CanContain(name, dtd);
+            return _model.CanContain(name, dtd);
         }
     }
 
@@ -1736,37 +1798,37 @@ namespace Sgml {
     /// </summary>
     public class Group
     {
-        private readonly Group m_parent;
-        private readonly List<object> Members;
-        private GroupType m_groupType;
-        private Occurrence m_occurrence;
-        private bool Mixed;
+        private readonly Group _parent;
+        private readonly List<object> _members;
+        private GroupType _groupType;
+        private Occurrence _occurrence;
+        private bool _isMixed;
 
         /// <summary>
         /// The <see cref="Occurrence"/> of this group.
         /// </summary>
-        public Occurrence Occurrence => m_occurrence;
+        public Occurrence Occurrence => _occurrence;
 
         /// <summary>
         /// Checks whether the group contains only text.
         /// </summary>
         /// <value>true if the group is of mixed content and has no members, otherwise false.</value>
-        public bool TextOnly => this.Mixed && Members.Count == 0;
+        public bool TextOnly => _isMixed && _members.Count == 0;
 
         /// <summary>
         /// The parent group of this group.
         /// </summary>
-        public Group Parent => m_parent;
+        public Group Parent => _parent;
         /// <summary>
         /// Initialises a new Content Model Group.
         /// </summary>
         /// <param name="parent">The parent model group.</param>
         public Group(Group parent)
         {
-            m_parent = parent;
-            Members = new List<object>();
-            m_groupType = GroupType.None;
-            m_occurrence = Occurrence.Required;
+            _parent = parent;
+            _members = new List<object>();
+            _groupType = GroupType.None;
+            _occurrence = Occurrence.Required;
         }
 
         /// <summary>
@@ -1775,7 +1837,7 @@ namespace Sgml {
         /// <param name="g">The model group to add.</param>
         public void AddGroup(Group g)
         {
-            Members.Add(g);
+            _members.Add(g);
         }
 
         /// <summary>
@@ -1786,11 +1848,11 @@ namespace Sgml {
         {
             if (string.Equals(sym, "#PCDATA", StringComparison.OrdinalIgnoreCase)) 
             {               
-                Mixed = true;
+                _isMixed = true;
             } 
             else 
             {
-                Members.Add(sym);
+                _members.Add(sym);
             }
         }
 
@@ -1804,31 +1866,25 @@ namespace Sgml {
         /// </exception>
         public void AddConnector(char c)
         {
-            if (!Mixed && Members.Count == 0) 
+            if (!_isMixed && _members.Count == 0) 
             {
                 throw new SgmlParseException($"Missing token before connector '{c}'.");
             }
 
-            GroupType gt = GroupType.None;
-            switch (c) 
+            GroupType gt = c switch
             {
-                case ',': 
-                    gt = GroupType.Sequence;
-                    break;
-                case '|':
-                    gt = GroupType.Or;
-                    break;
-                case '&':
-                    gt = GroupType.And;
-                    break;
+                ',' => GroupType.Sequence,
+                '|' => GroupType.Or,
+                '&' => GroupType.And,
+                _   => GroupType.None
+            };
+
+            if (_groupType != GroupType.None && _groupType != gt) 
+            {
+                throw new SgmlParseException($"Connector '{c}' is inconsistent with {_groupType} group.");
             }
 
-            if (this.m_groupType != GroupType.None && this.m_groupType != gt) 
-            {
-                throw new SgmlParseException($"Connector '{c}' is inconsistent with {m_groupType} group.");
-            }
-
-            m_groupType = gt;
+            _groupType = gt;
         }
 
         /// <summary>
@@ -1837,21 +1893,13 @@ namespace Sgml {
         /// <param name="c">The occurrence character.</param>
         public void AddOccurrence(char c)
         {
-            Occurrence o = Occurrence.Required;
-            switch (c) 
+            _occurrence = c switch
             {
-                case '?': 
-                    o = Occurrence.Optional;
-                    break;
-                case '+':
-                    o = Occurrence.OneOrMore;
-                    break;
-                case '*':
-                    o = Occurrence.ZeroOrMore;
-                    break;
-            }
-
-            m_occurrence = o;
+                '?' => Occurrence.Optional,
+                '+' => Occurrence.OneOrMore,
+                '*' => Occurrence.ZeroOrMore,
+                _   => Occurrence.Required
+            };
         }
 
         /// <summary>
@@ -1869,7 +1917,7 @@ namespace Sgml {
                 throw new ArgumentNullException(nameof(dtd));
 
             // Do a simple search of members.
-            foreach (object obj in Members) 
+            foreach (object obj in _members) 
             {
                 if (obj is string s) 
                 {
@@ -1879,7 +1927,7 @@ namespace Sgml {
             }
             // didn't find it, so do a more expensive search over child elements
             // that have optional start tags and over child groups.
-            foreach (object obj in Members) 
+            foreach (object obj in _members) 
             {
                 if (obj as string is string s)
                 {
@@ -1920,98 +1968,81 @@ namespace Sgml {
         /// <summary>
         /// The attribute contains text (with no markup).
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         CDATA,
         
         /// <summary>
         /// The attribute contains an entity declared in a DTD.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         ENTITY,
 
         /// <summary>
         /// The attribute contains a number of entities declared in a DTD.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         ENTITIES,
         
         /// <summary>
         /// The attribute is an id attribute uniquely identifie the element it appears on.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
-        [SuppressMessage("Microsoft.Naming", "CA1706", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         ID,
         
         /// <summary>
         /// The attribute value can be any declared subdocument or data entity name.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         IDREF,
         
         /// <summary>
         /// The attribute value is a list of (space separated) declared subdocument or data entity names.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         IDREFS,
         
         /// <summary>
         /// The attribute value is a SGML Name.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NAME,
         
         /// <summary>
         /// The attribute value is a list of (space separated) SGML Names.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NAMES,
         
         /// <summary>
         /// The attribute value is an XML name token (i.e. contains only name characters, but in this case with digits and other valid name characters accepted as the first character).
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NMTOKEN,
 
         /// <summary>
         /// The attribute value is a list of (space separated) XML NMTokens.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NMTOKENS,
 
         /// <summary>
         /// The attribute value is a number.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NUMBER,
         
         /// <summary>
         /// The attribute value is a list of (space separated) numbers.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NUMBERS,
         
         /// <summary>
         /// The attribute value is a number token (i.e. a name that starts with a number).
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NUTOKEN,
         
         /// <summary>
         /// The attribute value is a list of number tokens.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NUTOKENS,
         
         /// <summary>
         /// Attribute value is a member of the bracketed list of notation names that qualifies this reserved name.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         NOTATION,
         
         /// <summary>
         /// The attribute value is one of a set of allowed names.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1705", Justification = "This capitalisation is appropriate since the value it represents has all upper-case capitalisation.")]
         ENUMERATION
     }
 
@@ -2046,11 +2077,11 @@ namespace Sgml {
     /// </summary>
     public class AttDef
     {
-        private readonly string m_name;
-        private AttributeType m_type;
-        private string[] m_enumValues;
-        private string m_default;
-        private AttributePresence m_presence;
+        private readonly string _name;
+        private AttributeType _type;
+        private string[] _enumValues;
+        private string _default;
+        private AttributePresence _presence;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="AttDef"/> class.
@@ -2058,33 +2089,32 @@ namespace Sgml {
         /// <param name="name">The name of the attribute.</param>
         public AttDef(string name)
         {
-            m_name = name;
+            _name = name;
         }
 
         /// <summary>
         /// The name of the attribute declared by this attribute definition.
         /// </summary>
-        public string Name => m_name;
+        public string Name => _name;
 
         /// <summary>
         /// Gets of sets the default value of the attribute.
         /// </summary>
         public string Default
         {
-            get => m_default;
-            set => m_default = value;
+            get => _default;
+            set => _default = value;
         }
 
         /// <summary>
         /// The constraints on the attribute's presence on an element.
         /// </summary>
-        public AttributePresence AttributePresence => m_presence;
+        public AttributePresence AttributePresence => _presence;
 
         /// <summary>
         /// Gets or sets the possible enumerated values for the attribute.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1819", Justification = "Changing this would break backwards compatibility with previous code using this library.")]
-        public string[] EnumValues => m_enumValues;
+        public string[] EnumValues => _enumValues;
 
         /// <summary>
         /// Sets the attribute definition to have an enumerated value.
@@ -2097,14 +2127,14 @@ namespace Sgml {
             if (type != AttributeType.ENUMERATION && type != AttributeType.NOTATION)
                 throw new ArgumentException($"AttributeType {type} is not valid for an attribute definition with an enumerated value.");
 
-            m_enumValues = enumValues;
-            m_type = type;
+            _enumValues = enumValues;
+            _type = type;
         }
 
         /// <summary>
         /// The <see cref="AttributeType"/> of the attribute declaration.
         /// </summary>
-        public AttributeType Type => m_type;
+        public AttributeType Type => _type;
 
         /// <summary>
         /// Sets the type of the attribute definition.
@@ -2112,7 +2142,7 @@ namespace Sgml {
         /// <param name="type">The string representation of the attribute type, corresponding to the values in the <see cref="AttributeType"/> enumeration.</param>
         public void SetType(string type)
         {
-            m_type = type switch
+            _type = type switch
             {
                 "CDATA" => AttributeType.CDATA,
                 "ENTITY" => AttributeType.ENTITY,
@@ -2142,16 +2172,16 @@ namespace Sgml {
             bool hasDefault = true;
             if (string.Equals(token, "FIXED", StringComparison.OrdinalIgnoreCase)) 
             {
-                m_presence = AttributePresence.Fixed;             
+                _presence = AttributePresence.Fixed;             
             } 
             else if (string.Equals(token, "REQUIRED", StringComparison.OrdinalIgnoreCase)) 
             {
-                m_presence = AttributePresence.Required;
+                _presence = AttributePresence.Required;
                 hasDefault = false;
             }
             else if (string.Equals(token, "IMPLIED", StringComparison.OrdinalIgnoreCase)) 
             {
-                m_presence = AttributePresence.Implied;
+                _presence = AttributePresence.Implied;
                 hasDefault = false;
             }
             else 
@@ -2191,14 +2221,14 @@ namespace Sgml {
     /// </summary>
     public class SgmlDtd
     {
-        private string m_name;
+        private string _name;
 
-        private readonly Dictionary<string, ElementDecl> m_elements;
-        private readonly Dictionary<string, Entity> m_pentities;
-        private readonly Dictionary<string, Entity> m_entities;
-        private readonly StringBuilder m_sb;
-        private Entity m_current;
-        private readonly IEntityResolver m_resolver;
+        private readonly Dictionary<string, ElementDecl> _elements;
+        private readonly Dictionary<string, Entity> _pentities;
+        private readonly Dictionary<string, Entity> _entities;
+        private readonly StringBuilder _sb;
+        private Entity _current;
+        private readonly IEntityResolver _resolver;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="SgmlDtd"/> class.
@@ -2208,12 +2238,12 @@ namespace Sgml {
         /// <param name="resolver">The resolver to use for loading this entity</param>
         public SgmlDtd(string name, XmlNameTable nt, IEntityResolver resolver)
         {
-            this.m_name = name;
-            this.m_elements = new Dictionary<string,ElementDecl>();
-            this.m_pentities = new Dictionary<string, Entity>();
-            this.m_entities = new Dictionary<string, Entity>();
-            this.m_sb = new StringBuilder();
-            this.m_resolver = resolver;
+            _name = name;
+            _elements = new();
+            _pentities = new();
+            _entities = new();
+            _sb = new StringBuilder();
+            _resolver = resolver;
         }
 
         /// <summary>
@@ -2221,8 +2251,8 @@ namespace Sgml {
         /// </summary>
         public string Name
         {
-            get => m_name;
-            set => m_name = value;
+            get => _name;
+            set => _name = value;
         }
 
         /// <summary>
@@ -2261,7 +2291,7 @@ namespace Sgml {
             } 
             catch (Exception e)
             {
-                throw new SgmlParseException(e.Message + dtd.m_current.Context());
+                throw new SgmlParseException(e.Message + dtd._current.Context());
             }
 
             return dtd;
@@ -2277,7 +2307,6 @@ namespace Sgml {
         /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "The entities created here are not temporary and should not be disposed here.")]
         public static SgmlDtd Parse(Uri baseUri, string name, TextReader input, string subset, XmlNameTable nt, IEntityResolver resolver)
         {
             SgmlDtd dtd = new SgmlDtd(name, nt, resolver);
@@ -2293,7 +2322,7 @@ namespace Sgml {
             } 
             catch (Exception e)
             {
-                throw new SgmlParseException(e.Message + dtd.m_current.Context());
+                throw new SgmlParseException(e.Message + dtd._current.Context());
             }
 
             return dtd;
@@ -2306,7 +2335,7 @@ namespace Sgml {
         /// <returns>The specified Entity from the DTD.</returns>
         public Entity FindEntity(string name)
         {
-            this.m_entities.TryGetValue(name, out Entity e);
+            _entities.TryGetValue(name, out Entity e);
             return e;
         }
 
@@ -2317,69 +2346,69 @@ namespace Sgml {
         /// <returns>The <see cref="ElementDecl"/> matching the specified name.</returns>
         public ElementDecl FindElement(string name)
         {
-            m_elements.TryGetValue(name.ToUpperInvariant(), out ElementDecl el);
+            _elements.TryGetValue(name.ToUpperInvariant(), out ElementDecl el);
             return el;
         }
 
         //-------------------------------- Parser -------------------------
         private void PushEntity(Uri baseUri, Entity e)
         {
-            e.Open(this.m_current, baseUri);
-            this.m_current = e;
-            this.m_current.ReadChar();
+            e.Open(_current, baseUri);
+            _current = e;
+            _current.ReadChar();
         }
 
         private void PopEntity()
         {
-            if (this.m_current != null) this.m_current.Close();
-            if (this.m_current.Parent != null) 
+            if (_current != null) _current.Close();
+            if (_current.Parent != null) 
             {
-                this.m_current = this.m_current.Parent;
+                _current = _current.Parent;
             } 
             else 
             {
-                this.m_current = null;
+                _current = null;
             }
         }
 
         private void Parse()
         {
-            char ch = this.m_current.Lastchar;
+            char ch = _current.Lastchar;
             while (true) 
             {
                 switch (ch) 
                 {
                     case Entity.EOF:
                         PopEntity();
-                        if (this.m_current is null)
+                        if (_current is null)
                             return;
-                        ch = this.m_current.Lastchar;
+                        ch = _current.Lastchar;
                         break;
                     case ' ':
                     case '\n':
                     case '\r':
                     case '\t':
-                        ch = this.m_current.ReadChar();
+                        ch = _current.ReadChar();
                         break;
                     case '<':
                         ParseMarkup();
-                        ch = this.m_current.ReadChar();
+                        ch = _current.ReadChar();
                         break;
                     case '%':
                         Entity e = ParseParameterEntity(SgmlDtd.WhiteSpace);
                         try 
                         {
-                            PushEntity(this.m_current.ResolvedUri, e);
+                            PushEntity(_current.ResolvedUri, e);
                         } 
                         catch (Exception ex) 
                         {
                             // BUG: need an error log.
-                            Debug.WriteLine(ex.Message + this.m_current.Context());
+                            Debug.WriteLine(ex.Message + _current.Context());
                         }
-                        ch = this.m_current.Lastchar;
+                        ch = _current.Lastchar;
                         break;
                     default:
-                        this.m_current.Error("Unexpected character '{0}'", ch);
+                        _current.Error("Unexpected character '{0}'", ch);
                         break;
                 }               
             }
@@ -2387,18 +2416,18 @@ namespace Sgml {
 
         void ParseMarkup()
         {
-            char ch = this.m_current.ReadChar();
+            char ch = _current.ReadChar();
             if (ch != '!') 
             {
-                this.m_current.Error("Found '{0}', but expecing declaration starting with '<!'");
+                _current.Error("Found '{0}', but expecing declaration starting with '<!'");
                 return;
             }
-            ch = this.m_current.ReadChar();
+            ch = _current.ReadChar();
             if (ch == '-') 
             {
-                ch = this.m_current.ReadChar();
-                if (ch != '-') this.m_current.Error("Expecting comment '<!--' but found {0}", ch);
-                this.m_current.ScanToEnd(this.m_sb, "Comment", "-->");
+                ch = _current.ReadChar();
+                if (ch != '-') _current.Error("Expecting comment '<!--' but found {0}", ch);
+                _current.ScanToEnd(_sb, "Comment", "-->");
             } 
             else if (ch == '[') 
             {
@@ -2406,7 +2435,7 @@ namespace Sgml {
             }
             else 
             {
-                string token = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
+                string token = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, true);
                 switch (token) 
                 {
                     case "ENTITY":
@@ -2419,7 +2448,7 @@ namespace Sgml {
                         ParseAttList();
                         break;
                     default:
-                        this.m_current.Error("Invalid declaration '<!{0}'.  Expecting 'ENTITY', 'ELEMENT' or 'ATTLIST'.", token);
+                        _current.Error("Invalid declaration '<!{0}'.  Expecting 'ENTITY', 'ELEMENT' or 'ATTLIST'.", token);
                         break;
                 }
             }
@@ -2427,7 +2456,7 @@ namespace Sgml {
 
         char ParseDeclComments()
         {
-            char ch = this.m_current.Lastchar;
+            char ch = _current.Lastchar;
             while (ch == '-') 
             {
                 ch = ParseDeclComment(true);
@@ -2438,16 +2467,16 @@ namespace Sgml {
         char ParseDeclComment(bool full)
         {
             // This method scans over a comment inside a markup declaration.
-            char ch = this.m_current.ReadChar();
-            if (full && ch != '-') this.m_current.Error("Expecting comment delimiter '--' but found {0}", ch);
-            this.m_current.ScanToEnd(this.m_sb, "Markup Comment", "--");
-            return this.m_current.SkipWhitespace();
+            char ch = _current.ReadChar();
+            if (full && ch != '-') _current.Error("Expecting comment delimiter '--' but found {0}", ch);
+            _current.ScanToEnd(_sb, "Markup Comment", "--");
+            return _current.SkipWhitespace();
         }
 
         void ParseMarkedSection()
         {
             // <![^ name [ ... ]]>
-            this.m_current.ReadChar(); // move to next char.
+            _current.ReadChar(); // move to next char.
             string name = ScanName("[");
             if (string.Equals(name, "INCLUDE", StringComparison.OrdinalIgnoreCase)) 
             {
@@ -2459,12 +2488,10 @@ namespace Sgml {
             }
             else 
             {
-                this.m_current.Error("Unsupported marked section type '{0}'", name);
+                _current.Error("Unsupported marked section type '{0}'", name);
             }
         }
 
-        [SuppressMessage("Microsoft.Performance", "CA1822", Justification = "This is not yet implemented and will use 'this' in the future.")]
-        [SuppressMessage("Microsoft.Globalization", "CA1303", Justification = "The use of a literal here is only due to this not yet being implemented.")]
         private void ParseIncludeSection()
         {
             throw new NotImplementedException("Include Section");
@@ -2472,46 +2499,46 @@ namespace Sgml {
 
         void ParseIgnoreSection()
         {
-            char ch = this.m_current.SkipWhitespace();
-            if (ch != '[') this.m_current.Error("Expecting '[' but found {0}", ch);
-            this.m_current.ScanToEnd(this.m_sb, "Conditional Section", "]]>");
+            char ch = _current.SkipWhitespace();
+            if (ch != '[') _current.Error("Expecting '[' but found {0}", ch);
+            _current.ScanToEnd(_sb, "Conditional Section", "]]>");
         }
 
         string ScanName(string term)
         {
             // skip whitespace, scan name (which may be parameter entity reference
             // which is then expanded to a name)
-            char ch = this.m_current.SkipWhitespace();
+            char ch = _current.SkipWhitespace();
             if (ch == '%') 
             {
                 Entity e = ParseParameterEntity(term);
-                ch = this.m_current.Lastchar;
+                ch = _current.Lastchar;
                 // bugbug - need to support external and nested parameter entities
                 if (!e.IsInternal) throw new NotSupportedException("External parameter entity resolution");
                 return e.Literal.Trim();
             } 
             else 
             {
-                return this.m_current.ScanToken(this.m_sb, term, true);
+                return _current.ScanToken(_sb, term, true);
             }
         }
 
         private Entity ParseParameterEntity(string term)
         {
             // almost the same as this.current.ScanToken, except we also terminate on ';'
-            this.m_current.ReadChar();
-            string name =  this.m_current.ScanToken(this.m_sb, ";"+term, false);
-            if (this.m_current.Lastchar == ';') 
-                this.m_current.ReadChar();
+            _current.ReadChar();
+            string name =  _current.ScanToken(_sb, ";"+term, false);
+            if (_current.Lastchar == ';') 
+                _current.ReadChar();
             Entity e = GetParameterEntity(name);
             return e;
         }
 
         private Entity GetParameterEntity(string name)
         {
-            m_pentities.TryGetValue(name, out Entity e);
+            _pentities.TryGetValue(name, out Entity e);
             if (e is null)
-                this.m_current.Error("Reference to undefined parameter entity '{0}'", name);
+                _current.Error("Reference to undefined parameter entity '{0}'", name);
 
             return e;
         }
@@ -2520,11 +2547,10 @@ namespace Sgml {
         /// Returns a dictionary for looking up entities by their <see cref="Entity.Literal"/> value.
         /// </summary>
         /// <returns>A dictionary for looking up entities by their <see cref="Entity.Literal"/> value.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024", Justification = "This method creates and copies a dictionary, so exposing it as a property is not appropriate.")]
         public Dictionary<string, Entity> GetEntitiesLiteralNameLookup()
         {
             Dictionary<string, Entity> hashtable = new Dictionary<string, Entity>();
-            foreach (Entity entity in this.m_entities.Values)
+            foreach (Entity entity in _entities.Values)
                 hashtable[entity.Literal] = entity;
 
             return hashtable;
@@ -2534,32 +2560,32 @@ namespace Sgml {
 
         private void ParseEntity()
         {
-            char ch = this.m_current.SkipWhitespace();
+            char ch = _current.SkipWhitespace();
             bool pe = (ch == '%');
             if (pe)
             {
                 // parameter entity.
-                this.m_current.ReadChar(); // move to next char
-                ch = this.m_current.SkipWhitespace();
+                _current.ReadChar(); // move to next char
+                ch = _current.SkipWhitespace();
             }
-            string name = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
-            ch = this.m_current.SkipWhitespace();
+            string name = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, true);
+            ch = _current.SkipWhitespace();
             Entity e;
-            if (ch == '"' || ch == '\'') 
+            if (ch is '"' or '\'') 
             {
-                string literal = this.m_current.ScanLiteral(this.m_sb, ch);
-                e = new Entity(name, literal, m_resolver);                
+                string literal = _current.ScanLiteral(_sb, ch);
+                e = new Entity(name, literal, _resolver);                
             } 
             else 
             {
                 string pubid = null;
                 string extid;
-                string tok = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
+                string tok = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, true);
                 if (Entity.IsLiteralType(tok))
                 {
-                    ch = this.m_current.SkipWhitespace();
-                    string literal = this.m_current.ScanLiteral(this.m_sb, ch);
-                    e = new Entity(name, literal, m_resolver);
+                    ch = _current.SkipWhitespace();
+                    string literal = _current.ScanLiteral(_sb, ch);
+                    e = new Entity(name, literal, _resolver);
                     e.SetLiteralType(tok);
                 }
                 else 
@@ -2567,76 +2593,78 @@ namespace Sgml {
                     extid = tok;
                     if (string.Equals(extid, "PUBLIC", StringComparison.OrdinalIgnoreCase)) 
                     {
-                        ch = this.m_current.SkipWhitespace();
-                        if (ch == '"' || ch == '\'') 
+                        ch = _current.SkipWhitespace();
+                        if (ch is '"' or '\'') 
                         {
-                            pubid = this.m_current.ScanLiteral(this.m_sb, ch);
+                            pubid = _current.ScanLiteral(_sb, ch);
                         } 
                         else 
                         {
-                            this.m_current.Error("Expecting public identifier literal but found '{0}'",ch);
+                            _current.Error("Expecting public identifier literal but found '{0}'",ch);
                         }
                     } 
                     else if (!string.Equals(extid, "SYSTEM", StringComparison.OrdinalIgnoreCase)) 
                     {
-                        this.m_current.Error("Invalid external identifier '{0}'.  Expecing 'PUBLIC' or 'SYSTEM'.", extid);
+                        _current.Error("Invalid external identifier '{0}'.  Expecing 'PUBLIC' or 'SYSTEM'.", extid);
                     }
                     string uri = null;
-                    ch = this.m_current.SkipWhitespace();
-                    if (ch == '"' || ch == '\'') 
+                    ch = _current.SkipWhitespace();
+                    if (ch is '"' or '\'') 
                     {
-                        uri = this.m_current.ScanLiteral(this.m_sb, ch);
+                        uri = _current.ScanLiteral(_sb, ch);
                     } 
                     else if (ch != '>')
                     {
-                        this.m_current.Error("Expecting system identifier literal but found '{0}'",ch);
+                        _current.Error("Expecting system identifier literal but found '{0}'",ch);
                     }
-                    e = new Entity(name, pubid, uri, m_resolver);
+                    e = new Entity(name, pubid, uri, _resolver);
                 }
             }
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
             if (ch == '-') 
                 ch = ParseDeclComments();
             if (ch != '>') 
             {
-                this.m_current.Error("Expecting end of entity declaration '>' but found '{0}'", ch);  
+                _current.Error("Expecting end of entity declaration '>' but found '{0}'", ch);  
             }           
             if (pe)
-                this.m_pentities.Add(e.Name, e);
+                _pentities.Add(e.Name, e);
             else
-                this.m_entities.Add(e.Name, e);
+                _entities.Add(e.Name, e);
         }
 
         private void ParseElementDecl()
         {
-            char ch = this.m_current.SkipWhitespace();
+            char ch = _current.SkipWhitespace();
             string[] names = ParseNameGroup(ch, true);
-            ch = char.ToUpperInvariant(this.m_current.SkipWhitespace());
+            ch = char.ToUpperInvariant(_current.SkipWhitespace());
             bool sto = false;
             bool eto = false;
-            if (ch == 'O' || ch == '-') {
+            if (ch is 'O' or '-')
+            {
                 sto = (ch == 'O'); // start tag optional?   
-                this.m_current.ReadChar();
-                ch = char.ToUpperInvariant(this.m_current.SkipWhitespace());
-                if (ch == 'O' || ch == '-'){
+                _current.ReadChar();
+                ch = char.ToUpperInvariant(_current.SkipWhitespace());
+                if (ch is 'O' or '-')
+                {
                     eto = (ch == 'O'); // end tag optional? 
-                    ch = this.m_current.ReadChar();
+                    ch = _current.ReadChar();
                 }
             }
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
             ContentModel cm = ParseContentModel(ch);
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
 
             string [] exclusions = null;
             string [] inclusions = null;
 
             if (ch == '-') 
             {
-                ch = this.m_current.ReadChar();
+                ch = _current.ReadChar();
                 if (ch == '(') 
                 {
                     exclusions = ParseNameGroup(ch, true);
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                 }
                 else if (ch == '-') 
                 {
@@ -2644,7 +2672,7 @@ namespace Sgml {
                 } 
                 else 
                 {
-                    this.m_current.Error("Invalid syntax at '{0}'", ch);  
+                    _current.Error("Invalid syntax at '{0}'", ch);  
                 }
             }
 
@@ -2653,13 +2681,13 @@ namespace Sgml {
 
             if (ch == '+') 
             {
-                ch = this.m_current.ReadChar();
+                ch = _current.ReadChar();
                 if (ch != '(') 
                 {
-                    this.m_current.Error("Expecting inclusions name group", ch);  
+                    _current.Error("Expecting inclusions name group", ch);  
                 }
                 inclusions = ParseNameGroup(ch, true);
-                ch = this.m_current.SkipWhitespace();
+                ch = _current.SkipWhitespace();
             }
 
             if (ch == '-') 
@@ -2668,13 +2696,13 @@ namespace Sgml {
 
             if (ch != '>') 
             {
-                this.m_current.Error("Expecting end of ELEMENT declaration '>' but found '{0}'", ch); 
+                _current.Error("Expecting end of ELEMENT declaration '>' but found '{0}'", ch); 
             }
 
             foreach (string name in names) 
             {
                 string atom = name.ToUpperInvariant();
-                this.m_elements.Add(atom, new ElementDecl(atom, sto, eto, cm, inclusions, exclusions));
+                _elements.Add(atom, new ElementDecl(atom, sto, eto, cm, inclusions, exclusions));
             }
         }
 
@@ -2684,35 +2712,38 @@ namespace Sgml {
             List<string> names = new List<string>();
             if (ch == '(') 
             {
-                ch = this.m_current.ReadChar();
-                ch = this.m_current.SkipWhitespace();
+                ch = _current.ReadChar();
+                ch = _current.SkipWhitespace();
                 while (ch != ')') 
                 {
                     // skip whitespace, scan name (which may be parameter entity reference
                     // which is then expanded to a name)                    
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                     if (ch == '%') 
                     {
                         Entity e = ParseParameterEntity(SgmlDtd.ngterm);
-                        PushEntity(this.m_current.ResolvedUri, e);
+                        PushEntity(_current.ResolvedUri, e);
                         ParseNameList(names, nmtokens);
                         PopEntity();
-                        ch = this.m_current.Lastchar;
+                        ch = _current.Lastchar;
                     }
                     else 
                     {
-                        string token = this.m_current.ScanToken(this.m_sb, SgmlDtd.ngterm, nmtokens);
+                        string token = _current.ScanToken(_sb, SgmlDtd.ngterm, nmtokens);
                         token = token.ToUpperInvariant();
                         names.Add(token);
                     }
-                    ch = this.m_current.SkipWhitespace();
-                    if (ch == '|' || ch == ',') ch = this.m_current.ReadChar();
+                    ch = _current.SkipWhitespace();
+                    if (ch is '|' or ',')
+                    {
+                        ch = _current.ReadChar();
+                    }
                 }
-                this.m_current.ReadChar(); // consume ')'
+                _current.ReadChar(); // consume ')'
             } 
             else 
             {
-                string name = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, nmtokens);
+                string name = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, nmtokens);
                 name = name.ToUpperInvariant();
                 names.Add(name);
             }
@@ -2721,30 +2752,30 @@ namespace Sgml {
 
         void ParseNameList(List<string> names, bool nmtokens)
         {
-            char ch = this.m_current.Lastchar;
-            ch = this.m_current.SkipWhitespace();
+            char ch = _current.Lastchar;
+            ch = _current.SkipWhitespace();
             while (ch != Entity.EOF) 
             {
                 string name;
                 if (ch == '%') 
                 {
                     Entity e = ParseParameterEntity(SgmlDtd.ngterm);
-                    PushEntity(this.m_current.ResolvedUri, e);
+                    PushEntity(_current.ResolvedUri, e);
                     ParseNameList(names, nmtokens);
                     PopEntity();
-                    ch = this.m_current.Lastchar;
+                    ch = _current.Lastchar;
                 } 
                 else 
                 {
-                    name = this.m_current.ScanToken(this.m_sb, SgmlDtd.ngterm, true);
+                    name = _current.ScanToken(_sb, SgmlDtd.ngterm, true);
                     name = name.ToUpperInvariant();
                     names.Add(name);
                 }
-                ch = this.m_current.SkipWhitespace();
+                ch = _current.SkipWhitespace();
                 if (ch == '|') 
                 {
-                    ch = this.m_current.ReadChar();
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.ReadChar();
+                    ch = _current.SkipWhitespace();
                 }
             }
         }
@@ -2755,20 +2786,20 @@ namespace Sgml {
             ContentModel cm = new ContentModel();
             if (ch == '(') 
             {
-                this.m_current.ReadChar();
+                _current.ReadChar();
                 ParseModel(')', cm);
-                ch = this.m_current.ReadChar();
-                if (ch == '?' || ch == '+' || ch == '*') 
+                ch = _current.ReadChar();
+                if (ch is '?' or '+' or '*') 
                 {
                     cm.AddOccurrence(ch);
-                    this.m_current.ReadChar();
+                    _current.ReadChar();
                 }
             } 
             else if (ch == '%') 
             {
                 Entity e = ParseParameterEntity(SgmlDtd.dcterm);
-                PushEntity(this.m_current.ResolvedUri, e);
-                cm = ParseContentModel(this.m_current.Lastchar);
+                PushEntity(_current.ResolvedUri, e);
+                cm = ParseContentModel(_current.Lastchar);
                 PopEntity(); // bugbug should be at EOF.
             }
             else
@@ -2784,76 +2815,76 @@ namespace Sgml {
         {
             // Called when part of the model is made up of the contents of a parameter entity
             int depth = cm.CurrentDepth;
-            char ch = this.m_current.Lastchar;
-            ch = this.m_current.SkipWhitespace();
+            char ch = _current.Lastchar;
+            ch = _current.SkipWhitespace();
             while (ch != cmt || cm.CurrentDepth > depth) // the entity must terminate while inside the content model.
             {
                 if (ch == Entity.EOF) 
                 {
-                    this.m_current.Error("Content Model was not closed");
+                    _current.Error("Content Model was not closed");
                 }
                 if (ch == '%') 
                 {
                     Entity e = ParseParameterEntity(SgmlDtd.cmterm);
-                    PushEntity(this.m_current.ResolvedUri, e);
+                    PushEntity(_current.ResolvedUri, e);
                     ParseModel(Entity.EOF, cm);
                     PopEntity();                    
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                 } 
                 else if (ch == '(') 
                 {
                     cm.PushGroup();
-                    this.m_current.ReadChar();// consume '('
-                    ch = this.m_current.SkipWhitespace();
+                    _current.ReadChar();// consume '('
+                    ch = _current.SkipWhitespace();
                 }
                 else if (ch == ')') 
                 {
-                    ch = this.m_current.ReadChar();// consume ')'
-                    if (ch == '*' || ch == '+' || ch == '?') 
+                    ch = _current.ReadChar();// consume ')'
+                    if (ch is '*' or '+' or '?') 
                     {
                         cm.AddOccurrence(ch);
-                        ch = this.m_current.ReadChar();
+                        ch = _current.ReadChar();
                     }
                     if (cm.PopGroup() < depth)
                     {
-                        this.m_current.Error("Parameter entity cannot close a paren outside it's own scope");
+                        _current.Error("Parameter entity cannot close a paren outside it's own scope");
                     }
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                 }
-                else if (ch == ',' || ch == '|' || ch == '&') 
+                else if (ch is ',' or '|' or '&') 
                 {
                     cm.AddConnector(ch);
-                    this.m_current.ReadChar(); // skip connector
-                    ch = this.m_current.SkipWhitespace();
+                    _current.ReadChar(); // skip connector
+                    ch = _current.SkipWhitespace();
                 }
                 else
                 {
                     string token;
                     if (ch == '#') 
                     {
-                        ch = this.m_current.ReadChar();
-                        token = "#" + this.m_current.ScanToken(this.m_sb, SgmlDtd.cmterm, true); // since '#' is not a valid name character.
+                        ch = _current.ReadChar();
+                        token = "#" + _current.ScanToken(_sb, SgmlDtd.cmterm, true); // since '#' is not a valid name character.
                     } 
                     else 
                     {
-                        token = this.m_current.ScanToken(this.m_sb, SgmlDtd.cmterm, true);
+                        token = _current.ScanToken(_sb, SgmlDtd.cmterm, true);
                     }
 
                     token = token.ToUpperInvariant();
-                    ch = this.m_current.Lastchar;
-                    if (ch == '?' || ch == '+' || ch == '*') 
+                    ch = _current.Lastchar;
+                    if (ch is '?' or '+' or '*') 
                     {
                         cm.PushGroup();
                         cm.AddSymbol(token);
                         cm.AddOccurrence(ch);
                         cm.PopGroup();
-                        this.m_current.ReadChar(); // skip connector
-                        ch = this.m_current.SkipWhitespace();
+                        _current.ReadChar(); // skip connector
+                        ch = _current.SkipWhitespace();
                     } 
                     else 
                     {
                         cm.AddSymbol(token);
-                        ch = this.m_current.SkipWhitespace();
+                        ch = _current.SkipWhitespace();
                     }                   
                 }
             }
@@ -2861,15 +2892,15 @@ namespace Sgml {
 
         void ParseAttList()
         {
-            char ch = this.m_current.SkipWhitespace();
+            char ch = _current.SkipWhitespace();
             string[] names = ParseNameGroup(ch, true);          
             Dictionary<string, AttDef> attlist = new Dictionary<string, AttDef>();
             ParseAttList(attlist, '>');
             foreach (string name in names)
             {
-                if (!m_elements.TryGetValue(name, out ElementDecl e)) 
+                if (!_elements.TryGetValue(name, out ElementDecl e)) 
                 {
-                    this.m_current.Error("ATTLIST references undefined ELEMENT {0}", name);
+                    _current.Error("ATTLIST references undefined ELEMENT {0}", name);
                 }
 
                 e.AddAttDefs(attlist);
@@ -2879,16 +2910,16 @@ namespace Sgml {
         const string peterm = " \t\r\n>";
         void ParseAttList(Dictionary<string, AttDef> list, char term)
         {
-            char ch = this.m_current.SkipWhitespace();
+            char ch = _current.SkipWhitespace();
             while (ch != term) 
             {
                 if (ch == '%') 
                 {
                     Entity e = ParseParameterEntity(SgmlDtd.peterm);
-                    PushEntity(this.m_current.ResolvedUri, e);
+                    PushEntity(_current.ResolvedUri, e);
                     ParseAttList(list, Entity.EOF);
                     PopEntity();                    
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                 } 
                 else if (ch == '-') 
                 {
@@ -2899,30 +2930,30 @@ namespace Sgml {
                     AttDef a = ParseAttDef(ch);
                     list.Add(a.Name, a);
                 }
-                ch = this.m_current.SkipWhitespace();
+                ch = _current.SkipWhitespace();
             }
         }
 
         AttDef ParseAttDef(char ch)
         {
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
             string name = ScanName(SgmlDtd.WhiteSpace);
             name = name.ToUpperInvariant();
             AttDef attdef = new AttDef(name);
 
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
             if (ch == '-') 
                 ch = ParseDeclComments();               
 
             ParseAttType(ch, attdef);
 
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
             if (ch == '-') 
                 ch = ParseDeclComments();               
 
             ParseAttDefault(ch, attdef);
 
-            ch = this.m_current.SkipWhitespace();
+            ch = _current.SkipWhitespace();
             if (ch == '-') 
                 ch = ParseDeclComments();               
 
@@ -2935,10 +2966,10 @@ namespace Sgml {
             if (ch == '%')
             {
                 Entity e = ParseParameterEntity(SgmlDtd.WhiteSpace);
-                PushEntity(this.m_current.ResolvedUri, e);
-                ParseAttType(this.m_current.Lastchar, attdef);
+                PushEntity(_current.ResolvedUri, e);
+                ParseAttType(_current.Lastchar, attdef);
                 PopEntity(); // bugbug - are we at the end of the entity?
-                ch = this.m_current.Lastchar;
+                ch = _current.Lastchar;
                 return;
             }
 
@@ -2953,10 +2984,10 @@ namespace Sgml {
                 string token = ScanName(SgmlDtd.WhiteSpace);
                 if (string.Equals(token, "NOTATION", StringComparison.OrdinalIgnoreCase)) 
                 {
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                     if (ch != '(') 
                     {
-                        this.m_current.Error("Expecting name group '(', but found '{0}'", ch);
+                        _current.Error("Expecting name group '(', but found '{0}'", ch);
                     }
                     //attdef.Type = AttributeType.NOTATION;
                     //attdef.EnumValues = ParseNameGroup(ch, true);
@@ -2974,35 +3005,35 @@ namespace Sgml {
             if (ch == '%')
             {
                 Entity e = ParseParameterEntity(SgmlDtd.WhiteSpace);
-                PushEntity(this.m_current.ResolvedUri, e);
-                ParseAttDefault(this.m_current.Lastchar, attdef);
+                PushEntity(_current.ResolvedUri, e);
+                ParseAttDefault(_current.Lastchar, attdef);
                 PopEntity(); // bugbug - are we at the end of the entity?
-                ch = this.m_current.Lastchar;
+                ch = _current.Lastchar;
                 return;
             }
 
             bool hasdef = true;
             if (ch == '#') 
             {
-                this.m_current.ReadChar();
-                string token = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, true);
+                _current.ReadChar();
+                string token = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, true);
                 hasdef = attdef.SetPresence(token);
-                ch = this.m_current.SkipWhitespace();
+                ch = _current.SkipWhitespace();
             } 
             if (hasdef) 
             {
-                if (ch == '\'' || ch == '"') 
+                if (ch is '\'' or '"') 
                 {
-                    string lit = this.m_current.ScanLiteral(this.m_sb, ch);
+                    string lit = _current.ScanLiteral(_sb, ch);
                     attdef.Default = lit;
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                 }
                 else
                 {
-                    string name = this.m_current.ScanToken(this.m_sb, SgmlDtd.WhiteSpace, false);
+                    string name = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, false);
                     name = name.ToUpperInvariant();
                     attdef.Default = name; // bugbug - must be one of the enumerated names.
-                    ch = this.m_current.SkipWhitespace();
+                    ch = _current.SkipWhitespace();
                 }
             }
         }
@@ -3010,7 +3041,8 @@ namespace Sgml {
 
     internal static class StringUtilities
     {
-        public static bool EqualsIgnoreCase(string a, string b){
+        public static bool EqualsIgnoreCase(string a, string b)
+        {
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }
     }
