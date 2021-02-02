@@ -85,6 +85,7 @@ The command line executable version has the following options:
 | OutputFile | The optional output file name. Default is stdout.  If the InputUri contains wildcards then this just specifies the output file extension, the default being ".xml". |
 
 <br/>
+
 ### Examples
 
 Converts all .htm files to corresponding .xml files using the built in HTML DTD.
