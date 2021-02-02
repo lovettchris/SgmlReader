@@ -1481,6 +1481,10 @@ namespace Sgml
     /// </summary>
     public class ElementDecl
     {
+        private readonly string _name;
+        private readonly bool _startTagOptional;
+        private readonly bool _endTagOptional;
+        private readonly ContentModel _contentModel;
         private readonly string[] _inclusions;
         private readonly string[] _exclusions;
         private Dictionary<string, AttDef> _attList;
@@ -1489,17 +1493,17 @@ namespace Sgml
         /// Initialises a new element declaration instance.
         /// </summary>
         /// <param name="name">The name of the element.</param>
-        /// <param name="sto">Whether the start tag is optional.</param>
-        /// <param name="eto">Whether the end tag is optional.</param>
-        /// <param name="cm">The <see cref="ContentModel"/> of the element.</param>
+        /// <param name="startTagOptional">Whether the start tag is optional.</param>
+        /// <param name="endTagOptional">Whether the end tag is optional.</param>
+        /// <param name="contentModel">The <see cref="ContentModel"/> of the element.</param>
         /// <param name="inclusions"></param>
         /// <param name="exclusions"></param>
-        public ElementDecl(string name, bool sto, bool eto, ContentModel cm, string[] inclusions, string[] exclusions)
+        public ElementDecl(string name, bool startTagOptional, bool endTagOptional, ContentModel contentModel, string[] inclusions, string[] exclusions)
         {
-            Name = name;
-            StartTagOptional = sto;
-            EndTagOptional = eto;
-            ContentModel = cm;
+            _name = name;
+            _startTagOptional = startTagOptional;
+            _endTagOptional = endTagOptional;
+            _contentModel = contentModel;
             _inclusions = inclusions;
             _exclusions = exclusions;
         }
@@ -1507,24 +1511,24 @@ namespace Sgml
         /// <summary>
         /// The element name.
         /// </summary>
-        public string Name { get; }
+        public string Name => _name;
 
         /// <summary>
         /// The <see cref="Sgml.ContentModel"/> of the element declaration.
         /// </summary>
-        public ContentModel ContentModel { get; }
+        public ContentModel ContentModel => _contentModel;
 
         /// <summary>
         /// Whether the end tag of the element is optional.
         /// </summary>
         /// <value>true if the end tag of the element is optional, otherwise false.</value>
-        public bool EndTagOptional { get; }
+        public bool EndTagOptional => _endTagOptional;
 
         /// <summary>
         /// Whether the start tag of the element is optional.
         /// </summary>
         /// <value>true if the start tag of the element is optional, otherwise false.</value>
-        public bool StartTagOptional { get; }
+        public bool StartTagOptional => _startTagOptional; 
 
         /// <summary>
         /// Finds the attribute definition with the specified name.
@@ -1592,7 +1596,7 @@ namespace Sgml
                         return true;
                 }
             }
-            return ContentModel.CanContain(name, dtd);
+            return _contentModel.CanContain(name, dtd);
         }
     }
 
