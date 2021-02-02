@@ -220,7 +220,8 @@ namespace Sgml
         {
             Attribute a;
             // check for duplicates!
-            for (int i = 0, n = _attributes.Count; i < n; i++) {
+            for (int i = 0, n = _attributes.Count; i < n; i++)
+            {
                 a = _attributes[i];
                 if (string.Equals(a.Name, name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
@@ -230,7 +231,8 @@ namespace Sgml
             // This code makes use of the high water mark for attribute objects,
             // and reuses exisint Attribute objects to avoid memory allocation.
             a = _attributes.Push();
-            if (a is null) {
+            if (a is null)
+            {
                 a = new Attribute();
                 _attributes[_attributes.Count-1] = a;
             }
@@ -250,8 +252,10 @@ namespace Sgml
                 }
             }
         }
-        public void CopyAttributes(Node n) {
-            for (int i = 0, len = n._attributes.Count; i < len; i++) {
+        public void CopyAttributes(Node n) 
+        {
+            for (int i = 0, len = n._attributes.Count; i < len; i++)
+            {
                 Attribute a = n._attributes[i];
                 Attribute na = this.AddAttribute(a.Name, a.Value, a.QuoteChar, false);
                 na.DtdType = a.DtdType;
@@ -262,9 +266,11 @@ namespace Sgml
 
         public int GetAttribute(string name) 
         {
-            for (int i = 0, n = _attributes.Count; i < n; i++) {
+            for (int i = 0, n = _attributes.Count; i < n; i++) 
+            {
                 Attribute a = _attributes[i];
-                if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)) {
+                if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)) 
+                {
                     return i;
                 }
             }
@@ -273,7 +279,8 @@ namespace Sgml
 
         public Attribute GetAttribute(int i) 
         {
-            if (i>=0 && i<_attributes.Count) {
+            if (i>=0 && i<_attributes.Count)
+            {
                 Attribute a = _attributes[i];
                 return a;
             }
@@ -824,17 +831,22 @@ namespace Sgml
                     return string.Empty;
                 default: {
                         string value;
-                        if((NodeType is XmlNodeType.Attribute or XmlNodeType.Element)) {
+                        if ((NodeType is XmlNodeType.Attribute or XmlNodeType.Element)) 
+                         {
 
                             // check if a 'xmlns:prefix' attribute is defined
                             string key = "xmlns:" + prefix;
-                            for(int i = _stack.Count - 1; i > 0; --i) {
+                            for (int i = _stack.Count - 1; i > 0; --i)
+                            {
                                 Node node = _stack[i];
-                                if((node != null) && (node.NodeType == XmlNodeType.Element)) {
+                                if ((node != null) && (node.NodeType == XmlNodeType.Element)) 
+                                {
                                     int index = node.GetAttribute(key);
-                                    if(index >= 0) {
+                                    if (index >= 0) 
+                                    {
                                         value = node.GetAttribute(index).Value;
-                                        if(value != null) {
+                                        if (value != null) 
+                                        {
                                             return value;
                                         }
                                     }
@@ -843,10 +855,14 @@ namespace Sgml
                         }
 
                         // check if we've seen this prefix before
-                        if(!_unknownNamespaces.TryGetValue(prefix, out value)) {
-                            if(_unknownNamespaces.Count > 0) {
+                        if (!_unknownNamespaces.TryGetValue(prefix, out value)) 
+                        {
+                            if (_unknownNamespaces.Count > 0) 
+                            {
                                 value = UNDEFINED_NAMESPACE + _unknownNamespaces.Count.ToString();
-                            } else {
+                            } 
+                            else 
+                            {
                                 value = UNDEFINED_NAMESPACE;
                             }
                             _unknownNamespaces[prefix] = value;
@@ -1880,7 +1896,8 @@ namespace Sgml
 
             // check if the name has a prefix; if so, ignore it
             int colon = name.IndexOf(':');
-            if(colon > 0) {
+            if (colon > 0) 
+            {
                 name = name.Substring(colon + 1);
             }
 
@@ -1972,7 +1989,8 @@ namespace Sgml
                     ch = _current.ReadChar();
                 }
             }
-            if(ch == quote) {
+            if (ch == quote) 
+            {
                 _current.ReadChar(); // consume end quote.
             }
             return sb.ToString();
@@ -2034,12 +2052,15 @@ namespace Sgml
                                 break; 
                             }
 #if FIX
-                        } else if (ch == '['){
+                        } 
+                        else if (ch == '[')
+                        {
                             // We are about to wrap this node as a CDATA block because of it's
                             // type in the DTD, but since we found a CDATA block in the input
                             // we have to parse it as a CDATA block, otherwise we will attempt
                             // to output nested CDATA blocks which of course is illegal.
-                            if (this.ParseConditionalBlock()){
+                            if (this.ParseConditionalBlock())
+                            {
                                 this.partial = ' ';
                                 return true;
                             }
@@ -2122,7 +2143,8 @@ namespace Sgml
             }
 
             // NOTE (steveb): check if we reached EOF, which means it's over
-            if(ch == Entity.EOF) {
+            if(ch == Entity.EOF) 
+            {
                 _state = State.Eof;
                 return false;
             }
@@ -2162,7 +2184,8 @@ namespace Sgml
                 string name = _name.ToString();
 
                 // TODO (steveb): don't lookup amp, gt, lt, quote
-                switch(name) {
+                switch(name)
+                {
                 case "amp":
                     sb.Append('&');
                     if(ch != terminator && ch != '&' && ch != Entity.EOF)
@@ -2482,7 +2505,8 @@ namespace Sgml
                 string name = node.Name.ToUpperInvariant(); // DTD is in upper case
                 int i = 0;
                 int top = _stack.Count - 2;
-                if (node.DtdType != null) { 
+                if (node.DtdType != null) 
+                { 
                     // it is a known element, let's see if it's allowed in the
                     // current context.
                     for (i = top; i > 0; i--)
@@ -2535,7 +2559,8 @@ namespace Sgml
                     {
 #if DEBUG
                         string closing = "";
-                        for (int k = top; k >= i+1; k--) {
+                        for (int k = top; k >= i+1; k--) 
+                        {
                             if (closing != "") closing += ",";
                             Node n2 = _stack[k];
                             closing += "<" + n2.Name + ">";

@@ -878,7 +878,8 @@ namespace Sgml
         {            
             defaultEncoding ??= Encoding.UTF8; // default is UTF8
 
-            if (!stm.CanSeek){
+            if (!stm.CanSeek)
+            {
                 // Need to be able to seek to sniff correctly.
                 stm = CopyToMemoryStream(stm);
             }
@@ -907,7 +908,8 @@ namespace Sgml
             _stm.Seek(0, SeekOrigin.Begin);
             _position = _used = 0;
             // skip bom
-            if (bom>0){
+            if (bom > 0)
+            {
                 stm.Read(_rawBuffer, 0, bom);
             }
             _rawPos = _rawUsed = 0;            
@@ -1195,7 +1197,7 @@ namespace Sgml
                                         Encoding e = Encoding.GetEncoding(charset);
                                         _encoding = e;
                                         return e.GetDecoder();
-                                    } catch (ArgumentException) {}
+                                    } catch (ArgumentException) { }
                                 }                                
                             }
                         }
@@ -2643,7 +2645,8 @@ namespace Sgml
                 sto = (ch == 'O'); // start tag optional?   
                 _current.ReadChar();
                 ch = char.ToUpperInvariant(_current.SkipWhitespace());
-                if (ch is 'O' or '-'){
+                if (ch is 'O' or '-')
+                {
                     eto = (ch == 'O'); // end tag optional? 
                     ch = _current.ReadChar();
                 }
