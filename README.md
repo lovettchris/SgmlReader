@@ -156,6 +156,11 @@ Test Explorer and click Run All.
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
 redirection to account for newer versions when recompilation is not an option.
 
+### Release notes for 1.8.20 (2021-Feb-2)
+
+* Lots of code cleanups by Jason Nelson (https://github.com/iamcarbon) bringing
+the code up to stuff with lovely new C# 8 language features.
+
 ### Release notes for 1.8.19 (2021-Jan-29)
 
 * Add direct support for .NET 5.0 version of SgmlReader.

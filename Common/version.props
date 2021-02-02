@@ -4,8 +4,9 @@
     <Company>Microsoft Corporation</Company>
     <Product>SgmlReader</Product>
     <Title>SgmlReader</Title>
-    <FileVersion>1.8.18</FileVersion>
-    <AssemblyVersion>1.8.18</AssemblyVersion>
+    <FileVersion>1.8.20</FileVersion>
+    <AssemblyVersion>1.8.20</AssemblyVersion>
+    <Version>1.8.20</Version>
   </PropertyGroup>
 
 </Project>

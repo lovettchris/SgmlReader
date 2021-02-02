@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SgmlReaderCore", "SgmlReaderCore\SgmlReaderCore.csproj", "{8572B8DD-B915-44DE-8B61-0AB3772F9C55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SgmlTestsCore", "SgmlTests\SgmlTestsCore.csproj", "{43A51460-AD76-4146-A4D5-32838EB65A52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SgmlTestsCore", "SgmlTestsCore\SgmlTestsCore.csproj", "{43A51460-AD76-4146-A4D5-32838EB65A52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

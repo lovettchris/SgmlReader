@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <Import Project="../Common/version.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <DocumentationFile>SgmlReaderCore.xml</DocumentationFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.8.19</Version>
-    <AssemblyVersion>1.8.19</AssemblyVersion>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MYKEYFILE)</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

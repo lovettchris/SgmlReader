@@ -1,0 +1,97 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../Common/version.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <IsTestProject>true</IsTestProject>
+    <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SgmlTests\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
+    <Compile Include="..\SgmlTests\LoggingXmlReader.cs" Link="LoggingXmlReader.cs" />
+    <Compile Include="..\SgmlTests\Tests-Logic.cs" Link="Tests-Logic.cs" />
+    <Compile Include="..\SgmlTests\Tests.cs" Link="Tests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../SgmlReaderCore/SgmlReaderCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\SgmlTests\ofx160.dtd" Link="ofx160.dtd" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\01.test" Link="Resources\01.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\02.test" Link="Resources\02.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\03.test" Link="Resources\03.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\04.test" Link="Resources\04.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\05.test" Link="Resources\05.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\06.test" Link="Resources\06.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\07.test" Link="Resources\07.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\08.test" Link="Resources\08.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\09.test" Link="Resources\09.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\10.test" Link="Resources\10.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\11.test" Link="Resources\11.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\12.test" Link="Resources\12.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\13.test" Link="Resources\13.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\14.test" Link="Resources\14.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\15.test" Link="Resources\15.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\16.test" Link="Resources\16.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\17.test" Link="Resources\17.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\18.test" Link="Resources\18.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\19.test" Link="Resources\19.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\20.test" Link="Resources\20.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\21.test" Link="Resources\21.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\22.test" Link="Resources\22.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\23.test" Link="Resources\23.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\24.test" Link="Resources\24.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\25.test" Link="Resources\25.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\26.test" Link="Resources\26.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\27.test" Link="Resources\27.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\28.test" Link="Resources\28.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\29.test" Link="Resources\29.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\30.test" Link="Resources\30.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\31.test" Link="Resources\31.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\32.test" Link="Resources\32.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\33.test" Link="Resources\33.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\34.test" Link="Resources\34.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\35.test" Link="Resources\35.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\36.test" Link="Resources\36.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\37.test" Link="Resources\37.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\38.test" Link="Resources\38.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\39.test" Link="Resources\39.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\40.test" Link="Resources\40.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\41.test" Link="Resources\41.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\42.test" Link="Resources\42.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\43.test" Link="Resources\43.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\44.test" Link="Resources\44.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\45.test" Link="Resources\45.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\46.test" Link="Resources\46.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\47.test" Link="Resources\47.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\48.test" Link="Resources\48.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\49.test" Link="Resources\49.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\50.test" Link="Resources\50.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\51.test" Link="Resources\51.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\52.test" Link="Resources\52.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\53.test" Link="Resources\53.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\54.test" Link="Resources\54.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\55.test" Link="Resources\55.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\56.test" Link="Resources\56.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\57.test" Link="Resources\57.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\58.test" Link="Resources\58.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\59.test" Link="Resources\59.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\60.test" Link="Resources\60.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\61.test" Link="Resources\61.test" />
+  </ItemGroup>
+
+</Project>
