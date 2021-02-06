@@ -25,5 +25,4 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("$version")]
 [assembly: AssemblyFileVersion("$version")]
-[assembly: AssemblyInformationalVersion("$githash")]
 [assembly: ComVisible(false)]

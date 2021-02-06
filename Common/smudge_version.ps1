@@ -29,18 +29,11 @@ function SmudgeVersion($line) {
         # this is in version.props.
         return $line.Replace($Matches.1, "$version")
     }
-    elseif ($line -match "\w*\<AssemblyInformationalVersion\>([^\<]*)\</AssemblyInformationalVersion\>") {
-        # this is in version.props.
-        return $line.Replace($Matches.1, "$githash")
-    }
     elseif ($line -match "\w*\[assembly\: AssemblyVersion\(\`"([^<]*)\`"\)\]") {
         return $line.Replace($Matches.1, "$version")
     }
     elseif ($line -match "\w*\[assembly\: AssemblyFileVersion\(\`"([^<]*)\`"\)\]") {
         return $line.Replace($Matches.1, "$version")
-    }
-    elseif ($line -match "\w*\[assembly\: AssemblyInformationalVersion\(\`"([^<]*)\`"\)\]") {
-        return $line.Replace($Matches.1, "$githash")
     }
     return $line
 }

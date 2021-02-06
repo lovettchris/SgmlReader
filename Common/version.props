@@ -7,7 +7,6 @@
     <FileVersion>$version</FileVersion>
     <AssemblyVersion>$version</AssemblyVersion>
     <Version>$version</Version>
-    <AssemblyInformationalVersion>$version</AssemblyInformationalVersion>
   </PropertyGroup>
 
 </Project>
