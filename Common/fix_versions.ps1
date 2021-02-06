@@ -1,16 +1,18 @@
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RootDir = Split-Path -Parent $ScriptDir
+Set-Location $RootDir
 
 $smudge = Join-Path -Path $ScriptDir -ChildPath "smudge_version.ps1"
 
-$props = Join-Path -Path $ScriptDir -ChildPath "version.props"
+$props =  Join-Path -Path $RootDir -ChildPath "Common/version.props"
 $nuspec = Join-Path -Path $RootDir -ChildPath "SgmlReader.nuspec"
 $info = Join-Path -Path $RootDir -ChildPath "SgmlReaderUniversal/Properties/AssemblyInfo.cs"
 
-function FixFile($filename){
-    $content = &$smudge $filename
-    Write-Host $content
+function FixFile($filename)
+{
+    $content = &$smudge $filename $True
 }
 
-Write-Host $props
 FixFile($props)
+FixFile($nuspec)
+FixFile($info)

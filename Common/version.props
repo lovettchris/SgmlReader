@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup>
     <Company>Microsoft Corporation</Company>
     <Product>SgmlReader</Product>
@@ -8,5 +7,4 @@
     <AssemblyVersion>$version</AssemblyVersion>
     <Version>$version</Version>
   </PropertyGroup>
-
 </Project>
