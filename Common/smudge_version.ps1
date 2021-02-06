@@ -1,20 +1,21 @@
-param ([string] $filename)
+param ([string] $filename, [bool] $inplace=$False)
 
 if ($filename -eq "") {
     Write-Error "Missing filename parameter"
     Exit 1
 }
 
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $nl = [Environment]::NewLine
 $githash = &git rev-parse HEAD
-$x = Get-Location
-$versionFile = Join-Path -Path $x -ChildPath "Common/version.txt"
+$versionFile = Join-Path -Path $ScriptDir -ChildPath "version.txt"
 $version = Get-Content -Path $versionFile | Join-String -Separator $nl 
 $version = $version.Trim()
 
 function SmudgeVersion($line) {
     if ($line -match "\w*\<version\>([^\<]*)\</version\>") {
         # this is the SgmlReader.nuspec
+        $x = $Matches.1
         return $line.Replace($Matches.1, "$version")
     }
     elseif ($line -match "\w*\<Version\>([^\<]*)\</Version\>") {
@@ -38,10 +39,19 @@ function SmudgeVersion($line) {
     return $line
 }
 
-$fullPath = Join-Path -Path $x -ChildPath $filename
+$fullPath = $filename
+if (-Not (Test-Path $fullPath)) {
+    $x = Get-Location
+    $fullPath = Join-Path -Path $x -ChildPath $filename
+}
 
 $content = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ }
 
 $localcontent = Join-String -Separator $nl -InputObject  $content
 
-Write-Host $localcontent
+if ($inplace) {
+    $encoding = New-Object System.Text.UTF8Encoding $False
+    [IO.File]::WriteAllText($filename, $localcontent, $encoding)
+} else {
+    Write-Host $localcontent
+}
