@@ -47,6 +47,8 @@ function CleanVersion($line)
     return $line
 }
 
-$gitcontent = Get-Content -Path $fullPath | ForEach { CleanVersion $_ }
+# git requires \n newlines.
+$nl = "`n"
+$gitcontent = Get-Content -Path $fullPath | ForEach { CleanVersion $_ } | Join-String -Separator $nl
 
 Write-Host $gitcontent

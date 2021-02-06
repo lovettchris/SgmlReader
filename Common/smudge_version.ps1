@@ -45,10 +45,7 @@ if (-Not (Test-Path $fullPath)) {
     $fullPath = Join-Path -Path $x -ChildPath $filename
 }
 
-    $content = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ }
-
-    return Join-String -Separator $nl -InputObject  $content
-}
+$localcontent = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ } | Join-String -Separator $nl
 
 if ($inplace) {
     $encoding = New-Object System.Text.UTF8Encoding $False
