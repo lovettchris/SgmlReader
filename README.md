@@ -134,8 +134,7 @@ The build versioning system depends on `pwsh` and you can install that using:
 dotnet tool install --global powershell
 ```
 
-To change the version number edit `~\Common\version.txt` only and not any other file.  Full
-rebuilding the solution after doing this will replicate this version number to:
+To change the version number edit `~\Common\version.txt` only and not any other file.  This version will be replicated automatically to the following files:
 
 ```
 Common/version.props
@@ -145,14 +144,28 @@ SgmlReaderUniversal/Propertyes/AssemblyInfo.cs
 
 To make this change transparent to git run the following commands in your local git repo to setup
 the git filters which replace the version number with $version on upload to git and replace $version
-with the version in version.txt when you do a checkout.
+with the version in version.txt when you do a checkout.  
 
 ```
 git config --add filter.version.smudge "pwsh -f Common/smudge_version.ps1 %f"
 git config --add filter.version.clean "pwsh -f Common/clean_version.ps1 %f"
 ```
 
-### Checklist
+Now you can load SgmlReader.sln or SgmlReaderCore.sln into Visual Studio 2019 and select
+Builder/Rebuild solution.  If you want to do a command line dotnet build without Visual Studio then you also need to run this once:
+
+```
+pwsh -f Common/fix_versions.ps1
+```
+
+This will fixup all the $version instances with the version number in `~\Common\version.txt` so that
+you can now build successfully:
+
+```
+dotnet build SgmlReaderCore.sln
+```
+
+### Developer Checklist
 
 1. Make sure the code formatting is **identical** to the existing code formatting.
 You know that you're doing it right if your code is indistinguishable from
