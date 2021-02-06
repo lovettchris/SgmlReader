@@ -5,14 +5,17 @@ if ($filename -eq "") {
     Exit 1
 }
 
-$nl = [Environment]::NewLine
-$githash = &git rev-parse HEAD
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path    
 $x = Get-Location
-$versionFile = Join-Path -Path $x -ChildPath "Common/version.txt"
-$version = Get-Content -Path $versionFile | Join-String -Separator $nl 
-$version = $version.Trim()
+$fullPath = Join-Path -Path $x -ChildPath $filename
 
-function SmudgeVersion($line) {
+if (-Not (Test-Path -Path $fullPath)) {
+    # file was deleted
+    Exit 1
+}
+
+function SmudgeVersion($line)
+{
     if ($line -match "\w*\<version\>([^\<]*)\</version\>") {
         # this is the SgmlReader.nuspec
         return $line.Replace($Matches.1, "$version")
@@ -38,10 +41,19 @@ function SmudgeVersion($line) {
     return $line
 }
 
-$fullPath = Join-Path -Path $x -ChildPath $filename
+function SmudgeFile($fullPath)
+{
+    $nl = [Environment]::NewLine
+    $githash = &git rev-parse HEAD
 
-$content = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ }
+    $versionFile = Join-Path -Path $ScriptDir -ChildPath "version.txt"
+    $version = Get-Content -Path $versionFile | Join-String -Separator $nl 
+    $version = $version.Trim()
 
-$localcontent = Join-String -Separator $nl -InputObject  $content
+    $content = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ }
 
+    return Join-String -Separator $nl -InputObject  $content
+}
+
+$localcontent = SmudgeFile($fullPath)
 Write-Host $localcontent

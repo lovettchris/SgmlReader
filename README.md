@@ -94,14 +94,12 @@ Converts all .htm files to corresponding .xml files using the built in HTML DTD.
 sgmlreader -html *.htm *.xml
 ```
 
-Converts all the MSN home page to XML storing the result in the local file
-"msn.xml".
+Converts all the MSN home page to XML storing the result in the local file `msn.xml`.
 
 ```c#
 sgmlreader -html http://www.msn.com -proxy myproxy:80 msn.xml
 ```
-Converts the given OFX file to XML using the SGML DTD "ofx160.dtd" specified in
-the test.ofx file.
+Converts the given OFX file to XML using the SGML DTD "ofx160.dtd" specified in the test.ofx file.
 
 ```c#
 sgmlreader -dtd ofx160.dtd test.ofx ofx.xml
@@ -109,8 +107,8 @@ sgmlreader -dtd ofx160.dtd test.ofx ofx.xml
 
 ## UWP
 
-SgmlReaderUniversal provides a custom EntityResolver named `UniversalEntityResolver` which allows resolving resources using the 
-UWP `Windows.Storage` API's.  You will need to provide this resolver
+SgmlReaderUniversal provides a custom EntityResolver named `UniversalEntityResolver` which allows
+resolving resources using the UWP `Windows.Storage` API's.  You will need to provide this resolver
 by setting the Resolver property on the SgmlReader.
 
 ```c#
@@ -136,17 +134,22 @@ The build versioning system depends on `pwsh` and you can install that using:
 dotnet tool install --global powershell
 ```
 
-Run the following commands in your local git repo to setup the git versioning:
+To change the version number edit `~\Common\version.txt` only and not any other file.  Full
+rebuilding the solution after doing this will replicate this version number to:
+
+```
+Common/version.props
+SgmlReader.nuspec
+SgmlReaderUniversal/Propertyes/AssemblyInfo.cs
+```
+
+To make this change transparent to git run the following commands in your local git repo to setup
+the git filters which replace the version number with $version on upload to git and replace $version
+with the version in version.txt when you do a checkout.
+
 ```
 git config --add filter.version.smudge "pwsh -f Common/smudge_version.ps1 %f"
 git config --add filter.version.clean "pwsh -f Common/clean_version.ps1 %f"
-```
-
-Then run the following to invoke the smudge script to fix the build version info
-in your local repo:
-
-```
-git checkout -f
 ```
 
 ### Checklist
