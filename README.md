@@ -128,12 +128,36 @@ them with *sgmlreader*.  Feel free to post issues in the github issues list.
 
 If you fix an issue, please submit PR and follow these guidelines:
 
+## Building SgmlReader
+
+The build versioning system depends on `pwsh` and you can install that using:
+
+```
+dotnet tool install --global powershell
+```
+
+Run the following commands in your local git repo to setup the git versioning:
+```
+git config --add filter.version.smudge "pwsh -f Common/smudge_version.ps1 %f"
+git config --add filter.version.clean "pwsh -f Common/clean_version.ps1 %f"
+```
+
+Then run the following to invoke the smudge script to fix the build version info
+in your local repo:
+
+```
+git checkout -f
+```
+
+### Checklist
+
 1. Make sure the code formatting is **identical** to the existing code formatting.
 You know that you're doing it right if your code is indistinguishable from
 existing code.
+1. Fix any build warnings including code analysis warnings.
 1. Run the unit test to make sure no regressions are being introduced.
 1. Add a unit test to confirm your fix or feature, if needed.
-1. Submit a pull request on [GitHub](https://github.com/LovettChris/SGMLReader).
+1. Submit a pull request on [GitHub](https://github.com/lovettChris/SGMLReader).
 
 ## Testing
 

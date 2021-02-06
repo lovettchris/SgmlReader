@@ -1,0 +1,3 @@
+SgmlReader.nuspec filter=version
+Common/version.props filter=version
+SgmlReaderUniversal/Properties/AssemblyInfo.cs filter=version
