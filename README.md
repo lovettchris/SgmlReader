@@ -156,7 +156,7 @@ SgmlReader.nuspec
 SgmlReaderUniversal/Propertyes/AssemblyInfo.cs
 ```
 
-The `setup.ps1` script has make these file changes transparent to git using the following filters:
+The `setup.ps1` script has made these file changes transparent to git using the following filters:
 
 ```
 git config --add filter.version.smudge "pwsh -f Common/smudge_version.ps1 %f"
