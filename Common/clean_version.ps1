@@ -5,7 +5,16 @@ if ($filename -eq "") {
     Exit 1
 }
 
-function CleanVersion($line) {
+$x = Get-Location
+$fullPath = Join-Path -Path $x -ChildPath $filename
+
+if (-Not (Test-Path -Path $fullPath)) {
+    # file was deleted
+    Exit 1
+}
+
+function CleanVersion($line)
+{
     if ($line -match "\w*\<version\>([^\<]*)\</version\>") {
         # this is the SgmlReader.nuspec
         return $line.Replace($Matches.1, "`$version")
@@ -38,13 +47,6 @@ function CleanVersion($line) {
     return $line
 }
 
-$x = Get-Location
-$fullPath = Join-Path -Path $x -ChildPath $filename
-
-$content = Get-Content -Path $fullPath | ForEach { CleanVersion $_ }
-
-# git requires unix style newslines in the cleaned file.
-$nl = "`n"
-$gitcontent = Join-String -Separator $nl -InputObject $content
+$gitcontent = Get-Content -Path $fullPath | ForEach { CleanVersion $_ }
 
 Write-Host $gitcontent

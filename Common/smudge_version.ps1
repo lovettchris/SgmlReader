@@ -12,10 +12,10 @@ $versionFile = Join-Path -Path $ScriptDir -ChildPath "version.txt"
 $version = Get-Content -Path $versionFile | Join-String -Separator $nl 
 $version = $version.Trim()
 
-function SmudgeVersion($line) {
+function SmudgeVersion($line)
+{
     if ($line -match "\w*\<version\>([^\<]*)\</version\>") {
         # this is the SgmlReader.nuspec
-        $x = $Matches.1
         return $line.Replace($Matches.1, "$version")
     }
     elseif ($line -match "\w*\<Version\>([^\<]*)\</Version\>") {
@@ -45,9 +45,10 @@ if (-Not (Test-Path $fullPath)) {
     $fullPath = Join-Path -Path $x -ChildPath $filename
 }
 
-$content = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ }
+    $content = Get-Content -Path $fullPath | ForEach { SmudgeVersion $_ }
 
-$localcontent = Join-String -Separator $nl -InputObject  $content
+    return Join-String -Separator $nl -InputObject  $content
+}
 
 if ($inplace) {
     $encoding = New-Object System.Text.UTF8Encoding $False
