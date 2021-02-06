@@ -29,4 +29,8 @@
     <ProjectReference Include="..\SgmlReaderDll\SgmlReaderDll.csproj" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="pwsh -f &quot;$(SolutionDir)Common/fix_versions.ps1&quot;" />
+  </Target>
+
 </Project>
