@@ -33,44 +33,32 @@
     <file src="SgmlReader\bin\Release\net45\SgmlReaderDll.dll" target="lib\net45\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net45\SgmlReaderDll.pdb" target="lib\net45\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\net45\SgmlReaderDll.xml" target="lib\net45\SgmlReaderDll.xml" />
-    <file src="SgmlReader\bin\Release\net45\SgmlReader.exe" target="lib\net45\SgmlReader.exe" />
-    <file src="SgmlReader\bin\Release\net45\SgmlReader.pdb" target="lib\net45\SgmlReader.pdb" />
     
     <!-- net46 -->
     <file src="SgmlReader\bin\Release\net46\SgmlReaderDll.dll" target="lib\net46\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net46\SgmlReaderDll.pdb" target="lib\net46\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\net46\SgmlReaderDll.xml" target="lib\net46\SgmlReaderDll.xml" />
-    <file src="SgmlReader\bin\Release\net46\SgmlReader.exe" target="lib\net46\SgmlReader.exe" />
-    <file src="SgmlReader\bin\Release\net46\SgmlReader.pdb" target="lib\net46\SgmlReader.pdb" />
     
     <!-- net47 -->
     <file src="SgmlReader\bin\Release\net47\SgmlReaderDll.dll" target="lib\net47\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net47\SgmlReaderDll.pdb" target="lib\net47\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\net47\SgmlReaderDll.xml" target="lib\net47\SgmlReaderDll.xml" />
-    <file src="SgmlReader\bin\Release\net47\SgmlReader.exe" target="lib\net47\SgmlReader.exe" />
-    <file src="SgmlReader\bin\Release\net47\SgmlReader.pdb" target="lib\net47\SgmlReader.pdb" />
     
     <!-- net48 -->
     <file src="SgmlReader\bin\Release\net48\SgmlReaderDll.dll" target="lib\net48\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net48\SgmlReaderDll.pdb" target="lib\net48\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\net48\SgmlReaderDll.xml" target="lib\net48\SgmlReaderDll.xml" />
-    <file src="SgmlReader\bin\Release\net48\SgmlReader.exe" target="lib\net48\SgmlReader.exe" />
-    <file src="SgmlReader\bin\Release\net48\SgmlReader.pdb" target="lib\net48\SgmlReader.pdb" />
 
     <!-- netcoreapp3.1 -->
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.dll" target="lib\netcoreapp3.1\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.dll" target="lib\netcoreapp3.1\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.xml" target="lib\netcoreapp3.1\SgmlReaderDll.xml" />
-    <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReader.exe" target="lib\netcoreapp3.1\SgmlReader.exe" />
-    <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReader.pdb" target="lib\netcoreapp3.1\SgmlReader.pdb" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReader.runtimeconfig.json" target="lib\netcoreapp3.1\SgmlReader.runtimeconfig.json"/>
     
     <!-- net5.0 -->
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.xml" />
-    <file src="SgmlReader\bin\Release\net5.0\SgmlReader.exe" target="lib\net5.0\SgmlReader.exe" />
-    <file src="SgmlReader\bin\Release\net5.0\SgmlReader.exe" target="lib\net5.0\SgmlReader.pdb" />
     <file src="SgmlReader\bin\Release\net5.0\SgmlReader.runtimeconfig.json" target="lib\net5.0\SgmlReader.runtimeconfig.json"/>
 
     <!-- netstandard2.0 -->
