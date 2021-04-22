@@ -62,14 +62,14 @@
     <file src="SgmlReader\bin\Release\net5.0\SgmlReader.runtimeconfig.json" target="lib\net5.0\SgmlReader.runtimeconfig.json"/>
 
     <!-- netstandard2.0 -->
-    <file src="SgmlReaderCore\bin\Release\netstandard2.0\SgmlReaderCore.dll" target="lib\netstandard2.0\SgmlReaderCore.dll" />
-    <file src="SgmlReaderCore\bin\Release\netstandard2.0\SgmlReaderCore.pdb" target="lib\netstandard2.0\SgmlReaderCore.pdb" />
-    <file src="SgmlReaderCore\bin\Release\netstandard2.0\SgmlReaderCore.xml" target="lib\netstandard2.0\SgmlReaderCore.xml" />
+    <file src="SgmlReaderCore\bin\Release\netstandard2.0\SgmlReaderCore.dll" target="lib\netstandard2.0\SgmlReaderDll.dll" />
+    <file src="SgmlReaderCore\bin\Release\netstandard2.0\SgmlReaderCore.pdb" target="lib\netstandard2.0\SgmlReaderDll.pdb" />
+    <file src="SgmlReaderCore\bin\Release\netstandard2.0\SgmlReaderCore.xml" target="lib\netstandard2.0\SgmlReaderDll.xml" />
     
     <!-- netstandard2.1 -->
-    <file src="SgmlReaderCore\bin\Release\netstandard2.1\SgmlReaderCore.dll" target="lib\netstandard2.1\SgmlReaderCore.dll" />
-    <file src="SgmlReaderCore\bin\Release\netstandard2.1\SgmlReaderCore.pdb" target="lib\netstandard2.1\SgmlReaderCore.pdb" />
-    <file src="SgmlReaderCore\bin\Release\netstandard2.1\SgmlReaderCore.xml" target="lib\netstandard2.1\SgmlReaderCore.xml" />
+    <file src="SgmlReaderCore\bin\Release\netstandard2.1\SgmlReaderCore.dll" target="lib\netstandard2.1\SgmlReaderDll.dll" />
+    <file src="SgmlReaderCore\bin\Release\netstandard2.1\SgmlReaderCore.pdb" target="lib\netstandard2.1\SgmlReaderDll.pdb" />
+    <file src="SgmlReaderCore\bin\Release\netstandard2.1\SgmlReaderCore.xml" target="lib\netstandard2.1\SgmlReaderDll.xml" />
     
     <!-- uap -->
     <file src="SgmlReaderUniversal\bin\Release\SgmlReaderUniversal.dll" target="lib\uap\SgmlReaderUniversal.dll" />
