@@ -128,6 +128,8 @@ If you fix an issue, please submit PR and follow these guidelines:
 
 ## Building SgmlReader
 
+### Using `dotnet build`
+
 The build versioning system depends on `pwsh` and you can install that using:
 
 ```
@@ -144,6 +146,14 @@ And now you can build successfully:
 ```
 dotnet build SgmlReaderCore.sln
 ```
+
+### Using MSBuild
+
+1. Open your Visual Studio Developer Command Prompt - or any cmd session where `msbuild` is in the `PATH`.
+2. `cd <directory containing SgmlReader.sln>`
+3. `BUILD.cmd`
+
+The `BUILD.cmd` script will automatically install `pwsh` if necessary, run `setup.ps1`, restore NuGet packages, and build the solution using the default configuration.
 
 ## Versioning
 
@@ -163,8 +173,7 @@ git config --add filter.version.smudge "pwsh -f Common/smudge_version.ps1 %f"
 git config --add filter.version.clean "pwsh -f Common/clean_version.ps1 %f"
 ```
 
-When you "stage" a change to any one of these files the real version number will be replaced by
-$version. When you checkout or pull an update to one of these files the $version will be replaced
+When you "stage" a change to any one of these files the real version number will be replaced by the string "`$version`". When you checkout or pull an update to one of these files the string "`$version`" will be replaced
 with the real version from `versions.txt`.
 
 ### Developer Checklist
