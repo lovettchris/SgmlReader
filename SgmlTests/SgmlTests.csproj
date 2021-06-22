@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\62.test" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="ofx160.dtd" />
   </ItemGroup>
 
@@ -72,6 +76,7 @@
     <EmbeddedResource Include="Resources\58.test" />
     <EmbeddedResource Include="Resources\59.test" />
     <EmbeddedResource Include="Resources\60.test" />
+    <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\61.test" />
   </ItemGroup>
 

@@ -343,6 +343,12 @@ namespace SGMLTests {
         }
 
         [Test]
+        public void Handling_newLines_in_text()
+        {
+            Test("62.test", XmlRender.Passthrough, CaseFolding.None, null, true);
+        }
+
+        [Test]
         public void Test_MoveToNextAttribute()
         {
 
