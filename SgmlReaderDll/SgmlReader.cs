@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -187,6 +188,7 @@ namespace Sgml
     /// for validation purposes, and these Node objects are reused to reduce object allocation,
     /// hence the reset method.  
     /// </summary>
+    [DebuggerDisplay("Sgml.Node, Type: {NodeType}, Name: {Name}, Value: {Value}")]
     internal sealed class Node
     {
         internal XmlNodeType NodeType;

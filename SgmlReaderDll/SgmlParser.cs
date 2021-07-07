@@ -132,6 +132,7 @@ namespace Sgml
     /// <summary>
     /// An Entity declared in a DTD.
     /// </summary>
+    [DebuggerDisplay("Sgml.Entity, {LiteralType}, Name: {Name}, Is Whitespace: {IsWhitespace}")]
     public class Entity : IDisposable
     {
         /// <summary>
