@@ -1059,6 +1059,13 @@ namespace Sgml
         }
 
         /// <summary>
+        /// When <see langword="true"/>, then the <c>InnerText</c> for any auto-closing elements (e.g. &lt;p&gt;&lt;p&gt;&lt;p&gt;) will not contain any trailing whitespace - this removes the need for consumers to call <see cref="String.Trim"/> and so reduces string copies and heap-allocations.<br />
+        /// When <see langword="false"/> (the default), the whitespace is treated as significant by the <see cref="SgmlReader"/> and will be preserved.
+        /// </summary>
+        /// <remarks>This property is intended to make it easier to process files such as OFX feeds with self-closing elements separated by line-breaks as it allows <c>InnerText</c> to be passed directly into methods that expect string inputs to be trimmed of whitespace as a precondition.</remarks>
+        public bool IgnoreAutoClosedElementTrailingWhitespace { get; set; }
+
+        /// <summary>
         /// Gets the number of attributes on the current node.
         /// </summary>
         /// <value>The number of attributes on the current node.</value>
@@ -1959,9 +1966,39 @@ namespace Sgml
                 }
             }
 
-            string value = _sb.ToString();
+            string value;
+            if(_state == State.PartialTag && IgnoreAutoClosedElementTrailingWhitespace)
+            {
+                int lastIdxNonWS = LastIndexOfNonWhitespaceChar(_sb);
+                if (lastIdxNonWS == _sb.Length)
+                {
+                    value = _sb.ToString();
+                }
+                else if (lastIdxNonWS >= 0)
+                {
+                    value = _sb.ToString(startIndex: 0, length: lastIdxNonWS + 1);
+                }
+                else
+                {
+                    value = string.Empty;
+                }
+            }
+            else
+            {
+                value = _sb.ToString();
+            }
             Push(null, XmlNodeType.Text, value);
             return ws;
+        }
+
+        private static int LastIndexOfNonWhitespaceChar(StringBuilder sb)
+        {
+            int i = sb.Length - 1;
+            while(i >= 0 && char.IsWhiteSpace(sb[i]))
+            {
+                i--;
+            }
+            return i;
         }
 
         /// <summary>
