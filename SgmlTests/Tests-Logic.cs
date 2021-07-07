@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Original work Copyright (c) 2008 MindTouch. All rights reserved. 
  * Modified Work Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  * 
@@ -113,27 +113,31 @@ namespace SGMLTests {
         private static string RunTest(CaseFolding caseFolding, string doctype, bool format, string source, XmlReaderTestCallback callback) {
 
             // initialize sgml reader
-            XmlReader reader = new SgmlReader {
+            SgmlReader sgmlReader = new SgmlReader
+            {
                 CaseFolding = caseFolding,
                 DocType = doctype,
                 InputStream = new StringReader(source),
                 WhitespaceHandling = format ? WhitespaceHandling.None : WhitespaceHandling.All
             };
+
             if (doctype == "OFX")
             {
-                ((SgmlReader)reader).Dtd = LoadDtd("OFX", "ofx160.dtd");
+                sgmlReader.Dtd = LoadDtd("OFX", "ofx160.dtd");
             }
 
-
             // check if we need to use the LoggingXmlReader
-            if (_debug) {
-                reader = new LoggingXmlReader(reader, Console.Out);
+            XmlReader reader = sgmlReader;
+            if (_debug)
+            {
+                reader = new LoggingXmlReader(sgmlReader, Console.Out);
             }
 
             // initialize xml writer
             var stringWriter = new StringWriter();
             var xmlTextWriter = new XmlTextWriter(stringWriter);
-            if(format) {
+            if(format)
+            {
                 xmlTextWriter.Formatting = Formatting.Indented;
             }
             callback(reader, xmlTextWriter);

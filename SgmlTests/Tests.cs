@@ -16,9 +16,7 @@ using System.Xml;
 using NUnit.Framework;
 using Sgml;
 using System.Xml.Linq;
-#if WINDOWS_DESKTOP
 using System.Xml.XPath;
-#endif
 
 namespace SGMLTests {
 
@@ -408,7 +406,6 @@ namespace SGMLTests {
             Assert.AreEqual(2, count, "Expecing 2 XmlDocuments in the input stream");
         }
 
-#if WINDOWS_DESKTOP
         [Test]
         public void Test_XPathDocument()
         {
@@ -444,6 +441,7 @@ namespace SGMLTests {
             Assert.AreEqual("abcd", xpathNavigator.Evaluate("string(/html/body)"), "Expecting '/html/body' to be evaluated correctly.");
 
         }
-#endif
+
+        
     }
 }
