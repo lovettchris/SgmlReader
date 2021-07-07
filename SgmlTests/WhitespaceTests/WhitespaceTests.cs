@@ -29,43 +29,41 @@ namespace SGMLTests
         {
             // bradesco.ofx is licensed under the MIT license. From github.com/kevencarneiro/OFXSharp
             string bradescoOfxText = Tests.ReadTestResource(name: "bradesco.ofx");
+            bradescoOfxText = bradescoOfxText.Substring(startIndex: 134); // skip first 134 chars of OFX header.
+
             SgmlDtd ofx160Dtd      = Tests.LoadDtd(docType: "OFX", name: "ofx160.dtd");
 
             XmlDocument asXml = ConvertSgmlToXml(ofx160Dtd, bradescoOfxText);
-            //asXml.Dump();
 
             XmlNode codeNode = asXml.SelectSingleNode("//*[local-name()='CODE']");
             string sonrsStatusCodeInnerText = codeNode.InnerText;
 
-            Assert.IsFalse(condition: sonrsStatusCodeInnerText.EndsWith("\r\n"), message: "There should be no trailing whitespace in read elements' innerText.");
+            Assert.IsFalse(condition: sonrsStatusCodeInnerText.EndsWith("\n"), message: "There should be no trailing whitespace in read elements' innerText.");
         }
 
         private static XmlDocument ConvertSgmlToXml(SgmlDtd sgmlDtd, string sgmlText)
         {
-            using (StringReader rdr = new StringReader(sgmlText))
+            using (StringReader stringReader = new StringReader(sgmlText))
             {
-                return ConvertSgmlToXml(sgmlDtd, rdr);
-            }
-        }
-
-        private static XmlDocument ConvertSgmlToXml(SgmlDtd sgmlDtd, TextReader reader)
-        {
-            SgmlReader sgmlReader = new SgmlReader();
-            sgmlReader.WhitespaceHandling = WhitespaceHandling.None;
-            sgmlReader.InputStream = reader;
-            sgmlReader.DocType = sgmlDtd.Name; // "OFX"; ?
-            sgmlReader.Dtd = sgmlDtd;
-
-            XmlDocument doc = new XmlDocument();
-            using (XmlWriter xmlWriter = doc.CreateNavigator().AppendChild())
-            {
-                while (!sgmlReader.EOF)
+                SgmlReader sgmlReader = new SgmlReader()
                 {
-                    xmlWriter.WriteNode(sgmlReader, defattr: true);
-                }
-            }
+                    InputStream        = stringReader,
+                    WhitespaceHandling = WhitespaceHandling.None,
+                    DocType            = sgmlDtd.Name, // "OFX"; ?
+                    Dtd                = sgmlDtd
+                };
 
-            return doc;
+                XmlDocument doc = new XmlDocument();
+                using (XmlWriter xmlWriter = doc.CreateNavigator().AppendChild())
+                {
+                    while (!sgmlReader.EOF)
+                    {
+                        xmlWriter.WriteNode(sgmlReader, defattr: true);
+                    }
+                }
+
+                return doc;
+            }
         }
     }
 }
