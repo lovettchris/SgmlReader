@@ -44,6 +44,45 @@ namespace Sgml
     }
 
     /// <summary>
+    /// Due to the nature of adjacent self-closing and auto-closing SGML elements the <see cref="SgmlReader"/>'s default behavior may cause unwanted whitespace to appear at either end of the element's text content. This enum instructs <see cref="SgmlReader"/> that such whitespace is not significant-whitespace.<br />
+    /// Note that this is a <see cref="FlagsAttribute"/>-enum.
+    /// </summary>
+    /// <remarks>Internally strings are not actually trimmed using <see cref="String.Trim(char[])"/>, but instead by skipping leading and trailing whitespace during the read-phase - this avoids unnecessary string copying and heap-allocation.</remarks>
+    [Flags]
+    public enum TextWhitespaceHandling
+    {
+        /// <summary>
+        /// <c>0x00</c> - All leading and trailing whitespace in <c>InnerText</c> and <c>Value</c> properties is kept verbatim. This is the default behavior.
+        /// </summary>
+        None = 0,
+        
+        /// <summary>
+        /// <c>0x01</c> - Leading whitespace will not be present in <c>TextContent</c> and <c>Value</c> properties.
+        /// </summary>
+        TrimLeading  = 1,
+
+        /// <summary>
+        /// <c>0x02</c> - Trailing whitespace will not be present in <c>TextContent</c> and <c>Value</c> properties.
+        /// </summary>
+        TrimTrailing = 2,
+
+        /// <summary>
+        /// <c>0x04</c> - This flag only takes effect when either or both <see cref="TrimLeading"/> and <see cref="TrimTrailing"/> are set. When this flag is set, only line-break characters <c>\r</c> (CR) and <c>\n</c> (LF) will be trimmed.
+        /// </summary>
+        OnlyLineBreaks = 4,
+
+        /// <summary>
+        /// <c>0x03</c> - (This is a combination of flags). Neither leading nor trailing whitespace will be be present in <c>TextContent</c> and <c>Value</c> properties.
+        /// </summary>
+        TrimBoth  = TrimLeading | TrimTrailing,
+
+        /// <summary>
+        /// <c>0x06</c> - (This is a combination of flags). Only trailing <c>\r</c> (CR) and <c>\n</c> (LF) characters will be trimmed from trailing whitespace in in <c>InnerText</c> and <c>Value</c> properties.
+        /// </summary>
+        OnlyTrailingLineBreaks = OnlyLineBreaks | TrimTrailing
+    }
+
+    /// <summary>
     /// This stack maintains a high water mark for allocated objects so the client
     /// can reuse the objects in the stack to reduce memory allocations, this is
     /// used to maintain current state of the parser for element stack, and attributes
@@ -1050,7 +1089,7 @@ namespace Sgml
         }
 
         /// <summary>
-        /// Specifies how white space is handled.
+        /// Specifies how whitespace nodes are handled.
         /// </summary>
         public WhitespaceHandling WhitespaceHandling
         {
@@ -1058,12 +1097,29 @@ namespace Sgml
             set => _whitespaceHandling = value;
         }
 
+        private TextWhitespaceHandling _textWhitespace;
+
         /// <summary>
-        /// When <see langword="true"/>, then the <c>InnerText</c> for any auto-closing elements (e.g. &lt;p&gt;&lt;p&gt;&lt;p&gt;) will not contain any trailing whitespace - this removes the need for consumers to call <see cref="String.Trim"/> and so reduces string copies and heap-allocations.<br />
-        /// When <see langword="false"/> (the default), the whitespace is treated as significant by the <see cref="SgmlReader"/> and will be preserved.
+        /// Specifies how leading and trailing whitespace in <c>InnerText</c> and <c>Value</c> properties is handled.
         /// </summary>
         /// <remarks>This property is intended to make it easier to process files such as OFX feeds with self-closing elements separated by line-breaks as it allows <c>InnerText</c> to be passed directly into methods that expect string inputs to be trimmed of whitespace as a precondition.</remarks>
-        public bool IgnoreAutoClosedElementTrailingWhitespace { get; set; }
+        public TextWhitespaceHandling TextWhitespace
+        {
+            get => _textWhitespace;
+            set
+            {
+                // Prevent invalid values: only respect the lower 3 bits, and only respect the 3rd bit (OnlyLineBreaks) if either of the lower 2 bits are set - otherwise treat it as zero/empty/None.
+                value &= (TextWhitespaceHandling)0x07;
+                if ((value & TextWhitespaceHandling.TrimBoth) != 0)
+                {
+                    _textWhitespace = value;
+                }
+                else
+                {
+                    _textWhitespace = 0;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the number of attributes on the current node.
@@ -1920,9 +1976,12 @@ namespace Sgml
             return false;
         }
 
+        /// <summary>
+        /// Returns <see langword="true"/> if the text encountered is only comprised of whitespace characters.
+        /// </summary>
         private bool ParseText(char ch, bool newtext)
         {
-            bool ws = !newtext || _current.IsWhitespace;
+            bool ws = !newtext || _current.IsWhitespace; // `ws` indicates if the current run of text so-far is ONLY whitespace or not.
             if (newtext)
                 _sb.Length = 0;
 
@@ -1960,45 +2019,66 @@ namespace Sgml
                 else
                 {
                     if (!_current.IsWhitespace)
+                    {
                         ws = false;
+                    }
+                            
                     _sb.Append(ch);
                     ch = _current.ReadChar();
                 }
             }
 
             string value;
-            if(_state == State.PartialTag && IgnoreAutoClosedElementTrailingWhitespace)
-            {
-                int lastIdxNonWS = LastIndexOfNonWhitespaceChar(_sb);
-                if (lastIdxNonWS == _sb.Length)
-                {
-                    value = _sb.ToString();
-                }
-                else if (lastIdxNonWS >= 0)
-                {
-                    value = _sb.ToString(startIndex: 0, length: lastIdxNonWS + 1);
-                }
-                else
-                {
-                    value = string.Empty;
-                }
-            }
-            else
+            if(_textWhitespace == TextWhitespaceHandling.None)
             {
                 value = _sb.ToString();
             }
+            else
+            {
+                //TextWhitespaceHandling handling = _textWhitespace;
+                //if (!newtext) handling &= ~TextWhitespaceHandling.TrimLeading; // Don't trim leading whitespace if this is not at the start of a run. UPDATE: Ah, I forget that `_sb` is persisted.
+                value = TrimStringBuilder(_sb, _textWhitespace);
+            }
+
             Push(null, XmlNodeType.Text, value);
             return ws;
         }
 
-        private static int LastIndexOfNonWhitespaceChar(StringBuilder sb)
+        private static string TrimStringBuilder(StringBuilder sb, TextWhitespaceHandling handling) // It's simpler to return a substring from within a StringBuilder than it is to prevent whitespace from being added in the first place, hence this approach.
         {
-            int i = sb.Length - 1;
-            while(i >= 0 && char.IsWhiteSpace(sb[i]))
+            int startIndex = 0;
+            int endIndex   = sb.Length - 1; // `endIndex` is inclusive, not exclusive.
+
+            bool onlyLineBreaks = (handling & TextWhitespaceHandling.OnlyLineBreaks) == TextWhitespaceHandling.OnlyLineBreaks;
+           
+            if ((handling & TextWhitespaceHandling.TrimLeading) == TextWhitespaceHandling.TrimLeading)
             {
-                i--;
+                while (startIndex < sb.Length && CharTrimPredicate(sb[startIndex], onlyLineBreaks))
+                {
+                    startIndex++;
+                }
+
+                if (startIndex >= sb.Length) return string.Empty;
             }
-            return i;
+
+            if ((handling & TextWhitespaceHandling.TrimTrailing) == TextWhitespaceHandling.TrimTrailing)
+            {
+                while (endIndex >= 0 && CharTrimPredicate(sb[endIndex], onlyLineBreaks))
+                {
+                    endIndex--;
+                }
+
+                if (endIndex < 0 ) return string.Empty;
+            }
+
+            int exclusiveEndIndex = endIndex + 1;
+            int length = exclusiveEndIndex - startIndex;
+            return sb.ToString(startIndex, length);
+        }
+
+        private static bool CharTrimPredicate(char c, bool onlyLineBreaks)
+        {
+            return onlyLineBreaks ? (c == '\r' || c == '\n') : char.IsWhiteSpace(c);
         }
 
         /// <summary>

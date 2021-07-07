@@ -11,11 +11,13 @@
 
 using Sgml;
 using System;
+using System.Linq;
 using System.IO;
 using System.Xml;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace SGMLTests
 {
@@ -24,6 +26,17 @@ namespace SGMLTests
     [TestFixture]
     public class WhitespaceTests
     {
+        [Test]
+        public void Invalid_TextWhitespace_enum_values_should_be_dropped()
+        {
+            SgmlReader sgmlReader = new SgmlReader()
+            {
+                TextWhitespace = (TextWhitespaceHandling)0xFF
+            };
+
+            Assert.AreEqual(TextWhitespaceHandling.TrimBoth | TextWhitespaceHandling.OnlyLineBreaks, sgmlReader.TextWhitespace, "The " + nameof(sgmlReader.TextWhitespace) + " property should only respect defined flags bits.");
+        }
+
         [Test]
         public void DoBradescoTrailingWhitespaceTest()
         {
@@ -36,9 +49,20 @@ namespace SGMLTests
             XmlDocument asXml = ConvertSgmlToXml(ofx160Dtd, bradescoOfxText);
 
             XmlNode codeNode = asXml.SelectSingleNode("//*[local-name()='CODE']");
-            string sonrsStatusCodeInnerText = codeNode.InnerText;
 
-            Assert.IsFalse(condition: sonrsStatusCodeInnerText.EndsWith("\n"), message: "There should be no trailing whitespace in read elements' innerText.");
+            XmlNodeList memoNodes = asXml.SelectNodes("//*[local-name()='MEMO']");
+
+            List<XmlNode> selectedNodes = new List<XmlNode>();
+            selectedNodes.Add(codeNode);
+            selectedNodes.AddRange(memoNodes.Cast<XmlNode>());
+
+            foreach (XmlNode node in selectedNodes)
+            {
+                string innerText = codeNode.InnerText;
+                bool hasTrailingLineBreak = innerText.EndsWith("\n");
+
+                Assert.IsFalse(hasTrailingLineBreak, message: "There should be no trailing line-breaks in <" + node.Name + "> elements' innerText.");
+            }
         }
 
         private static XmlDocument ConvertSgmlToXml(SgmlDtd sgmlDtd, string sgmlText)
@@ -49,9 +73,12 @@ namespace SGMLTests
                 {
                     InputStream        = stringReader,
                     WhitespaceHandling = WhitespaceHandling.None,
+                    TextWhitespace     = TextWhitespaceHandling.OnlyTrailingLineBreaks,
                     DocType            = sgmlDtd.Name, // "OFX"; ?
                     Dtd                = sgmlDtd
                 };
+
+                Assert.AreEqual(TextWhitespaceHandling.OnlyTrailingLineBreaks, sgmlReader.TextWhitespace, "The " + nameof(sgmlReader.TextWhitespace) + " property should persist this valid value.");
 
                 XmlDocument doc = new XmlDocument();
                 using (XmlWriter xmlWriter = doc.CreateNavigator().AppendChild())
