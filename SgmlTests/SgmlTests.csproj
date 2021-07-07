@@ -8,14 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\62.test" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="ofx160.dtd" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\01.test" />
     <EmbeddedResource Include="Resources\02.test" />
     <EmbeddedResource Include="Resources\03.test" />
@@ -78,6 +71,7 @@
     <EmbeddedResource Include="Resources\60.test" />
     <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\61.test" />
+    <EmbeddedResource Include="Resources\bradesco.ofx" />
   </ItemGroup>
 
   <ItemGroup>

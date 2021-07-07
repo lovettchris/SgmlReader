@@ -82,19 +82,24 @@ namespace SGMLTests {
         private static void ReadTest(string name, out string before, out string after) {
             var assembly = typeof(Tests).Assembly;
            
+            var test = ReadTestResource(name).Split('`');
+            before = test[0];
+            after = test[1];
+        }
+
+        internal static string ReadTestResource(string name) {
+            var assembly = typeof(Tests).Assembly;
+           
             var stream = assembly.GetManifestResourceStream(assembly.FullName.Split(',')[0] + ".Resources." + name);
             if(stream == null) {
                 throw new FileNotFoundException("unable to load requested resource: " + name);
             }
             using(var sr = new StreamReader(stream)) {                
-                var test = sr.ReadToEnd().Split('`');
-                before = test[0];
-                after = test[1];
+                return sr.ReadToEnd();
             }
         }
 
-        private static SgmlDtd LoadDtd(string docType, string name)
-        {
+        internal static SgmlDtd LoadDtd(string docType, string name) {
             string rootName = typeof(Tests).Assembly.GetName().Name;
             using (Stream stream = typeof(SGMLTests.Tests).Assembly.GetManifestResourceStream(rootName + "." + name))
             {
