@@ -71,7 +71,7 @@
     <EmbeddedResource Include="Resources\60.test" />
     <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\61.test" />
-    <EmbeddedResource Include="Resources\bradesco.ofx" />
+    <EmbeddedResource Include="Resources\63.test" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,11 +20,11 @@ namespace SGMLTests {
     public class LoggingXmlReader : XmlReader {
 
         //--- Fields ---
-        private readonly XmlReader _reader;
+        private readonly SgmlReader _reader;
         private readonly TextWriter _logger;
 
         //--- Constructors ---
-        public LoggingXmlReader(XmlReader reader, TextWriter logger) {
+        public LoggingXmlReader(SgmlReader reader, TextWriter logger) {
             _reader = reader;
             _logger = logger;
         }
