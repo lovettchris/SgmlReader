@@ -10,30 +10,34 @@
  */
 
 using System;
-using System.Xml;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Collections;
+using System.Xml;
 
-namespace Sgml {
+namespace Sgml
+{
     /// <summary>
     /// This class provides a command line interface to the SgmlReader.
     /// </summary>
-    public class CommandLine {
-
-        string proxy = null;
-        string output = null;
-        bool formatted = false;
-        bool noxmldecl = false;
-        Encoding encoding = null;
+    public class CommandLine
+    {
+        private string proxy = null;
+        private string output = null;
+        private bool formatted = false;
+        private bool noxmldecl = false;
+        private Encoding encoding = null;
 
         [STAThread]
-        static void Main(string[] args) {
-            try {
+        private static void Main(string[] args)
+        {
+            try
+            {
                 CommandLine t = new CommandLine();
                 t.Run(args);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Console.WriteLine("Error: " + e.Message);
             }
             return;
@@ -43,20 +47,26 @@ namespace Sgml {
         /// Run the SgmlReader command line tool with the given command line arguments.
         /// </summary>
         /// <param name="args"></param>
-        public void Run(string[] args) {
+        public void Run(string[] args)
+        {
             SgmlReader reader = new SgmlReader();
             string inputUri = null;
 
-            for (int i = 0; i < args.Length; i++) {
+            for (int i = 0; i < args.Length; i++)
+            {
                 string arg = args[i];
-                if (arg[0] == '-' || arg[0] == '/') {
-                    switch (arg.Substring(1)) {
+                if (arg[0] == '-' || arg[0] == '/')
+                {
+                    switch (arg.Substring(1))
+                    {
                         case "e":
                             string errorlog = args[++i];
-                            if (errorlog.ToLower() == "$stderr") {
+                            if (errorlog.ToLower() == "$stderr")
+                            {
                                 reader.ErrorLog = Console.Error;
-                            } 
-                            else {
+                            }
+                            else
+                            {
                                 reader.ErrorLog = new StreamWriter(errorlog);
                             }
                             break;
@@ -109,9 +119,11 @@ namespace Sgml {
                             Console.WriteLine("               If input file contains wildcards then this just specifies the output file extension (default .xml)");
                             return;
                     }
-                } 
-                else {
-                    if (inputUri == null) {
+                }
+                else
+                {
+                    if (inputUri == null)
+                    {
                         inputUri = arg;
                         string ext = Path.GetExtension(arg).ToLower();
                         if (ext == ".htm" || ext == ".html")
@@ -120,55 +132,63 @@ namespace Sgml {
                     else if (output == null) output = arg;
                 }
             }
-            if (inputUri != null && !inputUri.StartsWith("http://") && inputUri.IndexOfAny(new char[] { '*', '?' }) >= 0) {
+            if (inputUri != null && !inputUri.StartsWith("http://") && inputUri.IndexOfAny(new char[] { '*', '?' }) >= 0)
+            {
                 // wild card processing of a directory of files.
                 string path = Path.GetDirectoryName(inputUri);
                 if (path == "") path = ".\\";
                 string ext = ".xml";
-                if (output != null) 
+                if (output != null)
                     ext = Path.GetExtension(output);
-                foreach (string uri in Directory.GetFiles(path, Path.GetFileName(inputUri))) {
+                foreach (string uri in Directory.GetFiles(path, Path.GetFileName(inputUri)))
+                {
                     Console.WriteLine("Processing: " + uri);
                     string file = Path.GetFileName(uri);
                     output = Path.GetDirectoryName(uri) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(file) + ext;
                     Process(reader, uri);
                     reader.Close();
-                }        
+                }
                 return;
-            } 
+            }
             Process(reader, inputUri);
             reader.Close();
-           
-            return ;
+
+            return;
         }
 
-        void Process(SgmlReader reader, string uri) {   
-            if (uri == null) {
+        private void Process(SgmlReader reader, string uri)
+        {
+            if (uri == null)
+            {
                 reader.InputStream = Console.In;
-            } else {
+            }
+            else
+            {
                 reader.Href = uri;
             }
 
 
-            this.encoding ??= reader.GetEncoding();
+            encoding ??= reader.GetEncoding();
 
             XmlTextWriter w = output != null
-                ? new XmlTextWriter(output, this.encoding)
+                ? new XmlTextWriter(output, encoding)
                 : new XmlTextWriter(Console.Out);
 
             if (formatted) w.Formatting = Formatting.Indented;
-            if (!noxmldecl) {
+            if (!noxmldecl)
+            {
                 w.WriteStartDocument();
             }
             reader.Read();
-            while (!reader.EOF) {
+            while (!reader.EOF)
+            {
                 w.WriteNode(reader, true);
             }
             w.Flush();
-            w.Close();          
+            w.Close();
         }
 
 
 
-    }    
+    }
 }
