@@ -30,7 +30,6 @@ namespace SGMLTests
         }
 
         private static readonly ILog _log = LogManager.GetLogger(typeof(Tests));
-        private static readonly bool _debug = true;
 
         private static void Test(string name, XmlRender xmlRender, CaseFolding caseFolding, string doctype, bool format)
         {
@@ -139,10 +138,11 @@ namespace SGMLTests
 
             // check if we need to use the LoggingXmlReader
             XmlReader reader = sgmlReader;
-            if (_debug)
+#if DEBUG
             {
                 reader = new LoggingXmlReader(sgmlReader, Console.Out);
             }
+#endif
 
             // initialize xml writer
             StringWriter stringWriter = new StringWriter();
@@ -168,7 +168,7 @@ namespace SGMLTests
             }
             catch (Exception)
             {
-                Assert.Fail("unable to parse sgml reader output:\n{0}", actual);
+                Assert.Fail("unable to parse " + nameof(SgmlReader) + " output:\n{0}", actual);
             }
 
             return actual.Trim().Replace("\r", "");
