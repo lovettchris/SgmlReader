@@ -87,6 +87,9 @@ namespace SGMLTests {
             after = test[1];
         }
 
+        /// <summary></summary>
+        /// <param name="name">The value provided Will be appended to &quot;<c>SgmlTests[Core].Resources.</c>&quot; to form the full manifest resource stream name.</param>
+        /// <returns></returns>
         internal static string ReadTestResource(string name) {
             var assembly = typeof(Tests).Assembly;
            

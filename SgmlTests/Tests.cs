@@ -462,7 +462,8 @@ namespace SGMLTests {
         {
             // 63.test is originally "bradesco.ofx" from github.com/kevencarneiro/OFXSharp, used under the MIT license.
             string bradescoOfxText = Tests.ReadTestResource(name: "63.test");
-            bradescoOfxText = bradescoOfxText.Substring(startIndex: 134); // skip first 134 chars of OFX header.
+            int indexOfOfxStart = bradescoOfxText.IndexOf("<OFX>");
+            bradescoOfxText = bradescoOfxText.Substring(startIndex: indexOfOfxStart); // skip past non-SGML OFX header.
 
             SgmlDtd ofx160Dtd = Tests.LoadDtd(docType: "OFX", name: "ofx160.dtd");
 
@@ -501,7 +502,7 @@ namespace SGMLTests {
             foreach (XmlNode node in selectedNodes)
             {
                 string innerText = codeNode.InnerText;
-                bool hasTrailingLineBreak = innerText.EndsWith("\n");
+                bool hasTrailingLineBreak = innerText.EndsWith("\n") || innerText.EndsWith("\r") || innerText.EndsWith(Environment.NewLine);
 
                 Assert.IsFalse(hasTrailingLineBreak, message: "There should be no trailing line-breaks in <" + node.Name + "> elements' innerText.");
             }

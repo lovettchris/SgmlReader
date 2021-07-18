@@ -82,6 +82,14 @@ namespace Sgml
         OnlyTrailingLineBreaks = OnlyLineBreaks | TrimTrailing
     }
 
+    internal static class EnumExtensions
+    {
+        // Bitwise operators on enums to check for flags are much faster than Enum.HasFlag(), unfortunately.
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public static bool HasFlagBits(this TextWhitespaceHandling value, TextWhitespaceHandling bits) => (value & bits) == bits;
+    }
+
     /// <summary>
     /// This stack maintains a high water mark for allocated objects so the client
     /// can reuse the objects in the stack to reduce memory allocations, this is
@@ -1102,7 +1110,11 @@ namespace Sgml
         /// <summary>
         /// Specifies how leading and trailing whitespace in <c>InnerText</c> and <c>Value</c> properties is handled.
         /// </summary>
-        /// <remarks>This property is intended to make it easier to process files such as OFX feeds with self-closing elements separated by line-breaks as it allows <c>InnerText</c> to be passed directly into methods that expect string inputs to be trimmed of whitespace as a precondition.</remarks>
+        /// <remarks>
+        /// This property is intended to make it easier to process files such as OFX feeds with self-closing elements
+        /// separated by line-breaks as it allows <c>InnerText</c> to be passed directly into methods that expect string
+        /// inputs to be trimmed of whitespace as a precondition.
+        /// </remarks>
         public TextWhitespaceHandling TextWhitespace
         {
             get => _textWhitespace;
@@ -2029,18 +2041,16 @@ namespace Sgml
             }
 
             string value;
-            if(_textWhitespace == TextWhitespaceHandling.None)
+            if (_textWhitespace == TextWhitespaceHandling.None)
             {
                 value = _sb.ToString();
             }
             else
             {
-                //TextWhitespaceHandling handling = _textWhitespace;
-                //if (!newtext) handling &= ~TextWhitespaceHandling.TrimLeading; // Don't trim leading whitespace if this is not at the start of a run. UPDATE: Ah, I forget that `_sb` is persisted.
                 value = TrimStringBuilder(_sb, _textWhitespace);
             }
 
-            Push(null, XmlNodeType.Text, value);
+            Push(name: null, XmlNodeType.Text, value);
             return ws;
         }
 
@@ -2049,11 +2059,9 @@ namespace Sgml
             int startIndex = 0;
             int endIndex   = sb.Length - 1; // `endIndex` is inclusive, not exclusive.
 
-            bool onlyLineBreaks = (handling & TextWhitespaceHandling.OnlyLineBreaks) == TextWhitespaceHandling.OnlyLineBreaks;
-           
-            if ((handling & TextWhitespaceHandling.TrimLeading) == TextWhitespaceHandling.TrimLeading)
+            if (handling.HasFlagBits(TextWhitespaceHandling.TrimLeading))
             {
-                while (startIndex < sb.Length && CharTrimPredicate(sb[startIndex], onlyLineBreaks))
+                while (startIndex < sb.Length && CharTrimPredicate(sb[startIndex], onlyLineBreaks: handling.HasFlagBits(TextWhitespaceHandling.OnlyLineBreaks)))
                 {
                     startIndex++;
                 }
@@ -2061,9 +2069,9 @@ namespace Sgml
                 if (startIndex >= sb.Length) return string.Empty;
             }
 
-            if ((handling & TextWhitespaceHandling.TrimTrailing) == TextWhitespaceHandling.TrimTrailing)
+            if (handling.HasFlagBits(TextWhitespaceHandling.TrimTrailing))
             {
-                while (endIndex >= 0 && CharTrimPredicate(sb[endIndex], onlyLineBreaks))
+                while (endIndex >= 0 && CharTrimPredicate(sb[endIndex], onlyLineBreaks: handling.HasFlagBits(TextWhitespaceHandling.OnlyLineBreaks)))
                 {
                     endIndex--;
                 }

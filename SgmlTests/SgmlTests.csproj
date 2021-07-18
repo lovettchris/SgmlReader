@@ -69,8 +69,8 @@
     <EmbeddedResource Include="Resources\58.test" />
     <EmbeddedResource Include="Resources\59.test" />
     <EmbeddedResource Include="Resources\60.test" />
-    <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\61.test" />
+    <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\63.test" />
   </ItemGroup>
 
