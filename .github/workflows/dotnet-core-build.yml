@@ -24,8 +24,8 @@ jobs:
     - name: Fix versions
       run: pwsh -f Common/fix_versions.ps1
     - name: Install dependencies
-      run: dotnet restore SgmlReaderCore.sln
+      run: dotnet restore SgmlReader.sln
     - name: Build
-      run: dotnet build SgmlReaderCore.sln 
+      run: dotnet build SgmlReader.sln 
     - name: Test
-      run: dotnet test SgmlReaderCore.sln --verbosity normal
+      run: dotnet test SgmlReader.sln --verbosity normal
