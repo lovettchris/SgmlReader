@@ -98,28 +98,26 @@ namespace SGMLTests
         {
             System.Reflection.Assembly assembly = typeof(Tests).Assembly;
 
-            Stream stream = assembly.GetManifestResourceStream(assembly.FullName.Split(',')[0] + ".Resources." + name);
-            if (stream == null)
+            using (Stream stream = assembly.GetManifestResourceStream(assembly.FullName.Split(',')[0] + ".Resources." + name))
             {
-                throw new FileNotFoundException("unable to load requested resource: " + name);
-            }
-
-            using (StreamReader sr = new StreamReader(stream))
-            {
-                return sr.ReadToEnd();
+                if (stream is null) throw new ArgumentException("unable to load requested resource: " + name);
+                using (StreamReader sr = new StreamReader(stream))
+                {
+                    return sr.ReadToEnd();
+                }
             }
         }
 
-        internal static SgmlDtd LoadDtd(string docType, string name)
+        /// <summary></summary>
+        /// <param name="docType"></param>
+        /// <param name="name">The name of the EmbeddedResource file located under the <c>SgmlTests\Resources</c> project directory.</param>
+        /// <returns></returns>
+        internal static SgmlDtd LoadDtd(string docType, string resourceFileName)
         {
-            string rootName = typeof(Tests).Assembly.GetName().Name;
-            using (Stream stream = typeof(SGMLTests.Tests).Assembly.GetManifestResourceStream(rootName + "." + name))
-            {
-                SgmlDtd dtd = SgmlDtd.Parse(null, System.IO.Path.GetFileNameWithoutExtension(name), new StreamReader(stream), "", new NameTable(),
-                    new DesktopEntityResolver());
-                dtd.Name = docType;
-                return dtd;
-            }
+            StringReader dtdTextReader = new StringReader(ReadTestResource(resourceFileName));
+
+            SgmlDtd dtd = SgmlDtd.Parse(baseUri: null, name: docType, input: dtdTextReader, subset: "", nt: new NameTable(), resolver: new DesktopEntityResolver());
+            return dtd;
         }
 
         private static string RunTest(CaseFolding caseFolding, string doctype, bool format, string source, XmlReaderTestCallback callback)

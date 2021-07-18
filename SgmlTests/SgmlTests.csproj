@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="ofx160.dtd" />
+    <EmbeddedResource Include="Resources\ofx160.dtd" />
     <EmbeddedResource Include="Resources\01.test" />
     <EmbeddedResource Include="Resources\02.test" />
     <EmbeddedResource Include="Resources\03.test" />

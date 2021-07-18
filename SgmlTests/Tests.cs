@@ -465,7 +465,7 @@ namespace SGMLTests {
             int indexOfOfxStart = bradescoOfxText.IndexOf("<OFX>");
             bradescoOfxText = bradescoOfxText.Substring(startIndex: indexOfOfxStart); // skip past non-SGML OFX header.
 
-            SgmlDtd ofx160Dtd = Tests.LoadDtd(docType: "OFX", name: "ofx160.dtd");
+            SgmlDtd ofx160Dtd = Tests.LoadDtd(docType: "OFX", resourceFileName: "ofx160.dtd");
 
             XmlDocument xmlDocument;
             using (StringReader stringReader = new StringReader(bradescoOfxText))

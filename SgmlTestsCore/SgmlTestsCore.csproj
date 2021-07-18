@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\SgmlTests\ofx160.dtd" Link="ofx160.dtd" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\ofx160.dtd" Link="Resources\ofx160.dtd" />
     <EmbeddedResource Include="..\SgmlTests\Resources\01.test" Link="Resources\01.test" />
     <EmbeddedResource Include="..\SgmlTests\Resources\02.test" Link="Resources\02.test" />
     <EmbeddedResource Include="..\SgmlTests\Resources\03.test" Link="Resources\03.test" />
