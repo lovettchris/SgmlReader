@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		BUILD.cmd = BUILD.cmd
+		.github\workflows\dotnet-core-build.yml = .github\workflows\dotnet-core-build.yml
 		license.txt = license.txt
 		NuGet.config = NuGet.config
 		readme.md = readme.md
@@ -42,9 +43,7 @@ Global
 		{0B4FCAF6-5A82-4E24-A1E8-912C68239871}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B4FCAF6-5A82-4E24-A1E8-912C68239871}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
