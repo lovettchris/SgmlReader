@@ -1,21 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Common/version.props" />
-  <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47;net48;net5.0;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
+  
+  <PropertyGroup Label="Build">
+    <TargetFrameworks>net45;net46;net47;net48;net5.0;netstandard2.0;netstandard2.1;netcoreapp3.1;</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Deterministic>True</Deterministic>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="Signing">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MYKEYFILE)</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <LangVersion>9</LangVersion>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Label="NuGet Package Properties">
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
+    <Description>SgmlReader is a .NET library that is handy for converting SGML content (like HTML and OFX) into well formed XML via XmlReader, XmlDocument, XDocument or XPathDocument.</Description>
+    <Authors>Chris Lovett, Steve Bjorg, Contributors</Authors>
+    <PackageProjectUrl>https://github.com/lovettchris/SgmlReader</PackageProjectUrl>
+    <PackageTags>SGML HTML XML HTMLTidy SgmlReader</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   
   <ItemGroup>
     <None Remove="Html.dtd" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Html.dtd" />
   </ItemGroup>
+  
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="pwsh -f &quot;$(SolutionDir)Common/fix_versions.ps1&quot;" />
+  </Target>
 
 </Project>

@@ -148,7 +148,7 @@ pwsh -f Common/setup.ps1
 And now you can build successfully:
 
 ```
-dotnet build SgmlReaderCore.sln
+dotnet build SgmlReader.sln
 ```
 
 ### Using MSBuild
