@@ -9,11 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SgmlTests", "SgmlTests\Sgml
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SgmlReader", "SgmlReader\SgmlReader.csproj", "{0B4FCAF6-5A82-4E24-A1E8-912C68239871}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SgmlReaderUniversal", "SgmlReaderUniversal\SgmlReaderUniversal.csproj", "{5BBCC991-4635-49F0-8F98-08983AEB8E8D}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BFFC450B-8425-4940-85EE-F9D3541FCAF0} = {BFFC450B-8425-4940-85EE-F9D3541FCAF0}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A55E734A-D5D5-4491-83C0-DDC477E094D0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -102,26 +97,6 @@ Global
 		{0B4FCAF6-5A82-4E24-A1E8-912C68239871}.Release|x64.Build.0 = Release|Any CPU
 		{0B4FCAF6-5A82-4E24-A1E8-912C68239871}.Release|x86.ActiveCfg = Release|Any CPU
 		{0B4FCAF6-5A82-4E24-A1E8-912C68239871}.Release|x86.Build.0 = Release|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|ARM.ActiveCfg = Debug|ARM
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|ARM.Build.0 = Debug|ARM
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|ARM64.Build.0 = Debug|ARM64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|x64.ActiveCfg = Debug|x64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|x64.Build.0 = Debug|x64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|x86.ActiveCfg = Debug|x86
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Debug|x86.Build.0 = Debug|x86
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|ARM.ActiveCfg = Release|ARM
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|ARM.Build.0 = Release|ARM
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|ARM64.ActiveCfg = Release|ARM64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|ARM64.Build.0 = Release|ARM64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|x64.ActiveCfg = Release|x64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|x64.Build.0 = Release|x64
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|x86.ActiveCfg = Release|x86
-		{5BBCC991-4635-49F0-8F98-08983AEB8E8D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

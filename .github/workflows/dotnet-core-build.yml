@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-2019
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,6 +21,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Build and test
-      shell: cmd
-      run: .\BUILD.cmd
+    - name: Build
+      run: dotnet build SgmlReader.sln
+    - name: Test
+      run: dotnet test SgmlReader.sln

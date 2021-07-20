@@ -38,6 +38,10 @@ REM Build the solution:
 msbuild SgmlReader.sln /verbosity:minimal
 if ERRORLEVEL 1 exit /B 1
 
+REM Build the solution:
+msbuild SgmlReaderUniversal.sln /verbosity:minimal
+if ERRORLEVEL 1 exit /B 1
+
 REM run .net core tests
 vstest.console d:\git\lovettchris\SgmlReader\SgmlTests\bin\Release\net5.0\SgmlTests.dll
 if ERRORLEVEL 1 exit /B 1
