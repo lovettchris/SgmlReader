@@ -1,6 +1,6 @@
 @echo off
 
-WHERE mssbuild >NUL 2>NUL
+WHERE msbuild >NUL 2>NUL
 IF ERRORLEVEL 1 goto :setup
 goto :powershell
 

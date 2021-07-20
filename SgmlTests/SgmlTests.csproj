@@ -7,7 +7,7 @@
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Label="Signing">
+  <PropertyGroup Label="Signing" Condition="'$(MYPUBLICKEYFILE)' != ''">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MYPUBLICKEYFILE)</AssemblyOriginatorKeyFile>
     <DelaySign>true</DelaySign>

@@ -24,4 +24,4 @@ jobs:
     - name: Build
       run: dotnet build SgmlReader.sln
     - name: Test
-      run: dotnet test SgmlReader.sln
+      run: dotnet test SgmlReader.sln --no-build
