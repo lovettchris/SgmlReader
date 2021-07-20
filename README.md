@@ -10,10 +10,10 @@ improvements to it.
 ## SgmlReaderDll API
 
 The SgmlReader is an implementation of the XmlReader API. So the only thing you really need to know
-is how to construct it. SgmlReader has a default constructor, then you need to set some of the
-properties. To load a DTD you must specify DocType="HTML" or you must provide a SystemLiteral. To
-specify the SGML document you must provide either the InputStream or Href. Everything else is
-optional. Then you can read from this reader like any other XmlReader class.
+is how to construct it. `SgmlReader` has a default constructor, then you need to set some of the
+properties. To load a DTD you must specify `DocType="HTML"` or you must provide a `SystemLiteral`. To
+specify the SGML document you must provide either the `InputStream` or `Href`. Everything else is
+optional. Then you can read from this reader like any other `XmlReader` class.
 
 ## Nuget Package
 
@@ -70,19 +70,23 @@ The command line executable version has the following options:
 
     sgmlreader <options> [InputUri] [OutputFile]
     
-| Argument Name | Description |
-| -------------- | :--------- |
-| -e "file" | Specifies a file to write error output to.  The default is to generate no errors.  The special name "$stderr" redirects errors to stderr output stream. |
-| -proxy    | "server"  Specifies the proxy server to use to fetch DTD's through the fire wall. |
-| -html     | Specifies that the input is HTML. |
-| -dtd "uri"| Specifies some other SGML DTD. |
-| -base     | Add an HTML base tag to the output. |
-| -pretty   | Pretty print the output. |
-| -encoding name | Specify an encoding for the output file (default UTF-8) |
-| -noxml    | Stops generation of XML declaration in output. |
-| -doctype  | Copy &lt;!DOCTYPE tag to the output. |
-| InputUri  | The input file name or URL. Default is stdin.  If this is a local file name then it also supports wildcards. |
-| OutputFile | The optional output file name. Default is stdout.  If the InputUri contains wildcards then this just specifies the output file extension, the default being ".xml". |
+| Argument Name    | Description |
+| ---------------- | :---------- |
+| `-help`          | Print the list of command-line options. |
+| `-e "file"`      | Specifies a file to write error output to.  The default is to generate no errors. Use the value "`$stderr`" to redirect errors to stderr. |
+| `-proxy server`  | Specifies the proxy server to use to fetch DTDs through the firewall. |
+| `-html`          | Specifies that the input is HTML. |
+| `-dtd "uri"`     | Specifies some other SGML DTD. |
+| `-base`          | Add an HTML base tag to the output. |
+| `-pretty`        | Pretty print the output. |
+| `-encoding name` | Specify an encoding for the output file (default UTF-8). |
+| `-nobom`         | Prevents the output of the BOM when using UTF-8. |
+| `-noxml`         | Stops generation of XML declaration in output. |
+| `-doctype`       | Copy &lt;!DOCTYPE tag to the output. |
+| `-f`             | Produce indented formatted output |
+| `-trimtext`      | SGML `#text` nodes will be trimmed of outer whitespace. |
+| `InputUri`       | The input file name or URL. Default is stdin.  If this is a local file name then it also supports wildcards. |
+| `OutputFile`     | The optional output file name. Default is stdout.  If the InputUri contains wildcards then this just specifies the output file extension, the default being ".xml". |
 
 <br/>
 
@@ -181,6 +185,7 @@ with the real version from `versions.txt`.
 1. Make sure the code formatting is **identical** to the existing code formatting.
 You know that you're doing it right if your code is indistinguishable from
 existing code.
+  * **Tip**: Ensure your editor uses the `.editorconfig` in the solution root, or customize your editor's settings to match those in the `.editorconfig` file.
 1. Fix any build warnings including code analysis warnings.
 1. Run the unit test to make sure no regressions are being introduced.
 1. Add a unit test to confirm your fix or feature, if needed.

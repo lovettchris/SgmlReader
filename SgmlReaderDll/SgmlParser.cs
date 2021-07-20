@@ -132,6 +132,7 @@ namespace Sgml
     /// <summary>
     /// An Entity declared in a DTD.
     /// </summary>
+    [DebuggerDisplay("Sgml.Entity, {LiteralType}, Name: {Name}, Is Whitespace: {IsWhitespace}")]
     public class Entity : IDisposable
     {
         /// <summary>
@@ -2221,8 +2222,6 @@ namespace Sgml
     /// </summary>
     public class SgmlDtd
     {
-        private string _name;
-
         private readonly Dictionary<string, ElementDecl> _elements;
         private readonly Dictionary<string, Entity> _pentities;
         private readonly Dictionary<string, Entity> _entities;
@@ -2233,12 +2232,12 @@ namespace Sgml
         /// <summary>
         /// Initialises a new instance of the <see cref="SgmlDtd"/> class.
         /// </summary>
-        /// <param name="name">The name of the DTD.</param>
+        /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
         /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
         public SgmlDtd(string name, XmlNameTable nt, IEntityResolver resolver)
         {
-            _name = name;
+            Name = name;
             _elements = new();
             _pentities = new();
             _entities = new();
@@ -2249,11 +2248,7 @@ namespace Sgml
         /// <summary>
         /// The name of the DTD.
         /// </summary>
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets the XmlNameTable associated with this implementation.
@@ -2265,7 +2260,7 @@ namespace Sgml
         /// Parses a DTD and creates a <see cref="SgmlDtd"/> instance that encapsulates the DTD.
         /// </summary>
         /// <param name="baseUri">The base URI of the DTD.</param>
-        /// <param name="name">The name of the DTD.</param>
+        /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
         /// <param name="pubid"></param>
         /// <param name="url"></param>
         /// <param name="subset"></param>
@@ -2301,7 +2296,7 @@ namespace Sgml
         /// Parses a DTD and creates a <see cref="SgmlDtd"/> instance that encapsulates the DTD.
         /// </summary>
         /// <param name="baseUri">The base URI of the DTD.</param>
-        /// <param name="name">The name of the DTD.</param>
+        /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
         /// <param name="input">The reader to load the DTD from.</param>
         /// <param name="subset"></param>
         /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>

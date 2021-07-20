@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Original work Copyright (c) 2008 MindTouch. All rights reserved. 
  * Modified Work Copyright (c) 2016 Microsoft Corporation. All rights reserved.
  * 
@@ -9,126 +9,146 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  */
 
-using System;
-using System.IO;
-using System.Xml;
 using log4net;
 using NUnit.Framework;
 using Sgml;
+using System;
+using System.IO;
+using System.Xml;
 
-namespace SGMLTests {
-    public partial class Tests {
-
-        //--- Types ---
+namespace SGMLTests
+{
+    public partial class Tests
+    {
         private delegate void XmlReaderTestCallback(XmlReader reader, XmlWriter xmlWriter);
 
-        private enum XmlRender {
+        private enum XmlRender
+        {
             Doc,
             DocClone,
             Passthrough
         }
 
-        //--- Class Fields ---
-        private static ILog _log = LogManager.GetLogger(typeof(Tests));
-        private static bool _debug = true;
+        private static readonly ILog _log = LogManager.GetLogger(typeof(Tests));
 
-        //--- Class Methods ---
-        private static void Test(string name, XmlRender xmlRender, CaseFolding caseFolding, string doctype, bool format) {
-            string source;
-            string expected;
-            ReadTest(name, out source, out expected);
+        private static void Test(string name, XmlRender xmlRender, CaseFolding caseFolding, string doctype, bool format)
+        {
+            ReadTest(name, out string source, out string expected);
             expected = expected.Trim().Replace("\r", "");
             string actual;
 
             // determine how the document should be written back
             XmlReaderTestCallback callback;
-            switch(xmlRender) {
-            case XmlRender.Doc:
+            switch (xmlRender)
+            {
+                case XmlRender.Doc:
+                    // test writing sgml reader using xml document load
+                    callback = (reader, writer) =>
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(reader);
+                        doc.WriteTo(writer);
+                    };
+                    break;
 
-                // test writing sgml reader using xml document load
-                callback = (reader, writer) => {
-                    var doc = new XmlDocument();
-                    doc.Load(reader);
-                    doc.WriteTo(writer);
-                };
-                break;
-            case XmlRender.DocClone:
+                case XmlRender.DocClone:
+                    // test writing sgml reader using xml document load and clone
+                    callback = (reader, writer) =>
+                    {
+                        XmlDocument doc = new XmlDocument();
+                        doc.Load(reader);
+                        XmlNode clone = doc.Clone();
+                        clone.WriteTo(writer);
+                    };
+                    break;
 
-                // test writing sgml reader using xml document load and clone
-                callback = (reader, writer) => {
-                    var doc = new XmlDocument();
-                    doc.Load(reader);
-                    var clone = doc.Clone();
-                    clone.WriteTo(writer);
-                };
-                break;
-            case XmlRender.Passthrough:
+                case XmlRender.Passthrough:
+                    // test writing sgml reader directly to xml writer
+                    callback = (reader, writer) =>
+                    {
+                        reader.Read();
+                        while (!reader.EOF)
+                        {
+                            writer.WriteNode(reader, true);
+                        }
+                    };
+                    break;
 
-                // test writing sgml reader directly to xml writer
-                callback = (reader, writer) => {
-                    reader.Read();
-                    while(!reader.EOF) {
-                        writer.WriteNode(reader, true);
-                    }
-                };
-                break;
-            default:
-                throw new ArgumentException("unknown value", "xmlRender");
+                default:
+                    throw new ArgumentException("unknown value", "xmlRender");
             }
             actual = RunTest(caseFolding, doctype, format, source, callback);
             Assert.AreEqual(expected, actual);
         }
 
-        private static void ReadTest(string name, out string before, out string after) {
-            var assembly = typeof(Tests).Assembly;
-           
-            var stream = assembly.GetManifestResourceStream(assembly.FullName.Split(',')[0] + ".Resources." + name);
-            if(stream == null) {
-                throw new FileNotFoundException("unable to load requested resource: " + name);
-            }
-            using(var sr = new StreamReader(stream)) {                
-                var test = sr.ReadToEnd().Split('`');
-                before = test[0];
-                after = test[1];
-            }
-        }
-
-        private static SgmlDtd LoadDtd(string docType, string name)
+        private static void ReadTest(string name, out string before, out string after)
         {
-            string rootName = typeof(Tests).Assembly.GetName().Name;
-            using (Stream stream = typeof(SGMLTests.Tests).Assembly.GetManifestResourceStream(rootName + "." + name))
+            System.Reflection.Assembly assembly = typeof(Tests).Assembly;
+
+            string[] test = ReadTestResource(name).Split('`');
+            before = test[0];
+            after = test[1];
+        }
+
+        /// <summary></summary>
+        /// <param name="name">The value provided Will be appended to &quot;<c>SgmlTests[Core].Resources.</c>&quot; to form the full manifest resource stream name.</param>
+        /// <returns></returns>
+        internal static string ReadTestResource(string name)
+        {
+            System.Reflection.Assembly assembly = typeof(Tests).Assembly;
+
+            using (Stream stream = assembly.GetManifestResourceStream(assembly.FullName.Split(',')[0] + ".Resources." + name))
             {
-                SgmlDtd dtd = SgmlDtd.Parse(null, System.IO.Path.GetFileNameWithoutExtension(name), new StreamReader(stream), "", new NameTable(), 
-                    new DesktopEntityResolver());
-                dtd.Name = docType;
-                return dtd;
+                if (stream is null) throw new ArgumentException("unable to load requested resource: " + name);
+                using (StreamReader sr = new StreamReader(stream))
+                {
+                    return sr.ReadToEnd();
+                }
             }
         }
 
-        private static string RunTest(CaseFolding caseFolding, string doctype, bool format, string source, XmlReaderTestCallback callback) {
+        /// <summary></summary>
+        /// <param name="docType"></param>
+        /// <param name="name">The name of the EmbeddedResource file located under the <c>SgmlTests\Resources</c> project directory.</param>
+        /// <returns></returns>
+        internal static SgmlDtd LoadDtd(string docType, string resourceFileName)
+        {
+            StringReader dtdTextReader = new StringReader(ReadTestResource(resourceFileName));
+
+            SgmlDtd dtd = SgmlDtd.Parse(baseUri: null, name: docType, input: dtdTextReader, subset: "", nt: new NameTable(), resolver: new DesktopEntityResolver());
+            return dtd;
+        }
+
+        private static string RunTest(CaseFolding caseFolding, string doctype, bool format, string source, XmlReaderTestCallback callback)
+        {
 
             // initialize sgml reader
-            XmlReader reader = new SgmlReader {
+            SgmlReader sgmlReader = new SgmlReader
+            {
                 CaseFolding = caseFolding,
                 DocType = doctype,
                 InputStream = new StringReader(source),
                 WhitespaceHandling = format ? WhitespaceHandling.None : WhitespaceHandling.All
             };
+
             if (doctype == "OFX")
             {
-                ((SgmlReader)reader).Dtd = LoadDtd("OFX", "ofx160.dtd");
+                sgmlReader.Dtd = LoadDtd("OFX", "ofx160.dtd");
             }
-
 
             // check if we need to use the LoggingXmlReader
-            if (_debug) {
-                reader = new LoggingXmlReader(reader, Console.Out);
+            XmlReader reader = sgmlReader;
+#if DEBUG
+            {
+                reader = new LoggingXmlReader(sgmlReader, Console.Out);
             }
+#endif
 
             // initialize xml writer
-            var stringWriter = new StringWriter();
-            var xmlTextWriter = new XmlTextWriter(stringWriter);
-            if(format) {
+            StringWriter stringWriter = new StringWriter();
+            XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter);
+            if (format)
+            {
                 xmlTextWriter.Formatting = Formatting.Indented;
             }
             callback(reader, xmlTextWriter);
@@ -138,14 +158,19 @@ namespace SGMLTests {
             var actual = stringWriter.ToString();
 
             // ensure that output can be parsed again
-            try {
-                using(var stringReader = new StringReader(actual)) {
+            try
+            {
+                using (StringReader stringReader = new StringReader(actual))
+                {
                     var doc = new XmlDocument();
                     doc.Load(stringReader);
                 }
-            } catch(Exception) {
-                Assert.Fail("unable to parse sgml reader output:\n{0}", actual);
             }
+            catch (Exception)
+            {
+                Assert.Fail("unable to parse " + nameof(SgmlReader) + " output:\n{0}", actual);
+            }
+
             return actual.Trim().Replace("\r", "");
         }
     }

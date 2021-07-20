@@ -10,30 +10,35 @@
  */
 
 using System;
-using System.Xml;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Collections;
+using System.Xml;
 
-namespace Sgml {
+namespace Sgml
+{
     /// <summary>
     /// This class provides a command line interface to the SgmlReader.
     /// </summary>
-    public class CommandLine {
-
-        string proxy = null;
-        string output = null;
-        bool formatted = false;
-        bool noxmldecl = false;
-        Encoding encoding = null;
+    public class CommandLine
+    {
+        private string proxy = null;
+        private string output = null;
+        private bool formatted = false;
+        private bool noUtf8Bom = false;
+        private bool noxmldecl = false;
+        private Encoding encoding = null;
 
         [STAThread]
-        static void Main(string[] args) {
-            try {
+        private static void Main(string[] args)
+        {
+            try
+            {
                 CommandLine t = new CommandLine();
                 t.Run(args);
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Console.WriteLine("Error: " + e.Message);
             }
             return;
@@ -43,20 +48,26 @@ namespace Sgml {
         /// Run the SgmlReader command line tool with the given command line arguments.
         /// </summary>
         /// <param name="args"></param>
-        public void Run(string[] args) {
+        public void Run(string[] args)
+        {
             SgmlReader reader = new SgmlReader();
             string inputUri = null;
 
-            for (int i = 0; i < args.Length; i++) {
+            for (int i = 0; i < args.Length; i++)
+            {
                 string arg = args[i];
-                if (arg[0] == '-' || arg[0] == '/') {
-                    switch (arg.Substring(1)) {
+                if (arg[0] == '-' || arg[0] == '/')
+                {
+                    switch (arg.Substring(1))
+                    {
                         case "e":
                             string errorlog = args[++i];
-                            if (errorlog.ToLower() == "$stderr") {
+                            if ("$stderr".Equals(errorlog, StringComparison.OrdinalIgnoreCase))
+                            {
                                 reader.ErrorLog = Console.Error;
-                            } 
-                            else {
+                            }
+                            else
+                            {
                                 reader.ErrorLog = new StreamWriter(errorlog);
                             }
                             break;
@@ -73,9 +84,15 @@ namespace Sgml {
                         case "encoding":
                             encoding = Encoding.GetEncoding(args[++i]);
                             break;
+                        case "nobom":
+                            noUtf8Bom = true;
+                            break;
                         case "f":
                             formatted = true;
                             reader.WhitespaceHandling = WhitespaceHandling.None;
+                            break;
+                        case "trimtext":
+                            reader.TextWhitespace = TextWhitespaceHandling.TrimBoth;
                             break;
                         case "noxml":
                             noxmldecl = true;
@@ -91,84 +108,120 @@ namespace Sgml {
                             break;
 
                         default:
-                            Console.WriteLine("Usage: SgmlReader <options> [InputUri] [OutputFile]");
-                            Console.WriteLine("-e log         Optional log file name, name of '$STDERR' will write errors to stderr");
-                            Console.WriteLine("-f             Whether to pretty print the output.");
-                            Console.WriteLine("-html          Specify the built in HTML dtd");
-                            Console.WriteLine("-dtd url       Specify other SGML dtd to use");
-                            Console.WriteLine("-base          Add base tag to output HTML");
-                            Console.WriteLine("-noxml         Do not add XML declaration to the output");
-                            Console.WriteLine("-proxy svr:80  Proxy server to use for http requests");
-                            Console.WriteLine("-encoding name Specify an encoding for the output file (default UTF-8)");
-                            Console.WriteLine("-lower         Convert input tags to lower case");
-                            Console.WriteLine("-upper         Convert input tags to upper case");
+                            string exeName = Environment.GetCommandLineArgs()[0];
+                            string exeVersion = typeof(CommandLine).Assembly.GetName().Version?.ToString();
+                            Console.WriteLine("{0} - version {1}", exeName, exeVersion);
+                            Console.WriteLine("  https://github.com/lovettchris/SgmlReader");
                             Console.WriteLine();
-                            Console.WriteLine("InputUri       The input file or http URL (default stdin).  ");
-                            Console.WriteLine("               Supports wildcards for local file names.");
-                            Console.WriteLine("OutputFile     Output file name (default stdout)");
-                            Console.WriteLine("               If input file contains wildcards then this just specifies the output file extension (default .xml)");
+                            Console.WriteLine("Usage: {0} <options> [InputUri] [OutputFile]", exeName);
+                            Console.WriteLine();
+                            Console.WriteLine("<options>:");
+                            Console.WriteLine("  -help          Prints this list of command-line options");
+                            Console.WriteLine("  -e log         Optional log file name, name of '$STDERR' will write errors to stderr");
+                            Console.WriteLine("  -f             Whether to pretty print the output.");
+                            Console.WriteLine("  -html          Specify the built in HTML dtd");
+                            Console.WriteLine("  -dtd url       Specify other SGML dtd to use");
+                            Console.WriteLine("  -base          Add base tag to output HTML");
+                            Console.WriteLine("  -noxml         Do not add XML declaration to the output");
+                            Console.WriteLine("  -proxy svr:80  Proxy server to use for http requests");
+                            Console.WriteLine("  -encoding name Specify an encoding for the output file (default UTF-8)");
+                            Console.WriteLine("  -nobom         Prevents output of the BOM when using UTF-8");
+                            Console.WriteLine("  -f             Produce indented formatted output");
+                            Console.WriteLine("  -trimtext      SGML `#text` nodes will be trimmed of outer whitespace");
+                            Console.WriteLine("  -lower         Convert input tags to lower case");
+                            Console.WriteLine("  -upper         Convert input tags to UPPER CASE");
+                            Console.WriteLine();
+                            Console.WriteLine("  InputUri       The input file or http URL (defaults to stdin if not specified)");
+                            Console.WriteLine("                 Supports wildcards for local file names.");
+                            Console.WriteLine("  OutputFile     Output file name (defaults to stdout if not specified)");
+                            Console.WriteLine("                 If input file contains wildcards then this just specifies the output file extension (default .xml)");
                             return;
                     }
-                } 
-                else {
-                    if (inputUri == null) {
+                }
+                else
+                {
+                    if (inputUri == null)
+                    {
                         inputUri = arg;
                         string ext = Path.GetExtension(arg).ToLower();
                         if (ext == ".htm" || ext == ".html")
+                        {
                             reader.DocType = "HTML";
+                        }
                     }
-                    else if (output == null) output = arg;
+                    else if (output == null)
+                    {
+                         output = arg;
+                    }
                 }
             }
-            if (inputUri != null && !inputUri.StartsWith("http://") && inputUri.IndexOfAny(new char[] { '*', '?' }) >= 0) {
+            
+            if (inputUri != null && !inputUri.StartsWith("http://") && inputUri.IndexOfAny(new char[] { '*', '?' }) >= 0)
+            {
                 // wild card processing of a directory of files.
                 string path = Path.GetDirectoryName(inputUri);
                 if (path == "") path = ".\\";
                 string ext = ".xml";
-                if (output != null) 
-                    ext = Path.GetExtension(output);
-                foreach (string uri in Directory.GetFiles(path, Path.GetFileName(inputUri))) {
+                if (output != null) ext = Path.GetExtension(output);
+                    
+                foreach (string uri in Directory.GetFiles(path, Path.GetFileName(inputUri)))
+                {
                     Console.WriteLine("Processing: " + uri);
                     string file = Path.GetFileName(uri);
                     output = Path.GetDirectoryName(uri) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(file) + ext;
                     Process(reader, uri);
                     reader.Close();
-                }        
+                }
                 return;
-            } 
+            }
+
             Process(reader, inputUri);
             reader.Close();
-           
-            return ;
+
+            return;
         }
 
-        void Process(SgmlReader reader, string uri) {   
-            if (uri == null) {
+        private void Process(SgmlReader reader, string uri)
+        {
+            if (uri == null)
+            {
                 reader.InputStream = Console.In;
-            } else {
+            }
+            else
+            {
                 reader.Href = uri;
             }
 
-
-            this.encoding ??= reader.GetEncoding();
+            encoding ??= reader.GetEncoding();
+            if (noUtf8Bom && encoding.Equals(Encoding.UTF8))
+            {
+                encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+            }
 
             XmlTextWriter w = output != null
-                ? new XmlTextWriter(output, this.encoding)
+                ? new XmlTextWriter(output, encoding)
                 : new XmlTextWriter(Console.Out);
 
-            if (formatted) w.Formatting = Formatting.Indented;
-            if (!noxmldecl) {
-                w.WriteStartDocument();
+            using (w)
+            {
+                if (formatted)
+                {
+                     w.Formatting = Formatting.Indented;
+                }
+                if (!noxmldecl)
+                {
+                    w.WriteStartDocument();
+                }
+                reader.Read();
+                while (!reader.EOF)
+                {
+                    w.WriteNode(reader, true);
+                }
+                w.Flush();
             }
-            reader.Read();
-            while (!reader.EOF) {
-                w.WriteNode(reader, true);
-            }
-            w.Flush();
-            w.Close();          
         }
 
 
 
-    }    
+    }
 }

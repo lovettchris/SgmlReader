@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Common/version.props" />
 
   <PropertyGroup>
@@ -16,9 +16,9 @@
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="nunit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="..\SgmlTests\ofx160.dtd" Link="ofx160.dtd" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\ofx160.dtd" Link="Resources\ofx160.dtd" />
     <EmbeddedResource Include="..\SgmlTests\Resources\01.test" Link="Resources\01.test" />
     <EmbeddedResource Include="..\SgmlTests\Resources\02.test" Link="Resources\02.test" />
     <EmbeddedResource Include="..\SgmlTests\Resources\03.test" Link="Resources\03.test" />
@@ -92,7 +92,8 @@
     <EmbeddedResource Include="..\SgmlTests\Resources\59.test" Link="Resources\59.test" />
     <EmbeddedResource Include="..\SgmlTests\Resources\60.test" Link="Resources\60.test" />
     <EmbeddedResource Include="..\SgmlTests\Resources\61.test" Link="Resources\61.test" />
-	<EmbeddedResource Include="..\SgmlTests\Resources\62.test" Link="Resources\62.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\62.test" Link="Resources\62.test" />
+    <EmbeddedResource Include="..\SgmlTests\Resources\63.test" Link="Resources\63.test" />
   </ItemGroup>
 
 </Project>

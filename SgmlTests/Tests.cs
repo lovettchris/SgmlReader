@@ -16,9 +16,9 @@ using System.Xml;
 using NUnit.Framework;
 using Sgml;
 using System.Xml.Linq;
-#if WINDOWS_DESKTOP
 using System.Xml.XPath;
-#endif
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SGMLTests {
 
@@ -408,7 +408,6 @@ namespace SGMLTests {
             Assert.AreEqual(2, count, "Expecing 2 XmlDocuments in the input stream");
         }
 
-#if WINDOWS_DESKTOP
         [Test]
         public void Test_XPathDocument()
         {
@@ -444,6 +443,69 @@ namespace SGMLTests {
             Assert.AreEqual("abcd", xpathNavigator.Evaluate("string(/html/body)"), "Expecting '/html/body' to be evaluated correctly.");
 
         }
-#endif
+
+        /// <summary>This is a unit-test for the <see cref="SgmlReader.TextWhitespace"/> property's logic.</summary>
+        [Test]
+        public void Invalid_TextWhitespace_enum_values_should_be_dropped()
+        {
+            SgmlReader sgmlReader = new SgmlReader()
+            {
+                TextWhitespace = (TextWhitespaceHandling)0xFF
+            };
+
+            Assert.AreEqual(TextWhitespaceHandling.TrimBoth | TextWhitespaceHandling.OnlyLineBreaks, sgmlReader.TextWhitespace, "The " + nameof(sgmlReader.TextWhitespace) + " property should only respect defined flags bits.");
+        }
+
+        /// <summary>https://github.com/lovettchris/SgmlReader/issues/15</summary>
+        [Test]
+        public void DoBradescoTrailingWhitespaceTest()
+        {
+            // 63.test is originally "bradesco.ofx" from github.com/kevencarneiro/OFXSharp, used under the MIT license.
+            string bradescoOfxText = Tests.ReadTestResource(name: "63.test");
+            int indexOfOfxStart = bradescoOfxText.IndexOf("<OFX>");
+            bradescoOfxText = bradescoOfxText.Substring(startIndex: indexOfOfxStart); // skip past non-SGML OFX header.
+
+            SgmlDtd ofx160Dtd = Tests.LoadDtd(docType: "OFX", resourceFileName: "ofx160.dtd");
+
+            XmlDocument xmlDocument;
+            using (StringReader stringReader = new StringReader(bradescoOfxText))
+            {
+                SgmlReader sgmlReader = new SgmlReader()
+                {
+                    InputStream        = stringReader,
+                    WhitespaceHandling = WhitespaceHandling.None,
+                    TextWhitespace     = TextWhitespaceHandling.OnlyTrailingLineBreaks,
+                    DocType            = ofx160Dtd.Name,
+                    Dtd                = ofx160Dtd
+                };
+
+                Assert.AreEqual(TextWhitespaceHandling.OnlyTrailingLineBreaks, sgmlReader.TextWhitespace, "The " + nameof(sgmlReader.TextWhitespace) + " property should persist this valid value.");
+
+                xmlDocument = new XmlDocument();
+                using (XmlWriter xmlWriter = xmlDocument.CreateNavigator().AppendChild())
+                {
+                    while (!sgmlReader.EOF)
+                    {
+                        xmlWriter.WriteNode(sgmlReader, defattr: true);
+                    }
+                }
+            }
+
+            // Assert:
+            XmlNode codeNode = xmlDocument.SelectSingleNode("//*[local-name()='CODE']");
+            XmlNodeList memoNodes = xmlDocument.SelectNodes("//*[local-name()='MEMO']");
+
+            List<XmlNode> selectedNodes = new List<XmlNode>();
+            selectedNodes.Add(codeNode);
+            selectedNodes.AddRange(memoNodes.Cast<XmlNode>());
+
+            foreach (XmlNode node in selectedNodes)
+            {
+                string innerText = codeNode.InnerText;
+                bool hasTrailingLineBreak = innerText.EndsWith("\n") || innerText.EndsWith("\r") || innerText.EndsWith(Environment.NewLine);
+
+                Assert.IsFalse(hasTrailingLineBreak, message: "There should be no trailing line-breaks in <" + node.Name + "> elements' innerText.");
+            }
+        }
     }
 }

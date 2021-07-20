@@ -8,14 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\62.test" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="ofx160.dtd" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <EmbeddedResource Include="Resources\ofx160.dtd" />
     <EmbeddedResource Include="Resources\01.test" />
     <EmbeddedResource Include="Resources\02.test" />
     <EmbeddedResource Include="Resources\03.test" />
@@ -76,15 +69,16 @@
     <EmbeddedResource Include="Resources\58.test" />
     <EmbeddedResource Include="Resources\59.test" />
     <EmbeddedResource Include="Resources\60.test" />
-    <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\61.test" />
+    <EmbeddedResource Include="Resources\62.test" />
+    <EmbeddedResource Include="Resources\63.test" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.12" />
-    <PackageReference Include="nunit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="nunit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
   </ItemGroup>
 
   <ItemGroup>
