@@ -22,4 +22,5 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Build and test
-      run: build.cmd
+      shell: cmd
+      run: .\BUILD.cmd
