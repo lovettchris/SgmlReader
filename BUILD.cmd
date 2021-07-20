@@ -6,8 +6,7 @@ goto :powershell
 
 :setup
 if "%VS140COMNTOOLS%" NEQ "" (
-	dir "%VS140COMNTOOLS%"
-	call "%VS140COMNTOOLS%VsDevCmd.bat"
+	call "%VS140COMNTOOLS%vsvars32.bat"
 	goto :powershell
 )
 if "%VS150COMNTOOLS%" NEQ "" (
