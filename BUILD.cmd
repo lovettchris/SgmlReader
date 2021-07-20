@@ -1,5 +1,7 @@
 @echo off
 
+set
+
 @WHERE msbuild
 @IF %ERRORLEVEL% NEQ 0 (
 	@echo "Run this script from the Visual Studio Developer Command Prompt"
@@ -30,4 +32,3 @@ pwsh -f Common\full_sign.ps1
 
 REM create .nupkg
 nuget pack SgmlReader.nuspec
-
