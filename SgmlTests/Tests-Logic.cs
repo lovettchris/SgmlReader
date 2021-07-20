@@ -155,14 +155,14 @@ namespace SGMLTests
             xmlTextWriter.Close();
 
             // reproduce the parsed document
-            string actual = stringWriter.ToString();
+            var actual = stringWriter.ToString();
 
             // ensure that output can be parsed again
             try
             {
                 using (StringReader stringReader = new StringReader(actual))
                 {
-                    XmlDocument doc = new XmlDocument();
+                    var doc = new XmlDocument();
                     doc.Load(stringReader);
                 }
             }
