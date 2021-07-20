@@ -1,16 +1,30 @@
 @echo off
 
-set
+WHERE mssbuild >NUL 2>NUL
+IF ERRORLEVEL 1 goto :setup
+goto :powershell
 
-@WHERE msbuild
-@IF %ERRORLEVEL% NEQ 0 (
-	@echo "Run this script from the Visual Studio Developer Command Prompt"
-	exit /B
+:setup
+if "%VS140COMNTOOLS%" NEQ "" (
+	call "%VS140COMNTOOLS%\VsDevCmd.bat"
+	goto :powershell
+)
+if "%VS150COMNTOOLS%" NEQ "" (
+	call "%VS150COMNTOOLS%\VsDevCmd.bat"
+	goto :powershell
+)
+if "%VS160COMNTOOLS%" NEQ "" (
+	call "%VS160COMNTOOLS%\VsDevCmd.bat"
+	goto :powershell
+) else (
+	echo "Run this script from the Visual Studio Developer Command Prompt"
+	exit /B 1
 )
 
-@WHERE pwsh >NUL 2>NUL
-@IF %ERRORLEVEL% NEQ 0 (
-	@echo "Installing 'pwsh' (PowerShell Core)"
+:powershell
+WHERE pwsh >NUL 2>NUL
+IF ERRORLEVEL 1 (
+	echo "Installing 'pwsh' (PowerShell Core)"
 	dotnet tool install --global powershell
 )
 
@@ -18,12 +32,15 @@ pwsh -f Common/fix_versions.ps1
 
 REM Restore NuGet packages:
 msbuild -t:restore SgmlReader.sln /verbosity:minimal
+if ERRORLEVEL 1 exit /B 1
 
 REM Build the solution:
 msbuild SgmlReader.sln /verbosity:minimal
+if ERRORLEVEL 1 exit /B 1
 
 REM run .net core tests
 vstest.console d:\git\lovettchris\SgmlReader\SgmlTests\bin\Release\net5.0\SgmlTests.dll
+if ERRORLEVEL 1 exit /B 1
 
 if "%MyKeyFile%" == "" goto :eof
 
