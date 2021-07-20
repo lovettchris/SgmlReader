@@ -6,15 +6,16 @@ goto :powershell
 
 :setup
 if "%VS140COMNTOOLS%" NEQ "" (
-	call "%VS140COMNTOOLS%\VsDevCmd.bat"
+	dir "%VS140COMNTOOLS%"
+	call "%VS140COMNTOOLS%VsDevCmd.bat"
 	goto :powershell
 )
 if "%VS150COMNTOOLS%" NEQ "" (
-	call "%VS150COMNTOOLS%\VsDevCmd.bat"
+	call "%VS150COMNTOOLS%VsDevCmd.bat"
 	goto :powershell
 )
 if "%VS160COMNTOOLS%" NEQ "" (
-	call "%VS160COMNTOOLS%\VsDevCmd.bat"
+	call "%VS160COMNTOOLS%VsDevCmd.bat"
 	goto :powershell
 ) else (
 	echo "Run this script from the Visual Studio Developer Command Prompt"
