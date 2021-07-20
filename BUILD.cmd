@@ -11,7 +11,7 @@
 	dotnet tool install --global powershell
 )
 
-pwsh -f Common/setup.ps1
+pwsh -f Common/fix_versions.ps1
 
 REM Restore NuGet packages:
 msbuild -t:restore SgmlReader.sln

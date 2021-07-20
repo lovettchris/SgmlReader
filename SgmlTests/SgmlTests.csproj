@@ -7,6 +7,12 @@
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Label="Signing">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MYPUBLICKEYFILE)</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Resources\ofx160.dtd" />
     <EmbeddedResource Include="Resources\01.test" />
