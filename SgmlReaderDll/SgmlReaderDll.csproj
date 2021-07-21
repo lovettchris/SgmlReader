@@ -2,20 +2,23 @@
   <Import Project="../Common/version.props" />
   <PropertyGroup>
     <TargetFrameworks>net45;net46;net47;net48;net5.0;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MYKEYFILE)</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
     <LangVersion>9</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <None Remove="Html.dtd" />
-  </ItemGroup>
+
+  <PropertyGroup Label="Signing" Condition="'$(MYPUBLICKEYFILE)' != ''">
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(MYPUBLICKEYFILE)</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Html.dtd" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <Exec Command="pwsh -f &quot;$(SolutionDir)Common/fix_versions.ps1&quot;" />
+  </Target>
 
 </Project>

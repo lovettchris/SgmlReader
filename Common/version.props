@@ -3,8 +3,8 @@
     <Company>Microsoft Corporation</Company>
     <Product>SgmlReader</Product>
     <Title>SgmlReader</Title>
-    <FileVersion>$version</FileVersion>
-    <AssemblyVersion>$version</AssemblyVersion>
-    <Version>$version</Version>
+    <FileVersion>1.8.23</FileVersion>
+    <AssemblyVersion>1.8.23</AssemblyVersion>
+    <Version>1.8.23</Version>
   </PropertyGroup>
 </Project>

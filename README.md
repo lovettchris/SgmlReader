@@ -64,6 +64,9 @@ return doc;
 
 ## SgmlReader.exe Command Line Tool
 
+Included in the .nuget package under the `tools` folder which you will find in `%USERPROFILE%\.nuget\packages\microsoft.xmlsgmlreader\1.8.22\tools` is a
+command line utility named `SgmlReader.exe`.
+
 ### Usage
 
 The command line executable version has the following options:
@@ -142,13 +145,13 @@ dotnet tool install --global powershell
 
 Now run the setup script:
 ```
-pwsh -f Common/setup.ps1
+pwsh -f Common/fix_versions.ps1
 ```
 
-And now you can build successfully:
+if this works then you can build successfully:
 
 ```
-dotnet build SgmlReaderCore.sln
+dotnet build SgmlReader.sln
 ```
 
 ### Using MSBuild
@@ -162,23 +165,13 @@ The `BUILD.cmd` script will automatically install `pwsh` if necessary, run `setu
 ## Versioning
 
 To change the version number edit `~\Common\version.txt` only and not any other file.  This version
-will be replicated automatically to the following files:
+will be replicated automatically to the following files using `Common\fix_version.ps1`:
 
 ```
 Common/version.props
 SgmlReader.nuspec
 SgmlReaderUniversal/Propertyes/AssemblyInfo.cs
 ```
-
-The `setup.ps1` script has made these file changes transparent to git using the following filters:
-
-```
-git config --add filter.version.smudge "pwsh -f Common/smudge_version.ps1 %f"
-git config --add filter.version.clean "pwsh -f Common/clean_version.ps1 %f"
-```
-
-When you "stage" a change to any one of these files the real version number will be replaced by the string "`$version`". When you checkout or pull an update to one of these files the string "`$version`" will be replaced
-with the real version from `versions.txt`.
 
 ### Developer Checklist
 
@@ -196,6 +189,15 @@ existing code.
 Please make sure all tests pass and new tests are added for areas you work on.
 See [nunit](https://nunit.org).  If you have Visual Studio, just open the
 Test Explorer and click Run All.
+
+## Signing and Publishing
+
+To publish new nuget package run the following:
+
+```
+pwsh -f Common\full_sign.ps1
+nuget pack SgmlReader.nuspec
+```
 
 ## Release History
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
