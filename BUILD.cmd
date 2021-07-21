@@ -31,19 +31,19 @@ IF ERRORLEVEL 1 (
 pwsh -f Common/fix_versions.ps1
 
 REM Restore NuGet packages:
-msbuild -t:restore SgmlReader.sln /verbosity:minimal
+msbuild -t:restore SgmlReader.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
 REM Build the solution:
-msbuild SgmlReader.sln /verbosity:minimal
+msbuild SgmlReader.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
 REM Build the solution:
-msbuild SgmlReaderUniversal.sln /verbosity:minimal
+msbuild SgmlReaderUniversal.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
 REM run .net core tests
-vstest.console d:\git\lovettchris\SgmlReader\SgmlTests\bin\Release\net5.0\SgmlTests.dll
+vstest.console %~dp0SgmlTests\bin\Release\net5.0\SgmlTests.dll
 if ERRORLEVEL 1 exit /B 1
 
 if "%MyKeyFile%" == "" goto :eof
