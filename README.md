@@ -64,6 +64,9 @@ return doc;
 
 ## SgmlReader.exe Command Line Tool
 
+Included in the .nuget package under the `tools` folder which you will find in `%USERPROFILE%\.nuget\packages\microsoft.xmlsgmlreader\1.8.22\tools` is a
+command line utility named `SgmlReader.exe`.
+
 ### Usage
 
 The command line executable version has the following options:

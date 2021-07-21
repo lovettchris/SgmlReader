@@ -14,7 +14,7 @@ $ns = $doc.Root.Name.Namespace.NamespaceName
 foreach ($e in $doc.Root.Descendants()) {
 	if ($e.Name.LocalName -eq "file") {
 		$src = $e.Attribute("src").Value
-		if ($src.EndsWith(".dll")) {
+		if ($src.EndsWith(".dll") -or $src.EndsWith(".exe")) {
 			Write-Host "signing $src"
 			$path = $ScriptDir + "\\..\\" + $src
 			sn -q -Rca $path $kset
