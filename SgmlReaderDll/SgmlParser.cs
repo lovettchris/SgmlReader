@@ -2250,9 +2250,8 @@ namespace Sgml
         /// Initialises a new instance of the <see cref="SgmlDtd"/> class.
         /// </summary>
         /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
-        /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
-        public SgmlDtd(string name, XmlNameTable nt, IEntityResolver resolver)
+        public SgmlDtd(string name, IEntityResolver resolver)
         {
             Name = name;
             _elements = new();
@@ -2281,12 +2280,11 @@ namespace Sgml
         /// <param name="pubid"></param>
         /// <param name="url"></param>
         /// <param name="subset"></param>
-        /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
-        public static SgmlDtd Parse(Uri baseUri, string name, string pubid, string url, string subset, XmlNameTable nt, IEntityResolver resolver)
+        public static SgmlDtd Parse(Uri baseUri, string name, string pubid, string url, string subset, IEntityResolver resolver)
         {
-            SgmlDtd dtd = new SgmlDtd(name, nt, resolver);
+            SgmlDtd dtd = new SgmlDtd(name, resolver);
             if (!string.IsNullOrEmpty(url))
             {
                 dtd.PushEntity(baseUri, new Entity(dtd.Name, pubid, url, resolver));
@@ -2321,12 +2319,11 @@ namespace Sgml
         /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
         /// <param name="input">The reader to load the DTD from.</param>
         /// <param name="subset"></param>
-        /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
-        public static SgmlDtd Parse(Uri baseUri, string name, TextReader input, string subset, XmlNameTable nt, IEntityResolver resolver)
+        public static SgmlDtd Parse(Uri baseUri, string name, TextReader input, string subset, IEntityResolver resolver)
         {
-            SgmlDtd dtd = new SgmlDtd(name, nt, resolver);
+            SgmlDtd dtd = new SgmlDtd(name, resolver);
             dtd.PushEntity(baseUri, new Entity(dtd.Name, baseUri, input, resolver));
             if (!string.IsNullOrEmpty(subset))
             {

@@ -470,7 +470,7 @@ namespace Sgml
         {
             if (_dtd is null && !_ignoreDtd && (!string.IsNullOrEmpty(_syslit) || !string.IsNullOrEmpty(_subset) || StringUtilities.EqualsIgnoreCase(_docType, "html")))
             {
-                _dtd = SgmlDtd.Parse(baseUri, _docType, _pubid, _syslit, _subset, null, _resolver);
+                _dtd = SgmlDtd.Parse(baseUri, _docType, _pubid, _syslit, _subset, _resolver);
             }
 
             if (_dtd?.Name is string dtdName)
