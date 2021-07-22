@@ -14,6 +14,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\64.test" />
+    <None Remove="Resources\htmlinline.dtd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\htmlinline.dtd" />
     <EmbeddedResource Include="Resources\ofx160.dtd" />
     <EmbeddedResource Include="Resources\01.test" />
     <EmbeddedResource Include="Resources\02.test" />
@@ -78,6 +84,7 @@
     <EmbeddedResource Include="Resources\61.test" />
     <EmbeddedResource Include="Resources\62.test" />
     <EmbeddedResource Include="Resources\63.test" />
+    <EmbeddedResource Include="Resources\64.test" />
   </ItemGroup>
 
   <ItemGroup>

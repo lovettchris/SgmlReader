@@ -12,11 +12,12 @@
 using log4net;
 using NUnit.Framework;
 using Sgml;
+using SgmlTests;
 using System;
 using System.IO;
 using System.Xml;
 
-namespace SGMLTests
+namespace SgmlTests
 {
     public partial class Tests
     {
@@ -107,18 +108,6 @@ namespace SGMLTests
             }
         }
 
-        /// <summary></summary>
-        /// <param name="docType"></param>
-        /// <param name="name">The name of the EmbeddedResource file located under the <c>SgmlTests\Resources</c> project directory.</param>
-        /// <returns></returns>
-        internal static SgmlDtd LoadDtd(string docType, string resourceFileName)
-        {
-            StringReader dtdTextReader = new StringReader(ReadTestResource(resourceFileName));
-
-            SgmlDtd dtd = SgmlDtd.Parse(baseUri: null, name: docType, input: dtdTextReader, subset: "", nt: new NameTable(), resolver: new DesktopEntityResolver());
-            return dtd;
-        }
-
         private static string RunTest(CaseFolding caseFolding, string doctype, bool format, string source, XmlReaderTestCallback callback)
         {
 
@@ -128,12 +117,13 @@ namespace SGMLTests
                 CaseFolding = caseFolding,
                 DocType = doctype,
                 InputStream = new StringReader(source),
-                WhitespaceHandling = format ? WhitespaceHandling.None : WhitespaceHandling.All
+                WhitespaceHandling = format ? WhitespaceHandling.None : WhitespaceHandling.All,
+                Resolver = new TestEntityResolver()
             };
 
             if (doctype == "OFX")
             {
-                sgmlReader.Dtd = LoadDtd("OFX", "ofx160.dtd");
+                sgmlReader.SystemLiteral = "ofx160.dtd";
             }
 
             // check if we need to use the LoggingXmlReader

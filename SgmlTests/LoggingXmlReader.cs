@@ -16,7 +16,7 @@ using log4net;
 using NUnit.Framework;
 using Sgml;
 
-namespace SGMLTests {
+namespace SgmlTests {
     public class LoggingXmlReader : XmlReader {
 
         //--- Fields ---

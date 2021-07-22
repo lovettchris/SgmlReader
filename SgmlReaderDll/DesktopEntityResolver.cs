@@ -107,7 +107,7 @@ namespace Sgml
         /// </summary>
         /// <param name="uri">the absolute or relative Uri of the resource to load</param>
         /// <returns>The stream, or throws exception if the resource is not found</returns>
-        public IEntityContent GetContent(Uri uri)
+        public virtual IEntityContent GetContent(Uri uri)
         {
             if (!uri.IsAbsoluteUri)
             {

@@ -1,3 +1,5 @@
+<!DOCTYPE OFX [
+
 <!--#version 160 -->
 
 <!--
@@ -285,7 +287,7 @@
 <!ENTITY % TRANSACTIONENUM "(#PCDATA)">
 <!--#ENTITY % TRANSACTIONENUM		#Enum("CREDIT","DEBIT","INT","DIV","FEE","SRVCHG","DEP","ATM",
 			       			"POS","XFER","CHECK","PAYMENT","CASH","DIRECTDEP","DIRECTDEBIT",
-			       			"REPEATPMT","OTHER")-->		
+			       			"REPEATPMT","OTHER")-->
 <!ENTITY % PMTPROCESSSTATUSENUM "(#PCDATA)">
 <!--#ENTITY % PMTPROCESSSTATUSENUM	#Enum("WILLPROCESSON","PROCESSEDON","NOFUNDSON","FAILEDON",
 							"CANCELEDON")-->
@@ -397,7 +399,7 @@
 <!ENTITY % PAYEEMODENUM "(#PCDATA)">
 <!--#ENTITY % PAYEEMODENUM	#Enum("NEVER", "IFREQUESTED")-->
 
-<!-- OFX 1.6: Add these tags to PRESLISTRQ. -->               
+<!-- OFX 1.6: Add these tags to PRESLISTRQ. -->
 <!ENTITY % BILLTYPEENUM "(#PCDATA)">
 <!--#ENTITY % BILLTYPEENUM	#Enum("BILL", "STATEMENT", "NOTICE")-->
 <!ENTITY % BILLSTATUSCODEENUM "(#PCDATA)">
@@ -420,13 +422,13 @@
 -->
 <!-- ============================================================================= -->
 <!-- ampersand -->
-<!ENTITY amp CDATA "&#38;">     
+<!ENTITY amp CDATA "&#38;">
 
 <!-- greater than -->
 <!ENTITY gt CDATA "&#62;">
 
 <!-- less than -->
-<!ENTITY lt CDATA "&#60;">      
+<!ENTITY lt CDATA "&#60;">
 
 
 <!-- ============================================================================= -->
@@ -445,7 +447,7 @@
 <!-- OFX 1.5 -->
 <!-- ADDED TOKEN2 -->
 <!ENTITY % SYNCRQMACRO "((TOKEN | TOKEN2 | TOKENONLY | REFRESH ) 
-    , REJECTIFMISSING)" >   
+    , REJECTIFMISSING)" >
 
 <!-- OFX 1.5 -->
 <!-- ADDED SYNCERROR -->
@@ -474,7 +476,7 @@
 <!-- ADDED PRESACCTINFO -->
 <!ENTITY % ACCTINFOMACRO "(BANKACCTINFO | CCACCTINFO | BPACCTINFO | INVACCTINFO | PRESACCTINFO)">
 
-                      
+
 <!-- ============================================================================= -->
 
 <!-- Signon Message set -->
@@ -637,16 +639,16 @@
 <!ELEMENT CANBILLPAY	- o %BOOLTYPE>
 
 <!-- Number of days after which a transfer is processed that it can be canceled -->
-<!ELEMENT CANCELWND	- o	%DAYSPANTYPE>	
+<!ELEMENT CANCELWND	- o	%DAYSPANTYPE>
 
 <!-- Fee for sending a domestic transfer transfer -->
-<!ELEMENT DOMXFERFEE	- o	%AMTTYPE>	
+<!ELEMENT DOMXFERFEE	- o	%AMTTYPE>
 
 <!-- Fee for sending an international transfer -->
-<!ELEMENT INTLXFERFEE	- o	%AMTTYPE>	
+<!ELEMENT INTLXFERFEE	- o	%AMTTYPE>
 
 <!-- Can Provider do MULTIINTER -->
-<!ELEMENT CANMULTI	- o	%BOOLTYPE>	
+<!ELEMENT CANMULTI	- o	%BOOLTYPE>
 
 <!-- If Y, TAN is required for funds xfer -->
 <!ELEMENT NEEDTANTRANSFER - o %BOOLTYPE>
@@ -666,10 +668,10 @@
                                   ((CCSTMTTRNRQ | CCSTMTENDTRNRQ)+)>
 <!ELEMENT (WIREXFERMSGSRQV1, WIREXFERMSGSRQV2)  - - 
                                   ((WIRETRNRQ   | WIRESYNCRQ)+)>
-<!ELEMENT INTERXFERMSGSRQV1   - - ((INTERTRNRQ  | RECINTERTRNRQ | INTERSYNCRQ | RECINTERSYNCRQ)+)>  
+<!ELEMENT INTERXFERMSGSRQV1   - - ((INTERTRNRQ  | RECINTERTRNRQ | INTERSYNCRQ | RECINTERSYNCRQ)+)>
 <!-- OFX 1.5 -->
 <!-- ADDED MULTIINTERTRNRQ -->
-<!ELEMENT INTERXFERMSGSRQV2   - - ((INTERTRNRQ  | RECINTERTRNRQ | INTERSYNCRQ | RECINTERSYNCRQ | MULTIINTERTRNRQ)+)>  
+<!ELEMENT INTERXFERMSGSRQV2   - - ((INTERTRNRQ  | RECINTERTRNRQ | INTERSYNCRQ | RECINTERSYNCRQ | MULTIINTERTRNRQ)+)>
 
 <!-- Banking Message Set -->
 <!ELEMENT STMTTRNRQ     - - (%TRNRQMACRO , STMTRQ)>
@@ -702,10 +704,10 @@
                                   ((CCSTMTTRNRS | CCSTMTENDTRNRS)+)>
 <!ELEMENT (WIREXFERMSGSRSV1, WIREXFERMSGSRSV2)  - - 
                                   ((WIRETRNRS   | WIRESYNCRS)+)>
-<!ELEMENT INTERXFERMSGSRSV1   - - ((INTERTRNRS  | RECINTERTRNRS | INTERSYNCRS | RECINTERSYNCRS)+)>  
+<!ELEMENT INTERXFERMSGSRSV1   - - ((INTERTRNRS  | RECINTERTRNRS | INTERSYNCRS | RECINTERSYNCRS)+)>
 <!-- OFX 1.5 -->
 <!-- ADDED MULTIINTERTRNRS -->
-<!ELEMENT INTERXFERMSGSRSV2   - - ((INTERTRNRS  | RECINTERTRNRS | INTERSYNCRS | RECINTERSYNCRS | MULTIINTERTRNRS)+)>  
+<!ELEMENT INTERXFERMSGSRSV2   - - ((INTERTRNRS  | RECINTERTRNRS | INTERSYNCRS | RECINTERSYNCRS | MULTIINTERTRNRS)+)>
 
 <!-- Banking TRN responses -->
 
@@ -749,7 +751,7 @@
 <!ELEMENT CCSTMTENDRQ - - (CCACCTFROM , DTSTART? , DTEND?)>
 
 <!-- stop check request -->
-<!ELEMENT STPCHKRQ - - (BANKACCTFROM , (CHKRANGE|CHKDESC))> 
+<!ELEMENT STPCHKRQ - - (BANKACCTFROM , (CHKRANGE|CHKDESC))>
 
 
 <!-- intrabank transfer request -->
@@ -759,7 +761,7 @@
 <!-- intrabank transfer modification request -->
 <!-- version 2 uses SRVRTID2, version 1 SRVRTID -->
 <!-- OFX 1.5 -->
-<!ELEMENT INTRAMODRQ - - ((SRVRTID|SRVRTID2), XFERINFO)> 
+<!ELEMENT INTRAMODRQ - - ((SRVRTID|SRVRTID2), XFERINFO)>
 <!--#ELEMENT INTRAMODRQ #Link(SRVRTID,BANKMSGSRQV1)-->
 <!--#ELEMENT INTRAMODRQ #Link(SRVRTID2,BANKMSGSRQV2)-->
 
@@ -773,7 +775,7 @@
 
 
 <!-- interbank transfer request -->
-<!ELEMENT INTERRQ - - (XFERINFO)> 
+<!ELEMENT INTERRQ - - (XFERINFO)>
 
 
 <!-- interbank transfer modification request -->
@@ -793,7 +795,7 @@
 
 
 <!-- wire transfer request -->
-<!ELEMENT WIRERQ - - (BANKACCTFROM , WIREBENEFICIARY , WIREDESTBANK? , TRNAMT , DTDUE? , PAYINSTRUCT?)> 
+<!ELEMENT WIRERQ - - (BANKACCTFROM , WIREBENEFICIARY , WIREDESTBANK? , TRNAMT , DTDUE? , PAYINSTRUCT?)>
 
 
 <!-- wire transfer cancellation request -->
@@ -835,7 +837,7 @@
 <!--#ELEMENT RECINTERMODRQ #Link(XFERINFO, INTERXFERMSGSRQV2)-->
 
 <!-- recurring inter transfer cancellation request -->
-<!ELEMENT RECINTERCANRQ - - ((RECSRVRTID | RECSRVRTID2), CANPENDING)> 
+<!ELEMENT RECINTERCANRQ - - ((RECSRVRTID | RECSRVRTID2), CANPENDING)>
 <!--#ELEMENT RECINTERCANRQ #Link(RECSRVRTID, INTERXFERMSGSRQV1)-->
 <!--#ELEMENT RECINTERCANRQ #Link(RECSRVRTID2, INTERXFERMSGSRQV2)-->
 
@@ -881,7 +883,7 @@
 <!--#ELEMENT WIRESYNCRQ #Link(TOKEN,WIREXFERMSGSRQV1)-->
 <!--#ELEMENT WIRESYNCRQ #Link(TOKEN2,WIREXFERMSGSRQV2)-->
 
-         
+
 <!--
   recurring intra transfer synchronization request, 
   for transactions <RECINTRARQ>,<RECINTRAMODRQ>, and/or <RECINTRACANRQ>
@@ -930,12 +932,12 @@
 <!-- stop check response -->
 <!ELEMENT STPCHKRS - - (CURDEF , BANKACCTFROM , STPCHKNUM+,
                         FEE, FEEMSG)>
- 
+
 
 <!-- intrabank transfer response -->
 <!-- version 2 uses SRVRTID2, version 1 SRVRTID -->
 <!-- OFX 1.5 -->
-<!ELEMENT INTRARS - - (CURDEF , (SRVRTID | SRVRTID2), XFERINFO , (DTXFERPRJ|DTPOSTED)? , (RECSRVRTID | RECSRVRTID2)?, XFERPRCSTS?)>	
+<!ELEMENT INTRARS - - (CURDEF , (SRVRTID | SRVRTID2), XFERINFO , (DTXFERPRJ|DTPOSTED)? , (RECSRVRTID | RECSRVRTID2)?, XFERPRCSTS?)>
 <!--#ELEMENT INTRARS #Link(SRVRTID,BANKMSGSRSV1)-->
 <!--#ELEMENT INTRARS #Link(SRVRTID2,BANKMSGSRSV2)-->
 <!--#ELEMENT INTRARS #Link(RECSRVRTID,BANKMSGSRSV1)-->
@@ -1130,7 +1132,7 @@
 <!--#ELEMENT CCACCTINFO #Link(SVCSTATUS,SIGNUPMSGSRSV1)-->
 <!--#ELEMENT CCACCTINFO #Link(SVCSTATUS2,SIGNUPMSGSRSV2)-->
 <!--#ELEMENT CCACCTINFO #Link(REASON,SIGNUPMSGSRSV2)-->
-                             
+
 <!ELEMENT SUPTXDL       - o %BOOLTYPE>
 <!ELEMENT XFERSRC       - o %BOOLTYPE>
 <!ELEMENT XFERDEST      - o %BOOLTYPE>
@@ -1185,7 +1187,7 @@
 
 <!-- Closing date of next statement -->
 <!ELEMENT DTNEXT	- o	%DTTMTYPE>
-	
+
 
 <!-- Opening statement balance -->
 <!ELEMENT BALOPEN	- o	%AMTTYPE>
@@ -1257,7 +1259,7 @@
 			     ( SPNAME?, (SRVRTID | SRVRTID2) )?, CHECKNUM? , REFNUM? , 
 			     SIC? , (PAYEEID | PAYEEID2)? , (NAME | (PAYEE | PAYEE2))?,
 			     (BANKACCTTO | CCACCTTO)?,
-			     (MEMO | MEMO2)? , (CURRENCY | ORIGCURRENCY)?)> 
+			     (MEMO | MEMO2)? , (CURRENCY | ORIGCURRENCY)?)>
 <!--#ELEMENT STMTTRN #Link(SRVRTID,(BANKMSGSRQV1|BANKMSGSRSV1))-->
 <!--#ELEMENT STMTTRN #Link(SRVRTID2,(BANKMSGSRQV2|BANKMSGSRSV2))-->
 <!--#ELEMENT STMTTRN #Link(PAYEE,(BANKMSGSRQV1|BANKMSGSRSV1))-->
@@ -1269,17 +1271,17 @@
 
 <!-- Status of request -->
 <!ELEMENT TRNTYPE	- o %TRANSACTIONENUM>
-	
+
 
 <!-- Date transaction was posted to account -->
 <!ELEMENT DTPOSTED	- o	%DTTMTYPE>
 
 
-<!-- Date user initiated transaction, if known -->	
+<!-- Date user initiated transaction, if known -->
 <!ELEMENT DTUSER	- o %DTTMTYPE>
 
 <!-- Standard Industrial Code -->
-<!ELEMENT SIC	- o	%SICTYPE>	
+<!ELEMENT SIC	- o	%SICTYPE>
 
 
 <!-- Check range aggregate. -->
@@ -1287,7 +1289,7 @@
 
 
 <!-- Check description aggregate. -->
-<!ELEMENT CHKDESC	- - (NAME , CHECKNUM? , DTUSER? , TRNAMT?)>	
+<!ELEMENT CHKDESC	- - (NAME , CHECKNUM? , DTUSER? , TRNAMT?)>
 
 
 <!-- Start check number -->
@@ -1305,10 +1307,10 @@
                          CHKSTATUS , CHKERROR? , (CURRENCY | ORIGCURRENCY)?)>
 
 <!-- Status code for individual stop check request -->
-<!ELEMENT CHKSTATUS	- o	%CHECKSTATUSENUM>	
+<!ELEMENT CHKSTATUS	- o	%CHECKSTATUSENUM>
 
 <!-- Further textual error explanation -->
-<!ELEMENT CHKERROR	- o %MSGTYPE>	
+<!ELEMENT CHKERROR	- o %MSGTYPE>
 
 <!-- Transfer information aggregate -->
 <!-- OFX 1.5 -->
@@ -1321,7 +1323,7 @@
 <!ELEMENT XFERPRCSTS	- -	(XFERPRCCODE , DTXFERPRC)>
 
 <!--  Transfers processing date; enum for processing date interpretation -->
-<!ELEMENT XFERPRCCODE	- o %XFERSTATUSENUM>		
+<!ELEMENT XFERPRCCODE	- o %XFERSTATUSENUM>
 
 <!-- Date transfer is expected to be processed -->
 <!ELEMENT DTXFERPRC - o	%DTTMTYPE>
@@ -1392,33 +1394,52 @@
                                         DIFFLASTPMT, NEEDTANPMT, NEEDTANPAYEE,
 					SUPPORTDTAVAIL, CANMOTO?, PAYEEMODPENDING? )>
 
-<!ELEMENT DAYSWITH              - o     %DAYSPANTYPE>       <!--  number of days before the processing date that funds are withdrawn -->
-<!ELEMENT DFLTDAYSTOPAY - o %DAYSPANTYPE> 		  <!--  the default number of days to pay -->
-<!ELEMENT XFERDAYSWITH          - o     %DAYSPANTYPE>       <!--  number of days before the processing date that funds are withdrawn for xfers-->
-<!ELEMENT XFERDFLTDAYSTOPAY     - o %DAYSPANTYPE>   <!--  the default number of days to pay for transfers-->
-<!ELEMENT POSTPROCWND   - o     %DAYSPANTYPE>       <!--  the number of days after a transaction is processed that it is acessible
+<!ELEMENT DAYSWITH              - o     %DAYSPANTYPE>
+<!--  number of days before the processing date that funds are withdrawn -->
+<!ELEMENT DFLTDAYSTOPAY - o %DAYSPANTYPE>
+<!--  the default number of days to pay -->
+<!ELEMENT XFERDAYSWITH          - o     %DAYSPANTYPE>
+<!--  number of days before the processing date that funds are withdrawn for xfers-->
+<!ELEMENT XFERDFLTDAYSTOPAY     - o %DAYSPANTYPE>
+<!--  the default number of days to pay for transfers-->
+<!ELEMENT POSTPROCWND   - o     %DAYSPANTYPE>
+<!--  the number of days after a transaction is processed that it is acessible
                                                                                           for status inquiries -->
-<!ELEMENT STSVIAMODS    - o     %BOOLTYPE>      <!--  server supports communication of server-initiated payment status changes
+<!ELEMENT STSVIAMODS    - o     %BOOLTYPE>
+<!--  server supports communication of server-initiated payment status changes
                                                                                           via the PMTMODRS -->
-<!ELEMENT PMTBYADDR             - o     %BOOLTYPE>      <!--  the payment provider supports payments to payees identified by billing
+<!ELEMENT PMTBYADDR             - o     %BOOLTYPE>
+<!--  the payment provider supports payments to payees identified by billing
                                                                                           address, i.e. the PAYEE aggregate -->
-<!ELEMENT PMTBYXFER     - o %BOOLTYPE>  <!--  can pay by transfers -->
-<!ELEMENT PMTBYPAYEEID  - o %BOOLTYPE>  <!--  can pay by user supplied payee IDs -->
-<!ELEMENT CANADDPAYEE   - o     %BOOLTYPE>      <!--  user can add payees if no, the user is restricted to payees added to the
+<!ELEMENT PMTBYXFER     - o %BOOLTYPE>
+<!--  can pay by transfers -->
+<!ELEMENT PMTBYPAYEEID  - o %BOOLTYPE>
+<!--  can pay by user supplied payee IDs -->
+<!ELEMENT CANADDPAYEE   - o     %BOOLTYPE>
+<!--  user can add payees if no, the user is restricted to payees added to the
                                                                                           users payee list by the payment system -->
-<!ELEMENT HASEXTDPMT    - o     %BOOLTYPE>      <!--  supports the EXTDPMT business payment aggregate -->
-<!ELEMENT HASRECEXTDPMT - o     %BOOLTYPE>      <!--  supports the RECEXTDPMT business payment aggregate -->
-<!ELEMENT CANMODPMTS    - o     %BOOLTYPE>      <!--  permit modifications to payments, i.e. PMTMODRQ -->
-<!ELEMENT DIFFFIRSTPMT  - o     %BOOLTYPE>      <!--  support for specifying a different amount for the first payment
+<!ELEMENT HASEXTDPMT    - o     %BOOLTYPE>
+<!--  supports the EXTDPMT business payment aggregate -->
+<!ELEMENT HASRECEXTDPMT - o     %BOOLTYPE>
+<!--  supports the RECEXTDPMT business payment aggregate -->
+<!ELEMENT CANMODPMTS    - o     %BOOLTYPE>
+<!--  permit modifications to payments, i.e. PMTMODRQ -->
+<!ELEMENT DIFFFIRSTPMT  - o     %BOOLTYPE>
+<!--  support for specifying a different amount for the first payment
                                                                                           generated by a model -->
-<!ELEMENT DIFFLASTPMT   - o     %BOOLTYPE>      <!--  support for specifying a different amount for the last payment generated
+<!ELEMENT DIFFLASTPMT   - o     %BOOLTYPE>
+<!--  support for specifying a different amount for the last payment generated
                                                                                           by a model -->
-<!ELEMENT NEEDTANPMT    - o     %BOOLTYPE>      <!-- need TAN for payment requests (should be N in US) -->
-<!ELEMENT NEEDTANPAYEE  - o     %BOOLTYPE>      <!-- need TAN for payee requests (should be N in US) -->
+<!ELEMENT NEEDTANPMT    - o     %BOOLTYPE>
+<!-- need TAN for payment requests (should be N in US) -->
+<!ELEMENT NEEDTANPAYEE  - o     %BOOLTYPE>
+<!-- need TAN for payee requests (should be N in US) -->
 
 <!-- OFX 1.6: Add CANMOTO and PAYEEMODPENDING. -->
-<!ELEMENT CANMOTO	- o	%BOOLTYPE>	<!-- Support for <CCMOTOACCT>. -->
-<!ELEMENT PAYEEMODPENDING - o	%PAYEEMODENUM>	<!-- Support for <MODPENDING> in
+<!ELEMENT CANMOTO	- o	%BOOLTYPE>
+<!-- Support for <CCMOTOACCT>. -->
+<!ELEMENT PAYEEMODPENDING - o	%PAYEEMODENUM>
+<!-- Support for <MODPENDING> in
 						     <PAYEEMODRQ>. -->
 
 <!-- Transactions -->
@@ -1444,7 +1465,7 @@
 <!--  payment request -->
 <!-- OFX 1.5 -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
-<!ELEMENT PMTRQ - -     ((PMTINFO | PMTINFO2))>              
+<!ELEMENT PMTRQ - -     ((PMTINFO | PMTINFO2))>
 <!--#ELEMENT PMTRQ #Link(PMTINFO,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT PMTRQ #Link(PMTINFO2,BILLPAYMSGSRQV2)-->
 
@@ -1452,7 +1473,7 @@
 <!-- OFX 1.5 -->
 <!-- CHANGE SRVRTID to (SRVRTID | SRVRTID2) -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
-<!ELEMENT PMTMODRQ      - -     ((SRVRTID | SRVRTID2), (PMTINFO | PMTINFO2))>             
+<!ELEMENT PMTMODRQ      - -     ((SRVRTID | SRVRTID2), (PMTINFO | PMTINFO2))>
 <!--#ELEMENT PMTMODRQ #Link(SRVRTID,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT PMTMODRQ #Link(SRVRTID2,BILLPAYMSGSRQV2)-->
 <!--#ELEMENT PMTMODRQ #Link(PMTINFO,BILLPAYMSGSRQV1)-->
@@ -1470,7 +1491,7 @@
 <!--  recurring payment request -->
 <!-- OFX 1.5 -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
-<!ELEMENT RECPMTRQ      - -     (RECURRINST, (PMTINFO | PMTINFO2), INITIALAMT?, FINALAMT?)>          
+<!ELEMENT RECPMTRQ      - -     (RECURRINST, (PMTINFO | PMTINFO2), INITIALAMT?, FINALAMT?)>
 <!--#ELEMENT RECPMTRQ #Link(PMTINFO,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT RECPMTRQ #Link(PMTINFO2,BILLPAYMSGSRQV2)-->
 
@@ -1480,12 +1501,12 @@
 <!-- CHANGE RECSRVRTID to (RECSRVRTID | RECSRVRTID2) -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
 <!ELEMENT RECPMTMODRQ   - -     ((RECSRVRTID | RECSRVRTID2), RECURRINST, (PMTINFO | PMTINFO2),
-					  INITIALAMT?, FINALAMT?, MODPENDING)>          
+					  INITIALAMT?, FINALAMT?, MODPENDING)>
 <!--#ELEMENT RECPMTMODRQ #Link(RECSRVRTID,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT RECPMTMODRQ #Link(RECSRVRTID2,BILLPAYMSGSRQV2)-->
 <!--#ELEMENT RECPMTMODRQ #Link(PMTINFO,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT RECPMTMODRQ #Link(PMTINFO2,BILLPAYMSGSRQV2)-->
- 
+
 
 <!--  cancellation request -->
 <!-- OFX 1.5 -->
@@ -1500,7 +1521,7 @@
 <!ELEMENT PMTINQRQ      - -     ((SRVRTID | SRVRTID2))>
 <!--#ELEMENT PMTINQRQ #Link(SRVRTID,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT PMTINQRQ #Link(SRVRTID2,BILLPAYMSGSRQV2)-->
- 
+
 
 <!-- payee request : add a payee to the payee list -->
 <!-- OFX 1.5 -->
@@ -1552,13 +1573,13 @@
 <!--#ELEMENT PMTRS #Link(PAYEELSTID2,BILLPAYMSGSRSV2)-->
 <!--#ELEMENT PMTRS #Link(RECSRVRTID,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT PMTRS #Link(RECSRVRTID2,BILLPAYMSGSRSV2)-->
-   
+
 
 <!-- payment modification response -->
 <!-- OFX 1.5 -->
 <!-- CHANGE SRVRTID to (SRVRTID | SRVRTID2) -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
-<!ELEMENT PMTMODRS      - -     ((SRVRTID | SRVRTID2), (PMTINFO | PMTINFO2), PMTPRCSTS?)>         
+<!ELEMENT PMTMODRS      - -     ((SRVRTID | SRVRTID2), (PMTINFO | PMTINFO2), PMTPRCSTS?)>
 <!--#ELEMENT PMTMODRS #Link(SRVRTID,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT PMTMODRS #Link(SRVRTID2,BILLPAYMSGSRSV2)-->
 <!--#ELEMENT PMTMODRS #Link(PMTINFO,BILLPAYMSGSRSV1)-->
@@ -1568,7 +1589,7 @@
 <!-- payment cancellation response -->
 <!-- OFX 1.5 -->
 <!-- CHANGE SRVRTID to (SRVRTID | SRVRTID2) -->
-<!ELEMENT PMTCANCRS     - -     (SRVRTID | SRVRTID2)>              
+<!ELEMENT PMTCANCRS     - -     (SRVRTID | SRVRTID2)>
 <!--#ELEMENT PMTCANCRS #Link(SRVRTID,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT PMTCANCRS #Link(SRVRTID2,BILLPAYMSGSRSV2)-->
 
@@ -1586,24 +1607,24 @@
 <!--#ELEMENT RECPMTRS #Link(PAYEELSTID2,BILLPAYMSGSRSV2)-->
 <!--#ELEMENT RECPMTRS #Link(PMTINFO,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT RECPMTRS #Link(PMTINFO2,BILLPAYMSGSRSV2)-->
- 
+
 
 <!-- modification response -->
 <!-- OFX 1.5 -->
 <!-- CHANGE RECSRVRTID to (RECSRVRTID | RECSRVRTID2) -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
 <!ELEMENT RECPMTMODRS   - -     ((RECSRVRTID | RECSRVRTID2), RECURRINST, (PMTINFO | PMTINFO2),
-					  INITIALAMT?, FINALAMT?, MODPENDING)>          
+					  INITIALAMT?, FINALAMT?, MODPENDING)>
 <!--#ELEMENT RECPMTMODRS #Link(RECSRVRTID,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT RECPMTMODRS #Link(RECSRVRTID2,BILLPAYMSGSRSV2)-->
 <!--#ELEMENT RECPMTMODRS #Link(PMTINFO,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT RECPMTMODRS #Link(PMTINFO2,BILLPAYMSGSRSV2)-->
 
 
-<!-- recurring payment modification response --> 
+<!-- recurring payment modification response -->
 <!-- OFX 1.5 -->
 <!-- CHANGE RECSRVRTID to (RECSRVRTID | RECSRVRTID2) -->
-<!ELEMENT RECPMTCANCRS  - -     ((RECSRVRTID | RECSRVRTID2), CANPENDING)>               
+<!ELEMENT RECPMTCANCRS  - -     ((RECSRVRTID | RECSRVRTID2), CANPENDING)>
 <!--#ELEMENT RECPMTCANCRS #Link(RECSRVRTID,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT RECPMTCANCRS #Link(RECSRVRTID2,BILLPAYMSGSRSV2)-->
 
@@ -1645,7 +1666,7 @@
 <!ELEMENT PAYEEDELRS    - - ((PAYEELSTID | PAYEELSTID2))>
 <!--#ELEMENT PAYEEDELRS #Link(PAYEELSTID,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT PAYEEDELRS #Link(PAYEELSTID2,BILLPAYMSGSRSV2)-->
-   
+
 <!-- ============================================================================= -->
 <!--                    Aggregates                                                         -->
 <!-- ============================================================================= -->
@@ -1679,11 +1700,11 @@
                          DTAVAIL?, ITA.CAUSALE?, PMTFOR?, BOOKINGTEXT?,
                          MEMO2?, BILLREFINFO?,
 			 ( SPNAME?, BILLID )? )>
- 
+
 <!--  Some non-US fields from pmtinfo -->
-<!ELEMENT PMTTYPE       - o %TYPEDESCTYPE>           
-<!ELEMENT PMTFOR        - o %GENNAMETYPE>           
-<!ELEMENT ITA.CAUSALE   - o %ITACAUSALETYPE>           
+<!ELEMENT PMTTYPE       - o %TYPEDESCTYPE>
+<!ELEMENT PMTFOR        - o %GENNAMETYPE>
+<!ELEMENT ITA.CAUSALE   - o %ITACAUSALETYPE>
 <!ELEMENT BOOKINGTEXT   - o %BOOKINGTEXTTYPE>
 
 <!-- OFX 1.6: Add CCMOTOACCT aggregate. -->
@@ -1695,14 +1716,14 @@
 <!ELEMENT PMTPRCSTS     - -     (PMTPRCCODE, DTPMTPRC)>
 
 <!--  Payment processing date; enum for processing date interpretation -->
-<!ELEMENT PMTPRCCODE    - o %PMTPROCESSSTATUSENUM>           
+<!ELEMENT PMTPRCCODE    - o %PMTPROCESSSTATUSENUM>
 
 <!--  Payment processing date; Interpretation depends on <PMTPRCCODE> -->
-<!ELEMENT DTPMTPRC      - o %DTTMTYPE>          
- 
+<!ELEMENT DTPMTPRC      - o %DTTMTYPE>
+
 <!-- billing reference info -->
 <!ELEMENT BILLREFINFO - o %BILLREFINFOTYPE>
- 
+
 <!--  Extended Payment aggregate -->
 <!--  Either extdpmtdsc or extdpmtinv, or both, but at least one required -->
 <!-- OFX 1.5 -->
@@ -1754,19 +1775,19 @@
 <!ELEMENT DSCDATE       - o %DTTMTYPE>
 <!ELEMENT DSCDESC       - o %SHORTMSGTYPE>
 <!ELEMENT ADJNO         - o %INVNOTYPE>
-<!ELEMENT ADJDESC       - o %SHORTMSGTYPE>   
+<!ELEMENT ADJDESC       - o %SHORTMSGTYPE>
 <!ELEMENT ADJAMT        - o %AMTTYPE>
 <!ELEMENT ADJDATE       - o %DTTMTYPE>
 <!ELEMENT LITMCODE      - o %IDTYPE>
 <!ELEMENT LITMAMT       - o %AMTTYPE>
 <!ELEMENT LITMDESC      - o %SHORTMSGTYPE>
- 
+
 <!--  Initial Amount -->
-<!ELEMENT INITIALAMT    - o %AMTTYPE>           
- 
+<!ELEMENT INITIALAMT    - o %AMTTYPE>
+
 <!--  Final Amount -->
-<!ELEMENT FINALAMT      - o %AMTTYPE>           
- 
+<!ELEMENT FINALAMT      - o %AMTTYPE>
+
 <!--  standard payee -->
 <!-- OFX 1.5 -->
 <!-- Changed PAYEEID to (PAYEEID | PAYEEID2) -->
@@ -1774,50 +1795,50 @@
 <!-- #ELEMENT EXTDPAYEE #Link (PAYEEID, (BILLPAYMSGSRQV1|BILLPAYMSGSRSV1)) -->
 <!-- #ELEMENT EXTDPAYEE #Link (PAYEEID2, (BILLPAYMSGSRQV2|BILLPAYMSGSRSV2)) -->
 
-<!--  Server-assigned standard payee ID -->             
-<!ELEMENT PAYEEID       - o %PAYEEIDTYPE>                
+<!--  Server-assigned standard payee ID -->
+<!ELEMENT PAYEEID       - o %PAYEEIDTYPE>
 
 <!-- OFX 1.5 -->
-<!--  Server-assigned standard payee ID -->             
-<!ELEMENT PAYEEID2       - o %UUIDTYPE>                
+<!--  Server-assigned standard payee ID -->
+<!ELEMENT PAYEEID2       - o %UUIDTYPE>
 
 <!--  Payee ID scope enumeration ; currently one of {GLOBAL,USER} -->
-<!ELEMENT IDSCOPE       - o %IDSCOPEENUM>           
+<!ELEMENT IDSCOPE       - o %IDSCOPEENUM>
 
-<!--  Minimum number of days needed to process -->   
-<!ELEMENT DAYSTOPAY     - o %DAYSPANTYPE>           
+<!--  Minimum number of days needed to process -->
+<!ELEMENT DAYSTOPAY     - o %DAYSPANTYPE>
 
 <!-- Check number -->
 <!ELEMENT CHECKNUM      - o %CHECKNUMTYPE>
 
 <!-- Payee aggregate, version 2 makes things optional for non-usa, still required in usa -->
-<!ELEMENT PAYEE - -     (NAME, (ADDR1,(ADDR2,ADDR3?)?), CITY, STATE, POSTALCODE, COUNTRY?, PHONE)>      
+<!ELEMENT PAYEE - -     (NAME, (ADDR1,(ADDR2,ADDR3?)?), CITY, STATE, POSTALCODE, COUNTRY?, PHONE)>
 <!-- OFX 1.5 -->
 <!-- CHANGE all required tags except NAME to being optional -->
-<!ELEMENT PAYEE2 - -     (NAME, (ADDR1,(ADDR2,ADDR3?)?)?, CITY?, STATE?, POSTALCODE?, COUNTRY?, PHONE?)>      
+<!ELEMENT PAYEE2 - -     (NAME, (ADDR1,(ADDR2,ADDR3?)?)?, CITY?, STATE?, POSTALCODE?, COUNTRY?, PHONE?)>
 
-<!--  Server-assigned payee list ID -->         
-<!ELEMENT PAYEELSTID    - o %PAYEEIDTYPE>                
+<!--  Server-assigned payee list ID -->
+<!ELEMENT PAYEELSTID    - o %PAYEEIDTYPE>
 
 <!-- OFX 1.5 -->
-<!--  Server-assigned payee list ID -->         
-<!ELEMENT PAYEELSTID2   - o %UUIDTYPE>                
+<!--  Server-assigned payee list ID -->
+<!ELEMENT PAYEELSTID2   - o %UUIDTYPE>
 
 <!--
         synchronization request messages
   -->
 
 <!--  payment synchronization request -->
-<!ELEMENT PMTSYNCRQ     - -     (%SYNCRQMACRO, BANKACCTFROM, PMTTRNRQ*)>                
+<!ELEMENT PMTSYNCRQ     - -     (%SYNCRQMACRO, BANKACCTFROM, PMTTRNRQ*)>
 <!--#ELEMENT PMTSYNCRQ #Link(TOKEN,	BILLPAYMSGSRQV1)-->
 <!--#ELEMENT PMTSYNCRQ #Link(TOKEN2,BILLPAYMSGSRQV2)-->
- 
+
 
 <!--  recurring payment synchronization request -->
 <!ELEMENT RECPMTSYNCRQ  - -     (%SYNCRQMACRO, BANKACCTFROM, RECPMTTRNRQ*)>
 <!--#ELEMENT RECPMTSYNCRQ #Link(TOKEN,BILLPAYMSGSRQV1)-->
 <!--#ELEMENT RECPMTSYNCRQ #Link(TOKEN2,BILLPAYMSGSRQV2)-->
- 
+
 <!-- payee list synchronization request -->
 <!ELEMENT PAYEESYNCRQ   - - (%SYNCRQMACRO, PAYEETRNRQ*)>
 <!--#ELEMENT PAYEESYNCRQ #Link(TOKEN,BILLPAYMSGSRQV1)-->
@@ -1835,18 +1856,18 @@
   -->
 
 <!-- payment synchronization response -->
-<!ELEMENT PMTSYNCRS     - -     (%SYNCRSMACRO, BANKACCTFROM, PMTTRNRS*)>                
+<!ELEMENT PMTSYNCRS     - -     (%SYNCRSMACRO, BANKACCTFROM, PMTTRNRS*)>
 <!--#ELEMENT PMTSYNCRS #Link(TOKEN,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT PMTSYNCRS #Link(TOKEN2,BILLPAYMSGSRSV2)-->
 <!--#ELEMENT PMTSYNCRS #Link(SYNCERROR,BILLPAYMSGSRSV2)-->
- 
+
 
 <!--  recurring payment synchronization response -->
 <!ELEMENT RECPMTSYNCRS  - -     (%SYNCRSMACRO, BANKACCTFROM, RECPMTTRNRS*)>
 <!--#ELEMENT RECPMTSYNCRS #Link(TOKEN,BILLPAYMSGSRSV1)-->
 <!--#ELEMENT RECPMTSYNCRS #Link(TOKEN2,BILLPAYMSGSRSV2)-->
 <!--#ELEMENT RECPMTSYNCRS #Link(SYNCERROR,BILLPAYMSGSRSV2)-->
- 
+
 <!-- payee list synchronization response -->
 <!ELEMENT PAYEESYNCRS   - - (%SYNCRSMACRO, PAYEETRNRS*)>
 <!--#ELEMENT PAYEESYNCRS #Link(TOKEN,BILLPAYMSGSRSV1)-->
@@ -1863,9 +1884,9 @@
 
 <!--
  Payment mail messages
-  --> 
+  -->
 
-<!-- payment inquiry mail message --> 
+<!-- payment inquiry mail message -->
 <!-- OFX 1.5 -->
 <!-- CHANGE SRVRTID to (SRVRTID | SRVRTID2) -->
 <!-- CHANGE PMTINFO to (PMTINFO | PMTINFO2) -->
@@ -1891,7 +1912,7 @@
 <!ELEMENT SIGNUPMSGSRQV1  - - 
                                    ((ENROLLTRNRQ | ACCTINFOTRNRQ | 
                                     CHGUSERINFOTRNRQ | CHGUSERINFOSYNCRQ |
-                                    ACCTTRNRQ | ACCTSYNCRQ)+ )> 
+                                    ACCTTRNRQ | ACCTSYNCRQ)+ )>
 <!ELEMENT SIGNUPMSGSRSV1  - - 
                                    ((ENROLLTRNRS | ACCTINFOTRNRS | 
                                     CHGUSERINFOTRNRS | CHGUSERINFOSYNCRS |
@@ -1901,7 +1922,7 @@
 <!ELEMENT SIGNUPMSGSRQV2  - - 
                                    ( USERID?, (ENROLLTRNRQ | ACCTINFOTRNRQ | 
                                     CHGUSERINFOTRNRQ | CHGUSERINFOSYNCRQ |
-                                    ACCTTRNRQ | ACCTSYNCRQ)+ )> 
+                                    ACCTTRNRQ | ACCTSYNCRQ)+ )>
 <!ELEMENT SIGNUPMSGSRSV2  - - 
                                    ( USERID?, (ENROLLTRNRS | ACCTINFOTRNRS | 
                                     CHGUSERINFOTRNRS | CHGUSERINFOSYNCRS |
@@ -1969,13 +1990,13 @@
                              (%ACCTFROMMACRO)? )>
 
 <!-- most above name / addr elements in ofxmain.dtd -->
-                             
+
 <!ELEMENT TAXID         - o %IDTYPE>
 <!ELEMENT SECURITYNAME  - o %GENNAMETYPE>
 <!ELEMENT DATEBIRTH     - o %DTTMTYPE>
-  
+
 <!ELEMENT ENROLLRS      - - (TEMPPASS? , USERID? , DTEXPIRE?)>
-    <!-- NOTE: could constrain  DTEXPIRE -->
+<!-- NOTE: could constrain  DTEXPIRE -->
 
 <!ELEMENT TEMPPASS      - o %TEMPPASSTYPE>
 <!ELEMENT DTEXPIRE      - o %DTTMTYPE>
@@ -2000,8 +2021,8 @@
                              DTINFOCHG)>
 <!--#ELEMENT CHGUSERINFORS #Link(USERID,(SIGNUPMSGSRQV2|SIGNUPMSGSRSV2))-->
 
-                             
-<!ELEMENT DTINFOCHG     - o %DTTMTYPE>                             
+
+<!ELEMENT DTINFOCHG     - o %DTTMTYPE>
 
 <!ELEMENT CHGUSERINFOSYNCRQ    - - (%SYNCRQMACRO , CHGUSERINFOTRNRQ*)>
 <!--#ELEMENT CHGUSERINFOSYNCRQ #Link(TOKEN,SIGNUPMSGSRQV1)-->
@@ -2027,8 +2048,8 @@
 <!-- Service status - should be included as part of
      the ACCTINFOMACRO aggregates.  Values
      are AVAIL, PEND, ACTIVE -->
-<!ELEMENT SVCSTATUS     - o %SERVICESTATUSENUM>      
-<!ELEMENT SVCSTATUS2    - o %SERVICESTATUS2ENUM>      
+<!ELEMENT SVCSTATUS     - o %SERVICESTATUSENUM>
+<!ELEMENT SVCSTATUS2    - o %SERVICESTATUS2ENUM>
 <!-- -----------------
   Service Activation
   ----------------- -->
@@ -2070,7 +2091,7 @@
 <!--#ELEMENT ACCTSYNCRS #Link(TOKEN,SIGNUPMSGSRSV1)-->
 <!--#ELEMENT ACCTSYNCRS #Link(TOKEN2,SIGNUPMSGSRSV2)-->
 <!--#ELEMENT ACCTSYNCRS #Link(SYNCERROR,SIGNUPMSGSRSV2)-->
-<!ELEMENT PREAUTHTOKEN  - o %IDTYPE>      
+<!ELEMENT PREAUTHTOKEN  - o %IDTYPE>
 
 
 
@@ -2109,11 +2130,11 @@
 <!ELEMENT SECRQ      - - (SECID | TICKER | FIID) >
 
 <!ELEMENT SECLISTRS  - - %EMPTYTYPE >
-            
+
 <!-- Security Ticker Symbol -->
 <!ELEMENT TICKER  - O %TICKERTYPE >
-                      
-<!-- Financial Institution ID for the Security -->                      
+
+<!-- Financial Institution ID for the Security -->
 <!ELEMENT FIID  - O %FIIDTYPE >
 
 <!-- ** Security Identifier ** -->
@@ -2141,7 +2162,7 @@
 <!--#ELEMENT SECINFO #Link(MEMO2,(INVSTMTMSGSRQV2|INVSTMTMSGSRSV2))-->
 
 <!ELEMENT SECNAME   - O %SECNAMETYPE>
-              
+
 <!-- Rating for Security -->
 <!ELEMENT RATING  - O %RATINGTYPE >
 
@@ -2218,7 +2239,7 @@
 
 <!-- Number of shares per contract -->
 <!ELEMENT SHPERCTRCT  - O %SHARESPERTYPE >
-          
+
 <!-- *** Other Security Type Information *** -->
 <!ELEMENT OTHERINFO  - - (SECINFO , TYPEDESC?, ASSETCLASS? , FIASSETCLASS?) >
 
@@ -2255,7 +2276,7 @@
 
 <!ELEMENT INVACCTTYPE - O %INVESTMENTACCOUNTENUM >
 
-<!ELEMENT OPTIONLEVEL - O %OPTIONLEVELTYPE >  
+<!ELEMENT OPTIONLEVEL - O %OPTIONLEVELTYPE >
 
 
 <!-- ****** INVESTMENT STATEMENT DOWNLOAD ****** -->
@@ -2391,8 +2412,8 @@
 
 <!-- ** Closure of Option Transaction ** -->
 <!ELEMENT CLOSUREOPT  - - (INVTRAN , SECID , OPTACTION , UNITS , SHPERCTRCT ,
-               SUBACCTSEC , RELFITID? , GAIN?) >      
-               
+               SUBACCTSEC , RELFITID? , GAIN?) >
+
 <!-- Closure of option action -->
 <!ELEMENT OPTACTION  - O %OPTACTIONENUM >
 
@@ -2468,7 +2489,7 @@
 <!-- Related option transaction type -->
 <!ELEMENT RELTYPE  - O %RELATEDENUM >
 
-<!-- How the option is secured -->          
+<!-- How the option is secured -->
 <!ELEMENT SECURED  - O %SECUREDENUM >
 
 <!-- ** Sell Other Transaction ** -->
@@ -2738,106 +2759,106 @@
 <!--#ELEMENT GETMIMERS #Link(URL,EMAILMSGSRSV1)-->
 <!--#ELEMENT GETMIMERS #Link(URL2,EMAILMSGSRSV2)-->
 
-    <!-- BILL PRESENTMENT   -->
-    
-    <!-- Profile entry for message set -->
+<!-- BILL PRESENTMENT   -->
+
+<!-- Profile entry for message set -->
 <!-- OFX 1.6 correction of ordinance within profile.  Allows for multiple Biller Directory
      services within an FI. -->
-    <!ELEMENT PRESDIRMSGSET        - - (PRESDIRMSGSETV1+)>
-    <!ELEMENT PRESDIRMSGSETV1      - - (MSGSETCORE, PRESDIRPROF?)>
+<!ELEMENT PRESDIRMSGSET        - - (PRESDIRMSGSETV1+)>
+<!ELEMENT PRESDIRMSGSETV1      - - (MSGSETCORE, PRESDIRPROF?)>
 
-    <!ELEMENT PRESDIRPROF      - - (PROCDAYSOFF*, CANSUPPORTIMAGES, PROCENDTM)>
+<!ELEMENT PRESDIRPROF      - - (PROCDAYSOFF*, CANSUPPORTIMAGES, PROCENDTM)>
 
 
-    <!-- No synchronization in this module -->
-   
-    <!-- ================== -->
-    <!-- DIRECTORY MESSAGES -->
-    <!-- ================== -->
-    
-    <!-- FIND BILLER -->
-    
-    <!-- Find Biller Message set -->
-    <!ELEMENT PRESDIRMSGSRQV1    - - (FINDBILLERTRNRQ)>
-    <!ELEMENT PRESDIRMSGSRSV1    - - (FINDBILLERTRNRS)>
-    
-    <!-- Find Biller Transactions -->
-    
-    <!ELEMENT FINDBILLERTRNRQ    - - (%TRNRQMACRO, FINDBILLERRQ)>
-    <!ELEMENT FINDBILLERTRNRS    - - (%TRNRSMACRO, FINDBILLERRS?)>
-    
-    
-    
-    <!-- Find Biller Request and Response -->
-    
-    <!ELEMENT FINDBILLERRQ  - - (DTUPDATE? , BILLERID?, NAME?, ADDR1?,
+<!-- No synchronization in this module -->
+
+<!-- ================== -->
+<!-- DIRECTORY MESSAGES -->
+<!-- ================== -->
+
+<!-- FIND BILLER -->
+
+<!-- Find Biller Message set -->
+<!ELEMENT PRESDIRMSGSRQV1    - - (FINDBILLERTRNRQ)>
+<!ELEMENT PRESDIRMSGSRSV1    - - (FINDBILLERTRNRS)>
+
+<!-- Find Biller Transactions -->
+
+<!ELEMENT FINDBILLERTRNRQ    - - (%TRNRQMACRO, FINDBILLERRQ)>
+<!ELEMENT FINDBILLERTRNRS    - - (%TRNRSMACRO, FINDBILLERRS?)>
+
+
+
+<!-- Find Biller Request and Response -->
+
+<!ELEMENT FINDBILLERRQ  - - (DTUPDATE? , BILLERID?, NAME?, ADDR1?,
                                     ADDR2? , ADDR3? , CITY?, STATE?,  
                                     POSTALCODE? , COUNTRY? , SIC? ,
                                     CONSUPOSTALCODE?,INCIMAGES)>
-             
-                                     
-    <!ELEMENT FINDBILLERRS  - - (DTUPDATE ,BILLERINFO*)>
-    
-    <!ELEMENT BILLERINFO    - - (BILLPUB, BILLERID, NAME, ADDR1,
+
+
+<!ELEMENT FINDBILLERRS  - - (DTUPDATE ,BILLERINFO*)>
+
+<!ELEMENT BILLERINFO    - - (BILLPUB, BILLERID, NAME, ADDR1,
                                     ADDR2? , ADDR3? , CITY, STATE,  
                                     POSTALCODE ,COUNTRY ,SIC ,PHONE ,
                                 PAYMENTINSTRUMENTS?, ACCTFORMAT?,
                                     ACCTEDITMASK?, HELPMESSAGE?, RESTRICT?, LOGO?,
                                     VALIDATE?, BILLERINFOURL?)>
-    
-    <!ELEMENT PAYMENTINSTRUMENTS      - - (PAYMENTINSTRUMENT+)>
-    <!ELEMENT PAYMENTINSTRUMENT       - - (PMTINSTRUMENTTYPE, BRAND?)>
-    <!ELEMENT DTUPDATE      - o %DTTMTYPE>
-    <!ELEMENT CONSUPOSTALCODE - o %ZIPTYPE>
-    <!ELEMENT BILLPUB       - o %GENNAMETYPE>
-    <!ELEMENT BILLERID      - o %IDTYPE>
-    <!ELEMENT ACCTFORMAT    - o %MSGTYPE>
-    <!ELEMENT ACCTEDITMASK  - o %MSGTYPE>
-    <!ELEMENT HELPMESSAGE   - o %MSGTYPE>
-    <!ELEMENT RESTRICT      - o %MSGTYPE>
-    <!ELEMENT VALIDATE      - o %URL2TYPE>
-    <!ELEMENT BILLERINFOURL - o %URL2TYPE>
-    <!ELEMENT LOGO          - o %URL2TYPE>
-    
-    
-    <!-- ================== -->
-    <!-- SIGNUP MESSAGES    -->
-    <!-- ================== -->
-    
-    <!-- ENROLL SAME AS STANDARD OFX ENROLL-->
-    
-    <!-- ACTIVATION SAME AS STANDARD OFX -->
 
-    <!-- OFX 1.6: Add BUSNAMEACCTHELD. -->
-    <!ELEMENT PRESNAMEADDRESS - - (NAMEACCTHELD?, BUSNAMEACCTHELD?, ADDR1?, ADDR2?,
+<!ELEMENT PAYMENTINSTRUMENTS      - - (PAYMENTINSTRUMENT+)>
+<!ELEMENT PAYMENTINSTRUMENT       - - (PMTINSTRUMENTTYPE, BRAND?)>
+<!ELEMENT DTUPDATE      - o %DTTMTYPE>
+<!ELEMENT CONSUPOSTALCODE - o %ZIPTYPE>
+<!ELEMENT BILLPUB       - o %GENNAMETYPE>
+<!ELEMENT BILLERID      - o %IDTYPE>
+<!ELEMENT ACCTFORMAT    - o %MSGTYPE>
+<!ELEMENT ACCTEDITMASK  - o %MSGTYPE>
+<!ELEMENT HELPMESSAGE   - o %MSGTYPE>
+<!ELEMENT RESTRICT      - o %MSGTYPE>
+<!ELEMENT VALIDATE      - o %URL2TYPE>
+<!ELEMENT BILLERINFOURL - o %URL2TYPE>
+<!ELEMENT LOGO          - o %URL2TYPE>
+
+
+<!-- ================== -->
+<!-- SIGNUP MESSAGES    -->
+<!-- ================== -->
+
+<!-- ENROLL SAME AS STANDARD OFX ENROLL-->
+
+<!-- ACTIVATION SAME AS STANDARD OFX -->
+
+<!-- OFX 1.6: Add BUSNAMEACCTHELD. -->
+<!ELEMENT PRESNAMEADDRESS - - (NAMEACCTHELD?, BUSNAMEACCTHELD?, ADDR1?, ADDR2?,
 				   ADDR3?, CITY?, STATE?, POSTALCODE?, COUNTRY?,
 				   DAYPHONE?, EVEPHONE?)>
-    
-    <!-- ACCOUNT INFO SAME AS STANDARD OFX EXCEPT FOR GROUP Messages-->
 
-    <!ELEMENT NAMEACCTHELD - o %NAMEACCTHELDTYPE>
-    <!ELEMENT BUSNAMEACCTHELD - o %NAMEACCTHELDTYPE>
-       
-    <!-- ====================== -->
-    <!-- BILL DELIVERY MESSAGES -->
-    <!-- ====================== -->
-    
-    <!-- Bill Delivery -->
-    
-    <!-- Bill Delivery Message set -->
-    <!-- Profile entry for message set -->
-    <!-- OFX 1.6 correction of ordinance within profile.  Allows for multiple Bill Presentment
+<!-- ACCOUNT INFO SAME AS STANDARD OFX EXCEPT FOR GROUP Messages-->
+
+<!ELEMENT NAMEACCTHELD - o %NAMEACCTHELDTYPE>
+<!ELEMENT BUSNAMEACCTHELD - o %NAMEACCTHELDTYPE>
+
+<!-- ====================== -->
+<!-- BILL DELIVERY MESSAGES -->
+<!-- ====================== -->
+
+<!-- Bill Delivery -->
+
+<!-- Bill Delivery Message set -->
+<!-- Profile entry for message set -->
+<!-- OFX 1.6 correction of ordinance within profile.  Allows for multiple Bill Presentment
      services within an FI. -->
-    <!ELEMENT PRESDLVMSGSET        - - (PRESDLVMSGSETV1+)>
-    <!ELEMENT PRESDLVMSGSETV1      - - (MSGSETCORE, PRESDLVPROF?, EMAILPROF)>
+<!ELEMENT PRESDLVMSGSET        - - (PRESDLVMSGSETV1+)>
+<!ELEMENT PRESDLVMSGSETV1      - - (MSGSETCORE, PRESDLVPROF?, EMAILPROF)>
 
-    <!ELEMENT PRESDLVPROF     - - (CANSUPPORTGROUPID, PROCDAYSOFF*, CANSUPPORTIMAGES, PROCENDTM, CANUPDATEPRESNAMEADDRESS)>
+<!ELEMENT PRESDLVPROF     - - (CANSUPPORTGROUPID, PROCDAYSOFF*, CANSUPPORTIMAGES, PROCENDTM, CANUPDATEPRESNAMEADDRESS)>
 
-    
-    <!-- No synchronization in this module -->
-    
-     <!-- OFX 1.6 addition of BILLSTATUSMODTRNRQ and BILLSTATUSMODTRNRS.  -->
-   <!ELEMENT PRESDLVMSGSRQV1  - - ((PRESLISTTRNRQ
+
+<!-- No synchronization in this module -->
+
+<!-- OFX 1.6 addition of BILLSTATUSMODTRNRQ and BILLSTATUSMODTRNRS.  -->
+<!ELEMENT PRESDLVMSGSRQV1  - - ((PRESLISTTRNRQ
                                 |PRESGRPACCTINFOTRNRQ
                                 |PRESDETAILTRNRQ
                                 |BILLTBLSTRUCTTRNRQ
@@ -2846,7 +2867,7 @@
                                 |PRESMAILSYNCRQ
                                 |PRESMAILTRNRQ)+
                                 )>
-    <!ELEMENT PRESDLVMSGSRSV1  - - ((PRESLISTTRNRS
+<!ELEMENT PRESDLVMSGSRSV1  - - ((PRESLISTTRNRS
                                 |PRESGRPACCTINFOTRNRS
                                 |PRESDETAILTRNRS
                                 |BILLTBLSTRUCTTRNRS
@@ -2856,154 +2877,154 @@
                                 |PRESMAILTRNRS)+
                                 )>
 
-    <!-- Account Info Group Transactions -->
-    <!ELEMENT PRESGRPACCTINFOTRNRQ    - - (%TRNRQMACRO, (USERID | GROUPID)?, ACCTINFORQ)>
-    <!ELEMENT PRESGRPACCTINFOTRNRS    - - (%TRNRSMACRO, ACCTINFORS?)>
-  
-    <!ELEMENT PRESACCTINFO              - - (PRESACCTFROM, SVCSTATUS2, REASON?)>
+<!-- Account Info Group Transactions -->
+<!ELEMENT PRESGRPACCTINFOTRNRQ    - - (%TRNRQMACRO, (USERID | GROUPID)?, ACCTINFORQ)>
+<!ELEMENT PRESGRPACCTINFOTRNRS    - - (%TRNRSMACRO, ACCTINFORS?)>
 
-    <!-- OFX 1.6: Add BILLERNAME, SPNAME, PAYEEID2 and PAYEELSTID2. -->
-    <!ELEMENT ( PRESACCTFROM, PRESACCTTO ) - -
+<!ELEMENT PRESACCTINFO              - - (PRESACCTFROM, SVCSTATUS2, REASON?)>
+
+<!-- OFX 1.6: Add BILLERNAME, SPNAME, PAYEEID2 and PAYEELSTID2. -->
+<!ELEMENT ( PRESACCTFROM, PRESACCTTO ) - -
 			( BILLPUB, BILLERID, BILLERNAME?, ACCTID, PRESNAMEADDRESS?,
 			USERID?, ( SPNAME?, ((PAYEEID2, PAYEELSTID2?) | PAYEELSTID2 ))?)>
-  
-    <!ELEMENT GROUPID                 - o %IDTYPE>
-    <!ELEMENT REASON                  - o %MSGTYPE>
-    <!ELEMENT PMTINSTRUMENTTYPE       - o %PMTINSTRUMENTENUM>
-    <!ELEMENT BRAND                   - o %GENNAMETYPE>
-    <!ELEMENT BILLERNAME	      - o %GENNAMETYPE>
 
-    <!-- Bill Delivery Transactions -->
-    <!ELEMENT PRESLISTTRNRQ    - - (%TRNRQMACRO,  (USERID|GROUPID)?, PRESLISTRQ)>
-    <!ELEMENT PRESLISTTRNRS    - - (%TRNRSMACRO, PRESLISTRS?)>
-    
-    <!ELEMENT PRESNOTIFYTRNRQ    - - (%TRNRQMACRO, PRESNOTIFYRQ)>
-    <!ELEMENT PRESNOTIFYTRNRS    - - (%TRNRSMACRO, PRESNOTIFYRS?)>
-    
-    <!-- OFX 1.6 addition of BILLSTATUSMODTRNRQ and BILLSTATUSMODTRNRS.  -->
-    <!ELEMENT BILLSTATUSMODTRNRQ    - - (%TRNRQMACRO, BILLSTATUSMODRQ)>
-    <!ELEMENT BILLSTATUSMODTRNRS    - - (%TRNRSMACRO, BILLSTATUSMODRS?)>
-    
-    <!-- OFX 1.6 addition of several new tags to PRESLISTRQ.  
+<!ELEMENT GROUPID                 - o %IDTYPE>
+<!ELEMENT REASON                  - o %MSGTYPE>
+<!ELEMENT PMTINSTRUMENTTYPE       - o %PMTINSTRUMENTENUM>
+<!ELEMENT BRAND                   - o %GENNAMETYPE>
+<!ELEMENT BILLERNAME	      - o %GENNAMETYPE>
+
+<!-- Bill Delivery Transactions -->
+<!ELEMENT PRESLISTTRNRQ    - - (%TRNRQMACRO,  (USERID|GROUPID)?, PRESLISTRQ)>
+<!ELEMENT PRESLISTTRNRS    - - (%TRNRSMACRO, PRESLISTRS?)>
+
+<!ELEMENT PRESNOTIFYTRNRQ    - - (%TRNRQMACRO, PRESNOTIFYRQ)>
+<!ELEMENT PRESNOTIFYTRNRS    - - (%TRNRSMACRO, PRESNOTIFYRS?)>
+
+<!-- OFX 1.6 addition of BILLSTATUSMODTRNRQ and BILLSTATUSMODTRNRS.  -->
+<!ELEMENT BILLSTATUSMODTRNRQ    - - (%TRNRQMACRO, BILLSTATUSMODRQ)>
+<!ELEMENT BILLSTATUSMODTRNRS    - - (%TRNRSMACRO, BILLSTATUSMODRS?)>
+
+<!-- OFX 1.6 addition of several new tags to PRESLISTRQ.  
          See "New tags in PRESLISTRQ", below. -->
-    <!ELEMENT PRESLISTRQ       - - (BILLPUB, DTSTART?, DTEND?, DTDUEBY?, BILLERID?, 
+<!ELEMENT PRESLISTRQ       - - (BILLPUB, DTSTART?, DTEND?, DTDUEBY?, BILLERID?, 
                                     BILLID?, BILLTYPE*, BILLSTATUSCODE*, 
                                     BILLPMTSTATUSCODE*, NOTIFYWILLING, INCLUDEDETAIL, 
                                     INCLUDEBILLSTATUS?, INCLUDEBILLPMTSTATUS?, 
                                     INCLUDESTATUSHIST?, INCLUDECOUNTS?, INCLUDESUMMARY?)>
-    
-    <!-- New tags in PRESLISTRQ for OFX 1.6.  BILLERID was also added. -->
-    <!ELEMENT DTDUEBY                  - o %DTTMTYPE>
-    <!ELEMENT BILLTYPE                 - o %BILLTYPEENUM>
-    <!ELEMENT BILLSTATUSCODE           - o %BILLSTATUSCODEENUM>
-    <!ELEMENT BILLPMTSTATUSCODE        - o %BILLPMTSTATUSCODEENUM>
-    <!ELEMENT INCLUDEBILLSTATUS        - o %BOOLTYPE>
-    <!ELEMENT INCLUDEBILLPMTSTATUS     - o %BOOLTYPE> 
-    <!ELEMENT INCLUDESTATUSHIST        - o %BOOLTYPE>
-    <!ELEMENT INCLUDECOUNTS            - o %BOOLTYPE>
-    <!ELEMENT INCLUDESUMMARY           - o %BOOLTYPE>
-                                
-    <!-- OFX 1.6 addition of the PRESCOUNTS aggregate to PRESLISTRS -->                                                            
-    <!ELEMENT PRESLISTRS       - - (BILLPUB, USERID, DTSTART, DTEND, 
+
+<!-- New tags in PRESLISTRQ for OFX 1.6.  BILLERID was also added. -->
+<!ELEMENT DTDUEBY                  - o %DTTMTYPE>
+<!ELEMENT BILLTYPE                 - o %BILLTYPEENUM>
+<!ELEMENT BILLSTATUSCODE           - o %BILLSTATUSCODEENUM>
+<!ELEMENT BILLPMTSTATUSCODE        - o %BILLPMTSTATUSCODEENUM>
+<!ELEMENT INCLUDEBILLSTATUS        - o %BOOLTYPE>
+<!ELEMENT INCLUDEBILLPMTSTATUS     - o %BOOLTYPE>
+<!ELEMENT INCLUDESTATUSHIST        - o %BOOLTYPE>
+<!ELEMENT INCLUDECOUNTS            - o %BOOLTYPE>
+<!ELEMENT INCLUDESUMMARY           - o %BOOLTYPE>
+
+<!-- OFX 1.6 addition of the PRESCOUNTS aggregate to PRESLISTRS -->
+<!ELEMENT PRESLISTRS       - - (BILLPUB, USERID, DTSTART, DTEND, 
                                     PRESLIST?, PRESCOUNTS?)>
-    
-    <!ELEMENT PRESCOUNTS             - - (BILLSTATUSCOUNTS*, BILLPMTSTATUSCOUNTS*)>      
-    <!ELEMENT BILLSTATUSCOUNTS       - - (BILLSTATUSCODE, COUNT)>  
-    <!ELEMENT BILLPMTSTATUSCOUNTS    - - (BILLPMTSTATUSCODE, COUNT)>  
-    <!ELEMENT COUNT                  - o %IDTYPE>
-    
-    <!ELEMENT PRESLIST         - - (PRESBILLINFO*)>
-    
-    <!-- OFX 1.6 addition of BILLTYPE, BILLSTATUS and BILLPMTSTATUS to PRESBILLINFO.  -->
-    <!ELEMENT PRESBILLINFO     - - (BILLID, PRESACCTFROM, PAYEEID2?, BILLREFINFO?, AMTDUE,
+
+<!ELEMENT PRESCOUNTS             - - (BILLSTATUSCOUNTS*, BILLPMTSTATUSCOUNTS*)>
+<!ELEMENT BILLSTATUSCOUNTS       - - (BILLSTATUSCODE, COUNT)>
+<!ELEMENT BILLPMTSTATUSCOUNTS    - - (BILLPMTSTATUSCODE, COUNT)>
+<!ELEMENT COUNT                  - o %IDTYPE>
+
+<!ELEMENT PRESLIST         - - (PRESBILLINFO*)>
+
+<!-- OFX 1.6 addition of BILLTYPE, BILLSTATUS and BILLPMTSTATUS to PRESBILLINFO.  -->
+<!ELEMENT PRESBILLINFO     - - (BILLID, PRESACCTFROM, PAYEEID2?, BILLREFINFO?, AMTDUE,
                                     MINAMTDUE?, DTPMTDUE, DTBILL, DTOPEN?, DTCLOSE?,
                                     PREVBAL?, ACTIVITY?, ACCTBAL?, INVOICE2?, NOTIFYDESIRED,
                                     BILLTYPE?, BILLSTATUS*, BILLPMTSTATUS*,
                                     STMNTIMAGE?, (DETAILAVAILABLE|BILLDETAILTABLE))>
-    
-    <!ELEMENT BILLSTATUS       - - (BILLSTATUSCODE, DTEFF, STATUSMODBY?)>  
-    <!ELEMENT BILLPMTSTATUS    - - (SRVRTID2?, BILLPMTSTATUSCODE, DTEFF, STATUSMODBY?)>
-    <!ELEMENT DTEFF            - o %DTTMTYPE> 
-    <!ELEMENT STATUSMODBY      - o %STATUSMODBYENUM>                                
 
-    <!-- OFX 1.6 addition of BILLSTATUSMODRQ and BILLSTATUSMODRS.  -->
-    <!ELEMENT BILLSTATUSMODRQ  - - (BILLID?, BILLSTATUS?, BILLPMTSTATUS?)>
-    <!ELEMENT BILLSTATUSMODRS  - - (BILLID?, BILLSTATUS?, BILLPMTSTATUS?)>
+<!ELEMENT BILLSTATUS       - - (BILLSTATUSCODE, DTEFF, STATUSMODBY?)>
+<!ELEMENT BILLPMTSTATUS    - - (SRVRTID2?, BILLPMTSTATUSCODE, DTEFF, STATUSMODBY?)>
+<!ELEMENT DTEFF            - o %DTTMTYPE>
+<!ELEMENT STATUSMODBY      - o %STATUSMODBYENUM>
 
-    <!-- OFX 1.6 correction of ordinance for PREFETCHURL element.
+<!-- OFX 1.6 addition of BILLSTATUSMODRQ and BILLSTATUSMODRS.  -->
+<!ELEMENT BILLSTATUSMODRQ  - - (BILLID?, BILLSTATUS?, BILLPMTSTATUS?)>
+<!ELEMENT BILLSTATUSMODRS  - - (BILLID?, BILLSTATUS?, BILLPMTSTATUS?)>
+
+<!-- OFX 1.6 correction of ordinance for PREFETCHURL element.
          This version (optional and repeating versus optional) matches the
 	 intent and wording of the specification. -->
-    <!ELEMENT STMNTIMAGE     - - ( IMAGEURL, PREFETCHURL*, DTEXPIRE? )>
-    
-    <!ELEMENT PRESDETAILTRNRQ  - - (%TRNRQMACRO, PRESDETAILRQ)>
-    <!ELEMENT PRESDETAILRQ     - - (BILLID, BILLDETAILTABLETYPE?)>
-    <!ELEMENT PRESDETAILTRNRS  - - (%TRNRSMACRO, PRESDETAILRS?)>
-    <!ELEMENT PRESDETAILRS   - - (PRESDETAIL*)>
-  
-    <!ELEMENT PRESDETAIL       - - (BILLID, PRESACCTFROM?, BILLDETAILTABLE*)>
-    
-    <!ELEMENT BILLDETAILTABLE        - - (TABLENAME, BILLDETAILTABLETYPE, BILLDETAILROW*)>
-    
-    <!ELEMENT BILLDETAILROW          - - (C|N)*>
-    
-    <!ELEMENT BILLTBLSTRUCTTRNRQ    - - (%TRNRQMACRO, BILLTBLSTRUCTRQ)>
-    <!ELEMENT BILLTBLSTRUCTTRNRS    - - (%TRNRSMACRO, BILLTBLSTRUCTRS?)>
-    
-    <!ELEMENT BILLTBLSTRUCTRQ  - - (BILLID, BILLDETAILTABLETYPE)>
-    
-    <!ELEMENT BILLTBLSTRUCTRS  - - (BILLID, BILLDETAILTABLETYPE, COLDEF*)>
-    
-    <!ELEMENT COLDEF                 - - (COLNAME, COLTYPE)>
-    
-    <!ELEMENT PRESNOTIFYRQ     - - (PRESDELIVERYID)>
+<!ELEMENT STMNTIMAGE     - - ( IMAGEURL, PREFETCHURL*, DTEXPIRE? )>
+
+<!ELEMENT PRESDETAILTRNRQ  - - (%TRNRQMACRO, PRESDETAILRQ)>
+<!ELEMENT PRESDETAILRQ     - - (BILLID, BILLDETAILTABLETYPE?)>
+<!ELEMENT PRESDETAILTRNRS  - - (%TRNRSMACRO, PRESDETAILRS?)>
+<!ELEMENT PRESDETAILRS   - - (PRESDETAIL*)>
+
+<!ELEMENT PRESDETAIL       - - (BILLID, PRESACCTFROM?, BILLDETAILTABLE*)>
+
+<!ELEMENT BILLDETAILTABLE        - - (TABLENAME, BILLDETAILTABLETYPE, BILLDETAILROW*)>
+
+<!ELEMENT BILLDETAILROW          - - (C|N)*>
+
+<!ELEMENT BILLTBLSTRUCTTRNRQ    - - (%TRNRQMACRO, BILLTBLSTRUCTRQ)>
+<!ELEMENT BILLTBLSTRUCTTRNRS    - - (%TRNRSMACRO, BILLTBLSTRUCTRS?)>
+
+<!ELEMENT BILLTBLSTRUCTRQ  - - (BILLID, BILLDETAILTABLETYPE)>
+
+<!ELEMENT BILLTBLSTRUCTRS  - - (BILLID, BILLDETAILTABLETYPE, COLDEF*)>
+
+<!ELEMENT COLDEF                 - - (COLNAME, COLTYPE)>
+
+<!ELEMENT PRESNOTIFYRQ     - - (PRESDELIVERYID)>
 <!-- OFX 1.6 correction.  All previous DTD versions allowed zero or more identifier
      aggregates.  Nothing other than a single <PRESDELIVERID> has meaning. -->
-    <!ELEMENT PRESNOTIFYRS     - - (PRESDELIVERYID)>
-     
-    <!ELEMENT PRESDELIVERYID   - - (PRESACCTFROM,BILLID,DTSEEN)>
-    
-    
-    <!ELEMENT NOTIFYWILLING  - o %BOOLTYPE>
-    <!ELEMENT INCLUDEDETAIL  - o %BOOLTYPE>
-    <!ELEMENT AMTDUE         - o %AMTTYPE>
-    <!ELEMENT MINAMTDUE      - o %AMTTYPE>
-    <!ELEMENT DTBILL         - o %DTTMTYPE>
-    <!ELEMENT PREVBAL        - o %AMTTYPE>
-    <!ELEMENT ACTIVITY       - o %AMTTYPE>
-    <!ELEMENT ACCTBAL        - o %AMTTYPE>
-    <!ELEMENT NOTIFYDESIRED  - o %BOOLTYPE>
-    <!ELEMENT DETAILAVAILABLE - o %BOOLTYPE>
-    <!ELEMENT IMAGEURL       - o %URL2TYPE>
-    <!ELEMENT PREFETCHURL    - o %URL2TYPE>
-    <!ELEMENT TABLENAME      - o %GENNAMETYPE>
-    <!ELEMENT BILLDETAILTABLETYPE      - o %GENNAMETYPE>
-    <!ELEMENT C              - o %MSGTYPE>
-    <!ELEMENT N              - o %CHARTYPE>
-    <!ELEMENT COLNAME        - o %GENNAMETYPE>
-    <!ELEMENT COLTYPE        - o %COLUMNTYPE>
-    <!ELEMENT DTSEEN         - o %DTTMTYPE>
-	<!ELEMENT BILLID         - o %IDTYPE>
-    
-    <!-- =============================== -->
-    <!-- BILL PRESENTMENT EMAIL MESSAGES -->
-    <!-- =============================== -->
-    
-    <!-- Synchronization -->
-    <!ELEMENT PRESMAILSYNCRQ   - - (%SYNCRQMACRO , INCIMAGES, USEHTML, PRESACCTFROM, PRESMAILTRNRQ*)>
+<!ELEMENT PRESNOTIFYRS     - - (PRESDELIVERYID)>
+
+<!ELEMENT PRESDELIVERYID   - - (PRESACCTFROM,BILLID,DTSEEN)>
+
+
+<!ELEMENT NOTIFYWILLING  - o %BOOLTYPE>
+<!ELEMENT INCLUDEDETAIL  - o %BOOLTYPE>
+<!ELEMENT AMTDUE         - o %AMTTYPE>
+<!ELEMENT MINAMTDUE      - o %AMTTYPE>
+<!ELEMENT DTBILL         - o %DTTMTYPE>
+<!ELEMENT PREVBAL        - o %AMTTYPE>
+<!ELEMENT ACTIVITY       - o %AMTTYPE>
+<!ELEMENT ACCTBAL        - o %AMTTYPE>
+<!ELEMENT NOTIFYDESIRED  - o %BOOLTYPE>
+<!ELEMENT DETAILAVAILABLE - o %BOOLTYPE>
+<!ELEMENT IMAGEURL       - o %URL2TYPE>
+<!ELEMENT PREFETCHURL    - o %URL2TYPE>
+<!ELEMENT TABLENAME      - o %GENNAMETYPE>
+<!ELEMENT BILLDETAILTABLETYPE      - o %GENNAMETYPE>
+<!ELEMENT C              - o %MSGTYPE>
+<!ELEMENT N              - o %CHARTYPE>
+<!ELEMENT COLNAME        - o %GENNAMETYPE>
+<!ELEMENT COLTYPE        - o %COLUMNTYPE>
+<!ELEMENT DTSEEN         - o %DTTMTYPE>
+<!ELEMENT BILLID         - o %IDTYPE>
+
+<!-- =============================== -->
+<!-- BILL PRESENTMENT EMAIL MESSAGES -->
+<!-- =============================== -->
+
+<!-- Synchronization -->
+<!ELEMENT PRESMAILSYNCRQ   - - (%SYNCRQMACRO , INCIMAGES, USEHTML, PRESACCTFROM, PRESMAILTRNRQ*)>
 <!--#ELEMENT PRESMAILSYNCRQ #Link(TOKEN2, PRESDLVMSGSRQV1)-->
 
-    <!ELEMENT PRESMAILSYNCRS   - - (%SYNCRSMACRO , PRESACCTFROM, PRESMAILTRNRS*)>
+<!ELEMENT PRESMAILSYNCRS   - - (%SYNCRSMACRO , PRESACCTFROM, PRESMAILTRNRS*)>
 <!--#ELEMENT PRESMAILSYNCRS #Link(TOKEN2,PRESDLVMSGSRSV1)-->
 <!--#ELEMENT PRESMAILSYNCRS #Link(SYNCERROR, PRESDLVMSGSRSV1)-->
 
-  
-    <!-- Bill Presentment Mail -->
-    <!ELEMENT PRESMAILTRNRQ    - - (%TRNRQMACRO, PRESMAILRQ)>
-    <!ELEMENT PRESMAILTRNRS    - - (%TRNRSMACRO, PRESMAILRS?)>
-    
-    <!ELEMENT PRESMAILRQ       - - (PRESACCTFROM, MAIL)>
-    <!ELEMENT PRESMAILRS       - - (PRESACCTFROM, MAIL)>
- 
+
+<!-- Bill Presentment Mail -->
+<!ELEMENT PRESMAILTRNRQ    - - (%TRNRQMACRO, PRESMAILRQ)>
+<!ELEMENT PRESMAILTRNRS    - - (%TRNRSMACRO, PRESMAILRS?)>
+
+<!ELEMENT PRESMAILRQ       - - (PRESACCTFROM, MAIL)>
+<!ELEMENT PRESMAILRS       - - (PRESACCTFROM, MAIL)>
+
 
 
 <!-- Profile message set -->
@@ -3068,7 +3089,7 @@
 <!--#ELEMENT PROFRS #Link(URL,PROFMSGSRSV1)-->
 <!--#ELEMENT PROFRS #Link(URL2,PROFMSGSRSV2)-->
 <!--#ELEMENT PROFRS #Link(URLGETREDIRECT,PROFMSGSRSV2)-->
-                        
+
 <!ELEMENT FINAME        - o %GENNAMETYPE>
 <!ELEMENT CSPHONE       - o %PHONETYPE>
 <!ELEMENT TSPHONE       - o %PHONETYPE>
@@ -3099,7 +3120,7 @@
 <!ELEMENT PINCH             - o %BOOLTYPE>
 <!ELEMENT CHGPINFIRST       - o %BOOLTYPE>
 <!-- OFX 1.5 -->
-<!ELEMENT PWTYPE            - o %PWTYPEENUM> 
+<!ELEMENT PWTYPE            - o %PWTYPEENUM>
 
 <!-- Message set core info - used by all XXXMSGSETVn -->
 <!-- version 2 adds COUNTRY -->
@@ -3126,13 +3147,13 @@
 
 <!ELEMENT VER           - o %VERTYPE>
 <!ELEMENT OFXSEC        - o %SECURITYENUM>
-<!ELEMENT TRANSPSEC     - o %BOOLTYPE> 
+<!ELEMENT TRANSPSEC     - o %BOOLTYPE>
 <!ELEMENT SYNCMODE      - o %SYNCENUM>
 <!ELEMENT REFRESHSUPT	- o %BOOLTYPE>
 <!ELEMENT RESPFILEER    - o %BOOLTYPE>
 <!ELEMENT SPNAME        - o %GENNAMETYPE>
-    
- 
+
+
 <!-- ============================================================================= -->
 <!--
     Open Financial Exchange Element Structure
@@ -3176,8 +3197,8 @@
 						PRESDIRMSGSRSV1?,
                         PRESDLVMSGSRSV1?,
                       (PROFMSGSRSV1       | PROFMSGSRSV2)?
-						%EXTRARSMSGSETS">                
-                      
+						%EXTRARSMSGSETS">
+
 <!ELEMENT OFX   - - ((%OFXRQMSGSETS) | (%OFXRSMSGSETS))>
 
 
@@ -3202,7 +3223,7 @@
 <!-- general error reporting aggregate -->
 <!-- OFX 1.5 -->
 <!-- CHANGED MESSAGE TO (MESSAGE | MESSAGE2) -->
-<!ELEMENT STATUS    - -     (CODE , SEVERITY , (MESSAGE | MESSAGE2)? )> 
+<!ELEMENT STATUS    - -     (CODE , SEVERITY , (MESSAGE | MESSAGE2)? )>
 <!--#ELEMENT STATUS #Link(MESSAGE,(SIGNONMSGSRSV1 |  SIGNUPMSGSRSV1 | BANKMSGSRSV1 | CREDITCARDMSGSRSV1 | INVSTMTMSGSRSV1 | INTERXFERMSGSRSV1 | WIREXFERMSGSRSV1 | BILLPAYMSGSRSV1 | EMAILMSGSRSV1 | SECLISTMSGSRSV1 | PROFMSGSRSV1))-->
 <!--#ELEMENT STATUS #Link(MESSAGE2, (SIGNONMSGSRSV2 |  SIGNUPMSGSRSV2 | BANKMSGSRSV2 | CREDITCARDMSGSRSV2 | INVSTMTMSGSRSV2 | INTERXFERMSGSRSV2 | WIREXFERMSGSRSV2 | BILLPAYMSGSRSV2 | EMAILMSGSRSV2 | SECLISTMSGSRSV2 | PROFMSGSRSV2 | PRESDIRMSGSRSV1 | PRESDLVMSGSRSV1))-->
 
@@ -3270,22 +3291,22 @@
 <!ELEMENT LASTNAME      - o %GENNAMETYPE>
 
 <!--  Payees address lines (1 or more) -->
-<!ELEMENT ADDR1     - o %ADDRESSTYPE>           
-<!ELEMENT ADDR2     - o %ADDRESSTYPE>           
-<!ELEMENT ADDR3     - o %ADDRESSTYPE>           
+<!ELEMENT ADDR1     - o %ADDRESSTYPE>
+<!ELEMENT ADDR2     - o %ADDRESSTYPE>
+<!ELEMENT ADDR3     - o %ADDRESSTYPE>
 
 <!--  Payees city  -->
-<!ELEMENT CITY      - o %ADDRESSTYPE>           
+<!ELEMENT CITY      - o %ADDRESSTYPE>
 
 <!--  Payees state -->
-<!ELEMENT STATE     - o %STATETYPE>           
+<!ELEMENT STATE     - o %STATETYPE>
 
 <!--  Zip code -->
-<!ELEMENT POSTALCODE        - o %ZIPTYPE>           
+<!ELEMENT POSTALCODE        - o %ZIPTYPE>
 
 <!--  Payees country -->
-<!ELEMENT COUNTRY   - o %COUNTRYTYPE>   
-    
+<!ELEMENT COUNTRY   - o %COUNTRYTYPE>
+
 <!ELEMENT DAYPHONE      - o %PHONETYPE>
 <!ELEMENT EVEPHONE      - o %PHONETYPE>
 <!ELEMENT EMAIL         - o %SHORTMSGTYPE>
@@ -3379,12 +3400,12 @@
 <!ELEMENT NAME              - o %GENNAMETYPE>
 
 <!-- Extra information (not in <NAME>), A-255 -->
-<!ELEMENT MEMO      - o     %MSGTYPE>       
+<!ELEMENT MEMO      - o     %MSGTYPE>
 
 <!-- OFX 1.5 -->
 <!-- NEW Type, Only used in V2 message sets -->
 <!-- Extra information (not in <NAME>), A-390 -->
-<!ELEMENT MEMO2     - o     %MEMO2TYPE>       
+<!ELEMENT MEMO2     - o     %MEMO2TYPE>
 
 <!-- Marketing information -->
 <!ELEMENT MKTGINFO  - o %INFOTYPE>
@@ -3422,10 +3443,10 @@
 <!-- ============================================================================= -->
 
 <!-- If the response is generated by a recurring model, this ID references it -->
-<!ELEMENT RECSRVRTID        - o     %SRVRIDTYPE>    
+<!ELEMENT RECSRVRTID        - o     %SRVRIDTYPE>
 <!-- OFX 1.5 -->
 <!-- ADDED RECSRVRTID2 OF UUIDTYPE -->
-<!ELEMENT RECSRVRTID2       - o     %UUIDTYPE>    
+<!ELEMENT RECSRVRTID2       - o     %UUIDTYPE>
 
 
 
@@ -3473,23 +3494,24 @@
 <!ELEMENT CANMODMDLS        - o %BOOLTYPE>
 
 <!-- Number of days prior to processing that server makes a recurring transaction available to the client -->
-<!ELEMENT MODELWND  - o     %DAYSPANTYPE>       
+<!ELEMENT MODELWND  - o     %DAYSPANTYPE>
 
 <!-- supports value date, dtavail (should be N in US) -->
-<!ELEMENT SUPPORTDTAVAIL - o    %BOOLTYPE>      
+<!ELEMENT SUPPORTDTAVAIL - o    %BOOLTYPE>
 
 <!-- Day where processing is unavailable (MONDAY, TUESDAY, etc) -->
-<!ELEMENT PROCDAYSOFF       - o     %DAYSENUM>       
+<!ELEMENT PROCDAYSOFF       - o     %DAYSENUM>
 
 <!-- Cut off time for day's processing -->
-<!ELEMENT PROCENDTM         - o     %TMTYPE>    
+<!ELEMENT PROCENDTM         - o     %TMTYPE>
 
 <!-- supports delivery of images as multi-part MIME -->
-<!ELEMENT CANSUPPORTIMAGES    - o   %BOOLTYPE>    
+<!ELEMENT CANSUPPORTIMAGES    - o   %BOOLTYPE>
 
 <!-- supports GROUPID transactions -->
-<!ELEMENT CANSUPPORTGROUPID    - o   %BOOLTYPE>    
+<!ELEMENT CANSUPPORTGROUPID    - o   %BOOLTYPE>
 
 <!-- supports updating PRESNAMEADDRESS on the server using SVCCHG in ACCTRQ -->
-<!ELEMENT CANUPDATEPRESNAMEADDRESS    - o   %BOOLTYPE>    
+<!ELEMENT CANUPDATEPRESNAMEADDRESS    - o   %BOOLTYPE>
 
+]>
