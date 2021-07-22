@@ -34,11 +34,12 @@ REM Restore NuGet packages:
 msbuild -t:restore SgmlReader.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
-REM Build the solution:
+REM Build SgmlReader:
 msbuild SgmlReader.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
-REM Build the solution:
+REM Build SgmlReaderUniversal:
+msbuild -t:restore SgmlReaderUniversal.sln /verbosity:minimal /p:Configuration=Release
 msbuild SgmlReaderUniversal.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
