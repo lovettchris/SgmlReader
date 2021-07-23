@@ -20,7 +20,8 @@ using System.Xml.XPath;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SGMLTests {
+namespace SgmlTests
+{
 
     [TestFixture]
     public partial class Tests {
@@ -28,167 +29,167 @@ namespace SGMLTests {
         //--- Methods ---
 
         [Test]
-        public void Convert_attribute_without_value_01() {
+        public void T01_Convert_attribute_without_value() {
             Test("01.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_attribute_with_missing_closing_quote_before_closing_tag_char_02() {
+        public void T02_Recover_from_attribute_with_missing_closing_quote_before_closing_tag_char() {
             Test("02.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_attribute_with_missing_closing_quote_before_opening_tag_char_03() {
+        public void T03_Recover_from_attribute_with_missing_closing_quote_before_opening_tag_char() {
             Test("03.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_text_with_wrong_entities_or_entities_with_missing_trailing_semicolon_04() {
+        public void T04_Recover_from_text_with_wrong_entities_or_entities_with_missing_trailing_semicolon() {
             Test("04.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Read_text_with_32bit_numeric_entity_05() {
+        public void T05_Read_text_with_32bit_numeric_entity() {
             Test("05.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Read_text_from_ms_office_06() {
+        public void T06_Read_text_from_ms_office() {
             Test("06.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_attribute_with_nested_quotes_07() {
+        public void T07_Recover_from_attribute_with_nested_quotes() {
             Test("07.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Allow_CData_section_with_xml_chars_08() {
+        public void T08_Allow_CData_section_with_xml_chars() {
             Test("08.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Convert_tags_to_lower_09() {
+        public void T09_Convert_tags_to_lower() {
             Test("09.test", XmlRender.Passthrough, CaseFolding.ToLower, "html", true);
         }
 
         [Test]
-        public void Test_whitespace_aware_processing_10() {
+        public void T10_Test_whitespace_aware_processing() {
             Test("10.test", XmlRender.Passthrough, CaseFolding.None, "html", false);
         }
 
         [Test]
-        public void Recover_from_attribute_value_with_extra_quote_11() {
+        public void T11_Recover_from_attribute_value_with_extra_quote() {
             Test("11.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_unclosed_xml_comment_12() {
+        public void T12_Recover_from_unclosed_xml_comment() {
             Test("12.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Allow_xml_only_apos_entity_in_html_13() {
+        public void T13_Allow_xml_only_apos_entity_in_html() {
             Test("13.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_script_tag_as_root_element_14() {
+        public void T14_Recover_from_script_tag_as_root_element() {
             Test("14.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Read_namespaced_attributes_with_missing_namespace_declaration_15() {
+        public void T15_Read_namespaced_attributes_with_missing_namespace_declaration() {
             Test("15.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Decode_entity_16() {
+        public void T16_Decode_entity() {
             Test("16.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Convert_element_with_illegal_tag_name_17() {
+        public void T17_Convert_element_with_illegal_tag_name() {
             Test("17.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Strip_comments_in_CData_section_18() {
+        public void T18_Strip_comments_in_CData_section() {
             Test("18.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Nest_contents_of_style_element_into_a_CData_section_19() {
+        public void T19_Nest_contents_of_style_element_into_a_CData_section() {
             Test("19.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Dont_push_elements_out_of_the_body_element_even_when_illegal_inside_body_20() {
+        public void T20_Dont_push_elements_out_of_the_body_element_even_when_illegal_inside_body() {
             Test("20.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Clone_document_with_invalid_attribute_declarations_21() {
+        public void T21_Clone_document_with_invalid_attribute_declarations() {
             Test("21.test", XmlRender.DocClone, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Ignore_conditional_comments_22() {
+        public void T22_Ignore_conditional_comments() {
             Test("22.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Preserve_explicit_and_implicit_attribute_and_element_namespaces_23() {
+        public void T23_Preserve_explicit_and_implicit_attribute_and_element_namespaces() {
             Test("23.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Preserve_explicit_attribute_and_element_namespaces_24() {
+        public void T24_Preserve_explicit_attribute_and_element_namespaces() {
             Test("24.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Clone_document_with_explicit_attribute_and_element_namespaces_25() {
+        public void T25_Clone_document_with_explicit_attribute_and_element_namespaces() {
             Test("25.test", XmlRender.DocClone, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Preserve_explicit_attribute_namespaces_26() {
+        public void T26_Preserve_explicit_attribute_namespaces() {
             Test("26.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Clone_document_with_explicit_attribute_namespaces_with_clone_27() {
+        public void T27_Clone_document_with_explicit_attribute_namespaces_with_clone() {
             Test("27.test", XmlRender.DocClone, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Clone_document_with_explicit_element_namespaces_with_clone_28() {
+        public void T28_Clone_document_with_explicit_element_namespaces_with_clone() {
             Test("28.test", XmlRender.DocClone, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Read_namespaced_elements_with_missing_namespace_declaration_29() {
+        public void T29_Read_namespaced_elements_with_missing_namespace_declaration() {
             Test("29.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Clone_document_with_namespaced_elements_with_missing_namespace_declaration_with_clone_30() {
+        public void T30_Clone_document_with_namespaced_elements_with_missing_namespace_declaration_with_clone() {
             Test("30.test", XmlRender.DocClone, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Parse_html_document_without_closing_body_tag_31() {
+        public void T31_Parse_html_document_without_closing_body_tag() {
             Test("31.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Parse_html_document_with_leading_whitespace_and_missing_closing_tag_32() {
+        public void T32_Parse_html_document_with_leading_whitespace_and_missing_closing_tag() {
             Test("32.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Parse_doctype_33() {
+        public void T33_Parse_doctype() {
             Test("33.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
@@ -200,150 +201,150 @@ namespace SGMLTests {
         //}
 
         [Test]
-        public void Add_missing_closing_element_tags_35() {
+        public void T35_Add_missing_closing_element_tags() {
             Test("35.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Preserve_xml_comments_inside_script_element_36() {
+        public void T36_Preserve_xml_comments_inside_script_element() {
             Test("36.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Allow_CDData_section_with_markup_37() {
+        public void T37_Allow_CDData_section_with_markup() {
             Test("37.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Recover_from_rogue_open_tag_char_38() {
+        public void T38_Recover_from_rogue_open_tag_char() {
             Test("38.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Ignore_invalid_char_after_tag_name_39() {
+        public void T39_Ignore_invalid_char_after_tag_name() {
             Test("39.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Convert_entity_to_char_code_40() {
+        public void T40_Convert_entity_to_char_code() {
             Test("40.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Attribute_with_missing_equal_sign_between_key_and_value_41() {
+        public void T41_Attribute_with_missing_equal_sign_between_key_and_value() {
             Test("41.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Script_element_with_explicit_CDData_section_42() {
+        public void T42_Script_element_with_explicit_CDData_section() {
             Test("42.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Convert_tags_to_lower_43() {
+        public void T43_Convert_tags_to_lower() {
             Test("43.test", XmlRender.Passthrough, CaseFolding.ToLower, "html", true);
         }
 
         [Test]
-        public void Load_document_44() {
+        public void T44_Load_document() {
             Test("44.test", XmlRender.Doc, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Load_document_with_text_before_root_node_45() {
+        public void T45_Load_document_with_text_before_root_node() {
             Test("45.test", XmlRender.Doc, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Load_document_with_text_before_root_node_46() {
+        public void T46_Load_document_with_text_before_root_node() {
 
             // NOTE (steveb): this is a dup of the previous test
             Test("46.test", XmlRender.Doc, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Load_document_with_xml_comment_before_root_node_47() {
+        public void T47_Load_document_with_xml_comment_before_root_node() {
             Test("47.test", XmlRender.Doc, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Decode_numeric_entities_for_non_html_content_48() {
+        public void T48_Decode_numeric_entities_for_non_html_content() {
             Test("48.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Load_document_with_nested_xml_declaration_49() {
+        public void T49_Load_document_with_nested_xml_declaration() {
             Test("49.test", XmlRender.Doc, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Handle_xml_processing_instruction_with_illegal_xml_namespace_50() {
+        public void T50_Handle_xml_processing_instruction_with_illegal_xml_namespace() {
             Test("50.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Close_elements_with_missing_closing_tags_51() {
+        public void T51_Close_elements_with_missing_closing_tags() {
             Test("51.test", XmlRender.Passthrough, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Clone_document_with_elements_with_missing_closing_tags_52() {
+        public void T52_Clone_document_with_elements_with_missing_closing_tags() {
             Test("52.test", XmlRender.DocClone, CaseFolding.None, "html", true);
         }
 
         [Test]
-        public void Read_ofx_content_53() {
+        public void T53_Read_ofx_content() {
             Test("53.test", XmlRender.Passthrough, CaseFolding.None, "OFX", true);
         }
 
         [Test]
-        public void Read_simple_html_54() {
+        public void T54_Read_simple_html() {
             Test("54.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Decode_xml_entity_55() {
+        public void T55_Decode_xml_entity() {
             Test("55.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Decode_Surrogate_Pairs_56()
+        public void T56_Decode_Surrogate_Pairs()
         {
             Test("56.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Read_html_with_invalid_entity_reference_57()
+        public void T57_Read_html_with_invalid_entity_reference()
         {
             Test("57.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Read_html_with_invalid_entity_reference_58()
+        public void T58_Read_html_with_invalid_entity_reference()
         {
             Test("58.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Read_html_with_invalid_entity_reference_59()
+        public void T59_Read_html_with_invalid_entity_reference()
         {
             Test("59.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Read_html_with_invalid_entity_reference_60()
+        public void T60_Read_html_with_invalid_entity_reference()
         {
             Test("60.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Read_html_with_invalid_surrogate_pairs_61()
+        public void T61_Read_html_with_invalid_surrogate_pairs()
         {
             Test("61.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
 
         [Test]
-        public void Handling_newLines_in_text()
+        public void T62_Handling_newLines_in_text()
         {
             Test("62.test", XmlRender.Passthrough, CaseFolding.None, null, true);
         }
@@ -458,14 +459,12 @@ namespace SGMLTests {
 
         /// <summary>https://github.com/lovettchris/SgmlReader/issues/15</summary>
         [Test]
-        public void DoBradescoTrailingWhitespaceTest()
+        public void T63_DoBradescoTrailingWhitespaceTest()
         {
             // 63.test is originally "bradesco.ofx" from github.com/kevencarneiro/OFXSharp, used under the MIT license.
             string bradescoOfxText = Tests.ReadTestResource(name: "63.test");
             int indexOfOfxStart = bradescoOfxText.IndexOf("<OFX>");
             bradescoOfxText = bradescoOfxText.Substring(startIndex: indexOfOfxStart); // skip past non-SGML OFX header.
-
-            SgmlDtd ofx160Dtd = Tests.LoadDtd(docType: "OFX", resourceFileName: "ofx160.dtd");
 
             XmlDocument xmlDocument;
             using (StringReader stringReader = new StringReader(bradescoOfxText))
@@ -475,8 +474,9 @@ namespace SGMLTests {
                     InputStream        = stringReader,
                     WhitespaceHandling = WhitespaceHandling.None,
                     TextWhitespace     = TextWhitespaceHandling.OnlyTrailingLineBreaks,
-                    DocType            = ofx160Dtd.Name,
-                    Dtd                = ofx160Dtd
+                    DocType            = "OFX",
+                    SystemLiteral      = "ofx160.dtd",
+                    Resolver           = new TestEntityResolver()
                 };
 
                 Assert.AreEqual(TextWhitespaceHandling.OnlyTrailingLineBreaks, sgmlReader.TextWhitespace, "The " + nameof(sgmlReader.TextWhitespace) + " property should persist this valid value.");
@@ -506,6 +506,12 @@ namespace SGMLTests {
 
                 Assert.IsFalse(hasTrailingLineBreak, message: "There should be no trailing line-breaks in <" + node.Name + "> elements' innerText.");
             }
+        }
+
+        [Test]
+        public void T64_Handling_DOCTYPE()
+        {
+            Test("64.test", XmlRender.Passthrough, CaseFolding.ToLower, null, true);
         }
     }
 }

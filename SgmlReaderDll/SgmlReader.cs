@@ -468,32 +468,9 @@ namespace Sgml
 
         private void LazyLoadDtd(Uri baseUri)
         {
-            if (_dtd is null && !_ignoreDtd)
+            if (_dtd is null && !_ignoreDtd && (!string.IsNullOrEmpty(_syslit) || !string.IsNullOrEmpty(_subset) || StringUtilities.EqualsIgnoreCase(_docType, "html")))
             {
-                if (string.IsNullOrEmpty(_syslit)
-                     // no need to hit the w3.org servers in this case
-                     || _syslit is "http://www.w3.org/TR/html4/loose.dtd")
-                {
-                    if (_docType != null && StringUtilities.EqualsIgnoreCase(_docType, "html"))
-                    {
-                        Stream stream = null;
-                        // see if our resolver can find it.
-                        var content = _resolver.GetContent(new Uri("Html.dtd", UriKind.Relative));
-                        if (content != null)
-                        {
-                            stream = content.Open();
-                        }
-                        if (stream != null)
-                        {
-                            var sr = new StreamReader(stream);
-                            _dtd = SgmlDtd.Parse(baseUri, "HTML", sr, null, null, _resolver);
-                        }
-                    }
-                }
-                else
-                { 
-                    _dtd = SgmlDtd.Parse(baseUri, _docType, _pubid, _syslit, _subset, null, _resolver);
-                }
+                _dtd = SgmlDtd.Parse(baseUri, _docType, _pubid, _syslit, _subset, _resolver);
             }
 
             if (_dtd?.Name is string dtdName)
@@ -1890,7 +1867,7 @@ namespace Sgml
         private void ParseDocType()
         {
             char ch = _current.SkipWhitespace();
-            string name = this.ScanName(SgmlReader.dtterm);
+            string name = _current.ScanToken(_sb, SgmlReader.dtterm, false);
             Push(name, XmlNodeType.DocumentType, null);
             ch = _current.SkipWhitespace();
             if (ch != '>')

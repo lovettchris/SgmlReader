@@ -23,6 +23,7 @@ namespace Sgml
         {
             this.assembly = assembly;
             this.name = name;
+            this.MimeType = "text/plain";
         }
 
         /// <summary>
@@ -33,19 +34,33 @@ namespace Sgml
         /// <summary>
         /// Return the HTTP ContentType
         /// </summary>
-        public string MimeType => "text/plain";
+        public string MimeType { get; set; }
 
         /// <summary>
         /// Returns the redirect Uri if an HTTP redirect happened during the fetching of this resource.
         /// </summary>
-        public Uri Redirect => new Uri(name, UriKind.Relative);
+        public Uri Redirect => new Uri(name, UriKind.RelativeOrAbsolute);
 
         /// <summary>
         /// Return the encoding from HTTP header
         /// </summary>
         public Stream Open()
         {
-            return assembly.GetManifestResourceStream(name);
+            var resourceName = name;
+            var stream = assembly.GetManifestResourceStream(name);
+            if (stream == null)
+            {
+                // try namespace qualification
+                resourceName = assembly.FullName.Split(',')[0] + "." + name;
+                stream = assembly.GetManifestResourceStream(resourceName);
+            }
+            if (stream == null)
+            {
+                // try additional Resources folder qualification
+                resourceName = assembly.FullName.Split(',')[0] + ".Resources." + name;
+                stream = assembly.GetManifestResourceStream(resourceName);
+            }
+            return stream;
         }
     }
 }

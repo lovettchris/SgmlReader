@@ -356,17 +356,33 @@ namespace Sgml
             }
             else
             {
-                if (baseUri != null)
+                Stream stream = null;
+
+                _resolvedUri = new Uri(_uri, UriKind.RelativeOrAbsolute);
+
+                if (!_resolvedUri.IsAbsoluteUri && baseUri != null && baseUri.IsAbsoluteUri)
                 {
                     _resolvedUri = new Uri(baseUri, _uri);
                 }
+                IEntityContent content;
+
+                if (StringUtilities.EqualsIgnoreCase(Name, "html") && (_uri.Contains("://www.w3.org")))
+                {
+                    // try not to spam the w3.org website with dtd requests. 
+                    // use the built in version.                    
+                    content = _resolver.GetContent(new Uri("Html.dtd", UriKind.Relative));
+                    _isHtml = true;
+                }
                 else
                 {
-                    _resolvedUri = new Uri(_uri, UriKind.RelativeOrAbsolute);
+                    content = _resolver.GetContent(this.ResolvedUri);
                 }
 
-                IEntityContent content = _resolver.GetContent(this.ResolvedUri);
-                Stream stream = content.Open();
+                stream = content.Open();
+                if (stream == null)
+                {
+                    this.Error("Internal error opening content at {0}", _resolvedUri.OriginalString);
+                }
 
                 if (StringUtilities.EqualsIgnoreCase(content.MimeType, "text/html"))
                 {
@@ -781,7 +797,7 @@ namespace Sgml
             {
                 string msg = p._isInternal
                     ? string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of internal entity '{2}'", p._line, p.LinePosition, p._name)
-                    : string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of '{2}' entity at [{3}]", p._line, p.LinePosition, p._name, p.ResolvedUri.AbsolutePath);
+                    : string.Format(CultureInfo.InvariantCulture, "\nReferenced on line {0}, position {1} of '{2}' entity at [{3}]", p._line, p.LinePosition, p._name, p.ResolvedUri.OriginalString);
                 
                 sb.Append(msg);
                 p = p.Parent;
@@ -2227,15 +2243,15 @@ namespace Sgml
         private readonly Dictionary<string, Entity> _entities;
         private readonly StringBuilder _sb;
         private Entity _current;
+        private bool _hasInlineDocType;
         private readonly IEntityResolver _resolver;
 
         /// <summary>
         /// Initialises a new instance of the <see cref="SgmlDtd"/> class.
         /// </summary>
         /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
-        /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
-        public SgmlDtd(string name, XmlNameTable nt, IEntityResolver resolver)
+        public SgmlDtd(string name, IEntityResolver resolver)
         {
             Name = name;
             _elements = new();
@@ -2264,15 +2280,19 @@ namespace Sgml
         /// <param name="pubid"></param>
         /// <param name="url"></param>
         /// <param name="subset"></param>
-        /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
-        public static SgmlDtd Parse(Uri baseUri, string name, string pubid, string url, string subset, XmlNameTable nt, IEntityResolver resolver)
+        public static SgmlDtd Parse(Uri baseUri, string name, string pubid, string url, string subset, IEntityResolver resolver)
         {
-            SgmlDtd dtd = new SgmlDtd(name, nt, resolver);
+            SgmlDtd dtd = new SgmlDtd(name, resolver);
             if (!string.IsNullOrEmpty(url))
             {
                 dtd.PushEntity(baseUri, new Entity(dtd.Name, pubid, url, resolver));
+            }
+            else if (StringUtilities.EqualsIgnoreCase(name, "html"))
+            {
+                // use built in dtd.
+                dtd.PushEntity(baseUri, new Entity(dtd.Name, pubid, "Html.dtd", resolver));
             }
 
             if (!string.IsNullOrEmpty(subset))
@@ -2299,12 +2319,11 @@ namespace Sgml
         /// <param name="name">The name of the DTD. This value is assigned to <see cref="Name"/>.</param>
         /// <param name="input">The reader to load the DTD from.</param>
         /// <param name="subset"></param>
-        /// <param name="nt">The <see cref="XmlNameTable"/> is NOT used.</param>
         /// <param name="resolver">The resolver to use for loading this entity</param>
         /// <returns>A new <see cref="SgmlDtd"/> instance that encapsulates the DTD.</returns>
-        public static SgmlDtd Parse(Uri baseUri, string name, TextReader input, string subset, XmlNameTable nt, IEntityResolver resolver)
+        public static SgmlDtd Parse(Uri baseUri, string name, TextReader input, string subset, IEntityResolver resolver)
         {
-            SgmlDtd dtd = new SgmlDtd(name, nt, resolver);
+            SgmlDtd dtd = new SgmlDtd(name, resolver);
             dtd.PushEntity(baseUri, new Entity(dtd.Name, baseUri, input, resolver));
             if (!string.IsNullOrEmpty(subset))
             {
@@ -2387,7 +2406,9 @@ namespace Sgml
                         break;
                     case '<':
                         ParseMarkup();
-                        ch = _current.ReadChar();
+                        if (_current is null)
+                            return;
+                        ch = _current.Lastchar;
                         break;
                     case '%':
                         Entity e = ParseParameterEntity(SgmlDtd.WhiteSpace);
@@ -2401,6 +2422,10 @@ namespace Sgml
                             Debug.WriteLine(ex.Message + _current.Context());
                         }
                         ch = _current.Lastchar;
+                        break;
+                    case ']':
+                        // could be end of an inline DOCTYPE DTD.
+                        ch = ParseEndDoctype();
                         break;
                     default:
                         _current.Error("Unexpected character '{0}'", ch);
@@ -2433,6 +2458,9 @@ namespace Sgml
                 string token = _current.ScanToken(_sb, SgmlDtd.WhiteSpace, true);
                 switch (token) 
                 {
+                    case "DOCTYPE":
+                        ParseDoctype();
+                        break;
                     case "ENTITY":
                         ParseEntity();
                         break;
@@ -2448,6 +2476,93 @@ namespace Sgml
                 }
             }
         }
+
+        private const string DocTypeTokenTerminators = " \r\n\t>";
+
+        private void ParseDoctype()
+        {
+            // Some examples:
+            // 
+            // <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" >
+            // <!DOCTYPE recipe SYSTEM "recipe.dtd">    
+            // <!DOCTYPE OFX [ ...
+            char ch = _current.SkipWhitespace();
+            string name = _current.ScanToken(_sb, DocTypeTokenTerminators, true);
+            if (name != this.Name)
+            {
+                _current.Error(string.Format("DOCTYPE '{0}' does not match expected name '{1}'", name, this.Name));
+            }
+            ch = _current.SkipWhitespace();
+
+            string pubid = "";
+            string syslit = "";
+
+            if (ch != '[' && ch != '>')
+            {
+                string token = _current.ScanToken(_sb, DocTypeTokenTerminators, false);
+                if (string.Equals(token, "PUBLIC", StringComparison.OrdinalIgnoreCase))
+                {
+                    ch = _current.SkipWhitespace();
+                    if (ch is '\"' or '\'')
+                    {
+                        pubid = _current.ScanLiteral(_sb, ch);
+                    }
+                }
+                else if (!string.Equals(token, "SYSTEM", StringComparison.OrdinalIgnoreCase))
+                {
+                    _current.Error(string.Format("DOCTYPE '{0}' contains unexpected token '{1}'", name, token));
+                }
+                ch = _current.SkipWhitespace();
+                if (ch is '\"' or '\'')
+                {
+                    syslit = _current.ScanLiteral(_sb, ch);
+                }
+                ch = _current.SkipWhitespace();
+            }
+
+            if (ch == '[')
+            {
+                this._hasInlineDocType = true;
+                _current.ReadChar();
+                // then we have an internal subset.
+                Parse();
+            }
+            else {
+                ParseEndDoctype();
+            }
+
+            if (!string.IsNullOrWhiteSpace(syslit))
+            {
+                PushEntity(_current.ResolvedUri, new Entity(name, pubid, syslit, this._resolver));
+            }
+        }
+
+        private char ParseEndDoctype()
+        {
+            var ch = _current.Lastchar;
+            if (ch == '>')
+            {
+                return _current.ReadChar();
+            }
+
+            if (!this._hasInlineDocType)
+            {
+                _current.Error("Unexpected character ']'");
+            }
+
+            ch = _current.ReadChar();
+            if (ch == '>')
+            {
+                ch = _current.SkipWhitespace();
+                ch = _current.ReadChar();
+            }
+            else
+            {
+                _current.Error("Unexpected character '{0}'", ch);
+            }
+            return ch;
+        }
+
 
         char ParseDeclComments()
         {
@@ -2620,8 +2735,9 @@ namespace Sgml
                 ch = ParseDeclComments();
             if (ch != '>') 
             {
-                _current.Error("Expecting end of entity declaration '>' but found '{0}'", ch);  
-            }           
+                _current.Error("Expecting end of entity declaration '>' but found '{0}'", ch);
+            }
+            _current.ReadChar(); // move to next char
             if (pe)
                 _pentities.Add(e.Name, e);
             else
@@ -2691,8 +2807,9 @@ namespace Sgml
 
             if (ch != '>') 
             {
-                _current.Error("Expecting end of ELEMENT declaration '>' but found '{0}'", ch); 
+                _current.Error("Expecting end of ELEMENT declaration '>' but found '{0}'", ch);
             }
+            _current.ReadChar(); // move to next char
 
             foreach (string name in names) 
             {
@@ -2890,7 +3007,7 @@ namespace Sgml
             char ch = _current.SkipWhitespace();
             string[] names = ParseNameGroup(ch, true);          
             Dictionary<string, AttDef> attlist = new Dictionary<string, AttDef>();
-            ParseAttList(attlist, '>');
+            ch = ParseAttList(attlist, '>');
             foreach (string name in names)
             {
                 if (!_elements.TryGetValue(name, out ElementDecl e)) 
@@ -2900,13 +3017,19 @@ namespace Sgml
 
                 e.AddAttDefs(attlist);
             }
+
+            if (ch != '>')
+            {
+                _current.Error("Expecting end of ELEMENT declaration '>' but found '{0}'", ch);
+            }
+            _current.ReadChar(); // move to next char
         }
 
         const string peterm = " \t\r\n>";
-        void ParseAttList(Dictionary<string, AttDef> list, char term)
+        char ParseAttList(Dictionary<string, AttDef> list, char term)
         {
             char ch = _current.SkipWhitespace();
-            while (ch != term) 
+            while (ch != term  && ch != Entity.EOF) 
             {
                 if (ch == '%') 
                 {
@@ -2927,6 +3050,7 @@ namespace Sgml
                 }
                 ch = _current.SkipWhitespace();
             }
+            return ch;
         }
 
         AttDef ParseAttDef(char ch)
