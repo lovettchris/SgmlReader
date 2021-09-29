@@ -2567,6 +2567,9 @@ namespace Sgml
 
         private static bool ValidAttributeName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
+
             try
             {
                 XmlConvert.VerifyNMTOKEN(name);
