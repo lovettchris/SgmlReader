@@ -203,6 +203,16 @@ nuget pack SgmlReader.nuspec
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
 redirection to account for newer versions when recompilation is not an option.
 
+### Release notes for 1.8.25
+
+* Performance improvement parsing attributes with empty values.
+
+### Release notes for 1.8.24
+
+* Support SGML DTD's that contain DOCTYPE tags like ofx.dtd.
+* Remove unused XmlNameTable parameter on SgmlDtd parser.
+* Adding `nobom` and `trimtext` command-line options. Improving help screen.
+
 ### Release notes for 1.8.20 (2021-Feb-2)
 
 * Lots of code cleanups by [Jason Nelson](https://github.com/iamcarbon) bringing

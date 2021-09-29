@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Microsoft.Xml.SgmlReader</id>
-    <version>1.8.23</version>
+    <version>1.8.25</version>
     <title>Microsoft.Xml.SgmlReader</title>
     <authors>Chris Lovett, Steve Bjorg</authors>
     <owners>Chris Lovett</owners>
