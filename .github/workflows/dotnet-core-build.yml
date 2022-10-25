@@ -20,7 +20,11 @@ jobs:
     - name: Setup .NET Core 5.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 5.0.x    
+    - name: Setup .NET Core 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
     - name: Build
       run: dotnet build SgmlReader.sln
     - name: Test
