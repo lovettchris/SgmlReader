@@ -10,7 +10,7 @@
   <body>
     <div>Test
 <p>More
-<table><tr><td>cell
-</td></tr></table></p></div>
+</p><table><tbody><tr><td>cell
+</td></tr></tbody></table></div>
   </body>
 </html>

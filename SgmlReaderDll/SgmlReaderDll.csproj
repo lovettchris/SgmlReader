@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../Common/version.props" />
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47;net48;net5.0;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net45;net46;net47;net48;net5.0;net6.0;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <LangVersion>9</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Label="Signing" Condition="'$(MYPUBLICKEYFILE)' != ''">
+  <PropertyGroup Label="Signing" Condition="'$(MyKeyFile)' != ''">
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MYPUBLICKEYFILE)</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>$(MyKeyFile)</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

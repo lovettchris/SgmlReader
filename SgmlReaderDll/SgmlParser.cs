@@ -1547,7 +1547,7 @@ namespace Sgml
         /// Whether the start tag of the element is optional.
         /// </summary>
         /// <value>true if the start tag of the element is optional, otherwise false.</value>
-        public bool StartTagOptional => _startTagOptional; 
+        public bool StartTagOptional => _startTagOptional;
 
         /// <summary>
         /// Finds the attribute definition with the specified name.
@@ -1573,15 +1573,15 @@ namespace Sgml
             if (list is null)
                 throw new ArgumentNullException(nameof(list));
 
-            if (_attList is null) 
+            if (_attList is null)
             {
                 _attList = list;
-            } 
-            else 
+            }
+            else
             {
-                foreach (AttDef a in list.Values) 
+                foreach (AttDef a in list.Values)
                 {
-                    if (!_attList.ContainsKey(a.Name)) 
+                    if (!_attList.ContainsKey(a.Name))
                     {
                         _attList.Add(a.Name, a);
                     }
@@ -1593,29 +1593,59 @@ namespace Sgml
         /// Tests whether this element can contain another specified element.
         /// </summary>
         /// <param name="name">The name of the element to check for.</param>
-        /// <param name="dtd">The DTD to use to do the check.</param>
         /// <returns>True if the specified element can be contained by this element.</returns>
-        public bool CanContain(string name, SgmlDtd dtd)
-        {            
-            // return true if this element is allowed to contain the given element.
-            if (_exclusions is not null) 
-            {
-                foreach (string s in _exclusions) 
-                {
-                    if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
-                        return false;
-                }
-            }
+        public bool CanContain(string name)
+        {
+            if (Excludes(name))
+                return false;
 
-            if (_inclusions is not null) 
+            if (Includes(name))
+                return true;
+
+            return _contentModel.CanContain(name);
+        }
+
+        /// <summary>
+        /// Tests whether another specified element is on exclusions list of this element .
+        /// </summary>
+        /// <param name="name">The name of the element to check for.</param>
+        /// <returns>True if the specified element is member of Exclusions of this element.</returns>
+        public bool Excludes(string name)
+        {
+            if (_exclusions is not null)
             {
-                foreach (string s in _inclusions) 
+                foreach (string s in _exclusions)
                 {
                     if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
                         return true;
                 }
             }
-            return _contentModel.CanContain(name, dtd);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tests whether another specified element is on inclusions list of this element .
+        /// </summary>
+        /// <param name="name">The name of the element to check for.</param>
+        /// <returns>True if the specified element is member of Inclusions of this element.</returns>
+        public bool Includes(string name)
+        {
+            if (_inclusions is not null)
+            {
+                foreach (string s in _inclusions)
+                {
+                    if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal bool CanContainText()
+        {
+            return (this._contentModel?.DeclaredContent == DeclaredContent.CDATA || this._contentModel?.Model.IsMixed == true);
         }
     }
 
@@ -1671,6 +1701,11 @@ namespace Sgml
         /// The allowed child content, specifying if nested children are not allowed and if so, what content is allowed.
         /// </summary>
         public DeclaredContent DeclaredContent => _declaredContent;
+
+        /// <summary>
+        /// Get the actual model.
+        /// </summary>
+        public Group Model => _model;
 
         /// <summary>
         /// Begins processing of a nested model group.
@@ -1747,14 +1782,13 @@ namespace Sgml
         /// Checks whether an element using this group can contain a specified element.
         /// </summary>
         /// <param name="name">The name of the element to look for.</param>
-        /// <param name="dtd">The DTD to use during the checking.</param>
         /// <returns>true if an element using this group can contain the element, otherwise false.</returns>
-        public bool CanContain(string name, SgmlDtd dtd)
+        public bool CanContain(string name)
         {
             if (_declaredContent != DeclaredContent.Default)
                 return false; // empty or text only node.
 
-            return _model.CanContain(name, dtd);
+            return _model.CanContain(name);
         }
     }
 
@@ -1827,15 +1861,31 @@ namespace Sgml
         public Occurrence Occurrence => _occurrence;
 
         /// <summary>
+        /// Get the type of the group (sequence, or, etc).
+        /// </summary>
+        public GroupType GroupType => _groupType;
+
+        /// <summary>
         /// Checks whether the group contains only text.
         /// </summary>
         /// <value>true if the group is of mixed content and has no members, otherwise false.</value>
         public bool TextOnly => _isMixed && _members.Count == 0;
 
         /// <summary>
+        /// Checks whether the group allows #PCDATA.
+        /// </summary>
+        public bool IsMixed => _isMixed;
+
+        /// <summary>
         /// The parent group of this group.
         /// </summary>
         public Group Parent => _parent;
+
+        /// <summary>
+        /// Get the members of the group, could be a string terminal or a nested Group.
+        /// </summary>
+        public List<object> Members => _members;
+
         /// <summary>
         /// Initialises a new Content Model Group.
         /// </summary>
@@ -1923,16 +1973,12 @@ namespace Sgml
         /// Checks whether an element using this group can contain a specified element.
         /// </summary>
         /// <param name="name">The name of the element to look for.</param>
-        /// <param name="dtd">The DTD to use during the checking.</param>
         /// <returns>true if an element using this group can contain the element, otherwise false.</returns>
         /// <remarks>
         /// Rough approximation - this is really assuming an "Or" group
         /// </remarks>
-        public bool CanContain(string name, SgmlDtd dtd)
+        public bool CanContain(string name)
         {
-            if (dtd is null)
-                throw new ArgumentNullException(nameof(dtd));
-
             // Do a simple search of members.
             foreach (object obj in _members) 
             {
@@ -1940,34 +1986,14 @@ namespace Sgml
                 {
                     if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
                         return true;
-                } 
-            }
-            // didn't find it, so do a more expensive search over child elements
-            // that have optional start tags and over child groups.
-            foreach (object obj in _members) 
-            {
-                if (obj as string is string s)
+                }
+                else if (obj is Group m)
                 {
-                    ElementDecl e = dtd.FindElement(s);
-                    if (e != null) 
-                    {
-                        if (e.StartTagOptional) 
-                        {
-                            // tricky case, the start tag is optional so element may be
-                            // allowed inside this guy!
-                            if (e.CanContain(name, dtd))
-                                return true;
-                        }
-                    }
-                } 
-                else 
-                {
-                    Group m = (Group)obj;
-                    if (m.CanContain(name, dtd)) 
+                    if (m.CanContain(name))
                         return true;
                 }
             }
-
+            
             return false;
         }
     }
@@ -2364,6 +2390,15 @@ namespace Sgml
             return el;
         }
 
+        /// <summary>
+        /// Get all defined elements.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<ElementDecl> GetElements()
+        {
+            return this._elements.Values;
+        }
+
         //-------------------------------- Parser -------------------------
         private void PushEntity(Uri baseUri, Entity e)
         {
@@ -2439,7 +2474,7 @@ namespace Sgml
             char ch = _current.ReadChar();
             if (ch != '!') 
             {
-                _current.Error("Found '{0}', but expecing declaration starting with '<!'");
+                _current.Error(String.Format("Found '{0}', but expecing declaration starting with '<!'", ch));
                 return;
             }
             ch = _current.ReadChar();
@@ -3153,6 +3188,96 @@ namespace Sgml
                     name = name.ToUpperInvariant();
                     attdef.Default = name; // bugbug - must be one of the enumerated names.
                     ch = _current.SkipWhitespace();
+                }
+            }
+        }
+
+        internal ElementDecl FindOptionalContainer(ElementDecl dtdType, string name)
+        {
+            // We have to work backwards from elements that can contain name to the current dtdType.
+            // For example if we just got a <td> and dtdType is <HTML> then we need to insert
+            // 2 start tags, "<BODY>" and "<TABLE>".  This method will find that chain, and return
+            // the top of the chain that needs to be inserted, in this example "<BODY>".
+            Stack<ElementDecl> stack = new Stack<ElementDecl>();
+            var decl = this.FindElement(name);
+            if (decl == null)
+            {
+                return null;
+            }
+            stack.Push(decl);
+            HashSet<ElementDecl> visited = new HashSet<ElementDecl>();
+            visited.Add(decl);
+            while (stack.Count > 0)
+            {
+                var e = stack.Pop();
+                foreach (ElementDecl f in FindOptionalContainers(dtdType, e.Name))
+                {
+                    if (f.Name == dtdType.Name)
+                    {
+                        return e;
+                    }
+                    else if (!visited.Contains(f))
+                    {
+                        stack.Push(f);
+                    }
+                }
+            }
+            
+            return null;
+        }
+
+        internal IEnumerable<ElementDecl> FindOptionalContainers(ElementDecl parentType, string name)
+        {
+            foreach (var e in this._elements.Values)
+            {
+                if ((e.StartTagOptional || string.Equals(e.Name, parentType.Name, StringComparison.OrdinalIgnoreCase)) && e.CanContain(name))
+                {
+                    yield return e;
+                }
+            }
+        }
+
+        internal ElementDecl FindOptionalTextContainer(ElementDecl dtdType)
+        {
+            // We have to work backwards from elements that can contain name to the current dtdType.
+            // For example if we have text and only <HTML> then we need to insert <BODY> and 
+            // BODY isMixed so text can live there.
+            Stack<ElementDecl> stack = new Stack<ElementDecl>();
+            foreach (ElementDecl f in FindOptionalTextContainers())
+            {
+                if (f.Name == dtdType.Name)
+                {
+                    // bugbug this shouldn't happen since we already checked dtdType cannot contain text.
+                    return f; 
+                }
+                else
+                {
+                    stack.Push(f);
+                }
+            }
+
+            HashSet<ElementDecl> visited = new HashSet<ElementDecl>();
+            while (stack.Count > 0)
+            {
+                var e = stack.Pop();
+                // Ok, we have an element that can contain text, but is it allowed inside dtdType?
+                var f = FindOptionalContainer(dtdType, e.Name);
+                if (f != null)
+                {
+                    return f;
+                }
+            }
+
+            return null;
+        }
+
+        internal IEnumerable<ElementDecl> FindOptionalTextContainers()
+        {
+            foreach (var e in this._elements.Values)
+            {
+                if (e.StartTagOptional && e.CanContainText())
+                {
+                    yield return e;
                 }
             }
         }

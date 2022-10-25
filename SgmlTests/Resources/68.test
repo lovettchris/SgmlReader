@@ -1,0 +1,18 @@
+﻿<!DOCTYPE a [
+	<!ELEMENT a O - (b?, c) >
+	<!ELEMENT b - - CDATA >
+	<!ELEMENT c O - (d) >
+	<!ELEMENT d O O (e) >
+	<!ELEMENT e O O (b?) >
+]>
+<a><c><b>element b</b></c></a>
+`
+<a>
+  <c>
+    <d>
+      <e>
+        <b><![CDATA[element b]]></b>
+      </e>
+    </d>
+  </c>
+</a>

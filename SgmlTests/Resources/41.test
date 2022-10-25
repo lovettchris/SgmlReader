@@ -3,5 +3,7 @@
 </html>
 `
 <html>
-  <img src="img.gif" height="4" width="2" />
+  <body>
+    <img src="img.gif" height="4" width="2" />
+  </body>
 </html>

@@ -2,17 +2,18 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Microsoft.Xml.SgmlReader</id>
-    <version>1.8.25</version>
+    <version>1.8.26</version>
     <title>Microsoft.Xml.SgmlReader</title>
     <authors>Chris Lovett, Steve Bjorg</authors>
     <owners>Chris Lovett</owners>
     <license type="expression">Apache-2.0</license>
     <projectUrl>https://github.com/lovettchris/SgmlReader</projectUrl>
+    <repository type="git" url="https://github.com/lovettchris/SgmlReader"/>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>SgmlReader is a .NET library that is handy for converting SGML content (like HTML and OFX) into well formed XML via XmlReader, XmlDocument, XDocument or XPathDocument. It runs on Windows and Linux using .NET core.</description>
     <summary>SgmlReader is a .NET library that is handy for converting SGML into well formed XML.</summary>
     <releaseNotes>https://github.com/lovettchris/SgmlReader/blob/master/README.md</releaseNotes>
-    <copyright>Copyright c 2002-2021, Microsoft Corporation; Copyright c 2007-2013, MindTouch</copyright>
+    <copyright>Copyright c 2002-2022, Microsoft Corporation; Copyright c 2007-2013, MindTouch</copyright>
     <language>en-US</language>
     <references></references>
     <tags>SGML HTML XML HTMLTidy SgmlReader</tags>
@@ -25,6 +26,7 @@
       <group targetFramework=".NETFramework4.8" />
       <group targetFramework=".NETCoreApp3.1" />
       <group targetFramework=".NET5.0" />
+      <group targetFramework=".NET6.0" />
       <group targetFramework="UAP0.0" />
     </dependencies>
   </metadata>
@@ -45,6 +47,9 @@
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="lib\net5.0\SgmlReaderDll.xml" />
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.dll" target="lib\net6.0\SgmlReaderDll.dll" />
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.dll" target="lib\net6.0\SgmlReaderDll.pdb" />
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.dll" target="lib\net6.0\SgmlReaderDll.xml" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.dll" target="lib\netcoreapp3.1\SgmlReaderDll.dll" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.dll" target="lib\netcoreapp3.1\SgmlReaderDll.pdb" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.xml" target="lib\netcoreapp3.1\SgmlReaderDll.xml" />
@@ -89,5 +94,11 @@
     <file src="SgmlReader\bin\Release\net5.0\SgmlReader.exe" target="tools\net5.0\SgmlReader.pdb" />
     <file src="SgmlReader\bin\Release\net5.0\SgmlReader.runtimeconfig.json" target="tools\net5.0\SgmlReader.runtimeconfig.json"/>
     <file src="SgmlReader\bin\Release\net5.0\SgmlReaderDll.dll" target="tools\net5.0\SgmlReaderDll.dll" />
+
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReader.exe" target="tools\net6.0\SgmlReader.exe" />
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReader.dll" target="tools\net6.0\SgmlReader.dll" />
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReader.exe" target="tools\net6.0\SgmlReader.pdb" />
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReader.runtimeconfig.json" target="tools\net6.0\SgmlReader.runtimeconfig.json"/>
+    <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.dll" target="tools\net6.0\SgmlReaderDll.dll" />
   </files>
 </package>

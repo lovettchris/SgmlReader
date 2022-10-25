@@ -1,16 +1,12 @@
-﻿<html>
-<body>
-<DIV STYLE="top:214px; left:139px; position:absolute; font-size:26px;"><NOBR><SPAN STYLE="font-family:"Wingdings 2";"></SPAN></NOBR></DIV>
-</body>
-</html>
+﻿<DIV STYLE="top:214px; left:139px; position:absolute; font-size:26px;"><NOBR><span style="font-family:"Wingdings 2";"></span></NOBR></DIV>
 `
-<html>
-  <body>
+<HTML>
+  <BODY>
     <DIV STYLE="top:214px; left:139px; position:absolute; font-size:26px;">
       <NOBR>
-        <SPAN STYLE="font-family:" Wingdings="Wingdings" _x0032_=";">
+        <SPAN STYLE="font-family:" WINGDINGS="WINGDINGS" _x0032_=";">
         </SPAN>
       </NOBR>
     </DIV>
-  </body>
-</html>
+  </BODY>
+</HTML>

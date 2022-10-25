@@ -1,5 +1,7 @@
 ﻿<b>foo</b>
 `
 <html>
-  <b>foo</b>
+  <body>
+    <b>foo</b>
+  </body>
 </html>

@@ -72,7 +72,7 @@ command line utility named `SgmlReader.exe`.
 The command line executable version has the following options:
 
     sgmlreader <options> [InputUri] [OutputFile]
-    
+
 | Argument Name    | Description |
 | ---------------- | :---------- |
 | `-help`          | Print the list of command-line options. |
@@ -202,6 +202,12 @@ nuget pack SgmlReader.nuspec
 ## Release History
 *Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
 redirection to account for newer versions when recompilation is not an option.
+
+### Release nodes for 1.8.26
+
+* Implement optional start tags and fix auto-close.
+* Fix inclusion/exclusion and add new tests for all this.
+* Make case folding only happen when CaseFolding is not CaseFolding.None.
 
 ### Release notes for 1.8.25
 

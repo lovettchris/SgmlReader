@@ -1,0 +1,16 @@
+﻿<!DOCTYPE test [
+	<!ELEMENT test - - (a, b)>
+	<!ELEMENT a O O (a1,a2)>
+	<!ELEMENT a1 - - (#PCDATA)>
+	<!ELEMENT a2 - - (#PCDATA)>
+	<!ELEMENT b - - (#PCDATA)>
+]>
+<test><a1>bla</a1><a2>fasel</a2><b>fasel</b></test>
+`
+<test>
+  <a>
+    <a1>bla</a1>
+    <a2>fasel</a2>
+  </a>
+  <b>fasel</b>
+</test>

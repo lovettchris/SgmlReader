@@ -2,23 +2,43 @@
   <Import Project="../Common/version.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47;net48;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net45;net46;net47;net48;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Label="Signing" Condition="'$(MYPUBLICKEYFILE)' != ''">
+  <PropertyGroup Label="Signing" Condition="'$(MyKeyFile)' != ''">
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MYPUBLICKEYFILE)</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>$(MyKeyFile)</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\64.test" />
+    <None Remove="Resources\65.test" />
+    <None Remove="Resources\66.test" />
+    <None Remove="Resources\67.test" />
+    <None Remove="Resources\68.test" />
+    <None Remove="Resources\69.test" />
+    <None Remove="Resources\70.test" />
+    <None Remove="Resources\71.test" />
+    <None Remove="Resources\72.test" />
+    <None Remove="Resources\73.test" />
+    <None Remove="Resources\74.test" />
     <None Remove="Resources\htmlinline.dtd" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\65.test" />
+    <EmbeddedResource Include="Resources\66.test" />
+    <EmbeddedResource Include="Resources\67.test" />
+    <EmbeddedResource Include="Resources\68.test" />
+    <EmbeddedResource Include="Resources\69.test" />
+    <EmbeddedResource Include="Resources\70.test" />
+    <EmbeddedResource Include="Resources\71.test" />
+    <EmbeddedResource Include="Resources\72.test" />
+    <EmbeddedResource Include="Resources\73.test" />
+    <EmbeddedResource Include="Resources\74.test" />
     <EmbeddedResource Include="Resources\htmlinline.dtd" />
     <EmbeddedResource Include="Resources\ofx160.dtd" />
     <EmbeddedResource Include="Resources\01.test" />

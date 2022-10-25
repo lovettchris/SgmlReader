@@ -289,12 +289,12 @@ namespace Sgml
             return a;
         }
 
-        public void RemoveAttribute(string name)
+        public void RemoveAttribute(string name, bool caseInsensitive)
         {
             for (int i = 0, n = _attributes.Count; i < n; i++)
             {
                 Attribute a  = _attributes[i];
-                if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(a.Name, name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
                     _attributes.RemoveAt(i);
                     return;
@@ -313,12 +313,12 @@ namespace Sgml
 
         public int AttributeCount => _attributes.Count;
 
-        public int GetAttribute(string name) 
+        public int GetAttribute(string name, bool caseInsensitive) 
         {
             for (int i = 0, n = _attributes.Count; i < n; i++) 
             {
                 Attribute a = _attributes[i];
-                if (string.Equals(a.Name, name, StringComparison.OrdinalIgnoreCase)) 
+                if (string.Equals(a.Name, name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal)) 
                 {
                     return i;
                 }
@@ -350,6 +350,8 @@ namespace Sgml
         CData,      // We are on a CDATA type node, eg. <scipt> where we have special parsing rules.
         PartialText,
         PseudoStartTag, // we pushed a pseudo-start tag, need to continue with previous start tag.
+        ContinueStartTag, // we began parsing a start tag, but had to inject default start tags.
+        ContinueTextNode, // we began parsing a text node, but had to inject default start tags.
         Eof
     }
 
@@ -398,6 +400,7 @@ namespace Sgml
         private string _docType;
         private WhitespaceHandling _whitespaceHandling;
         private CaseFolding _folding = CaseFolding.None;
+        bool _caseInsensitive = false;
         private bool _stripDocType = true;
         //private string m_startTag;
         private readonly Dictionary<string, string> _unknownNamespaces = new ();
@@ -618,7 +621,10 @@ namespace Sgml
         public CaseFolding CaseFolding
         {
             get => _folding;
-            set => _folding = value;
+            set {
+                _folding = value;
+                _caseInsensitive = (_folding != CaseFolding.None);
+            }
         }
 
         /// <summary>
@@ -814,7 +820,7 @@ namespace Sgml
             get
             {
                 // SGML has no namespaces, unless this turned out to be an xmlns attribute.
-                if (_state == State.Attr && string.Equals(_a.Name, "xmlns", StringComparison.OrdinalIgnoreCase))
+                if (_state == State.Attr && NameEquals(_a.Name, "xmlns"))
                 {
                     return "http://www.w3.org/2000/xmlns/";
                 }
@@ -841,7 +847,7 @@ namespace Sgml
                             Node node = _stack[i];
                             if ((node != null) && (node.NodeType == XmlNodeType.Element))
                             {
-                                int index = node.GetAttribute("xmlns");
+                                int index = node.GetAttribute("xmlns", _caseInsensitive);
                                 if (index >= 0)
                                 {
                                     string value = node.GetAttribute(index).Value;
@@ -867,7 +873,7 @@ namespace Sgml
                                 Node node = _stack[i];
                                 if ((node != null) && (node.NodeType == XmlNodeType.Element)) 
                                 {
-                                    int index = node.GetAttribute(key);
+                                    int index = node.GetAttribute(key, _caseInsensitive);
                                     if (index >= 0) 
                                     {
                                         value = node.GetAttribute(index).Value;
@@ -1137,7 +1143,7 @@ namespace Sgml
         {
             if (_state != State.Attr && _state != State.AttrValue)
             {
-                int i = _node.GetAttribute(name);
+                int i = _node.GetAttribute(name, _caseInsensitive);
                 if (i >= 0)
                     return GetAttribute(i);
             }
@@ -1201,8 +1207,8 @@ namespace Sgml
         /// <param name="name">The qualified name of the attribute.</param>
         /// <returns>true if the attribute is found; otherwise, false. If false, the reader's position does not change.</returns>
         public override bool MoveToAttribute(string name)
-        {
-            int i = _node.GetAttribute(name);
+        {            
+            int i = _node.GetAttribute(name, _caseInsensitive);
             if (i >= 0)
             {
                 MoveToAttribute(i);
@@ -1352,6 +1358,12 @@ namespace Sgml
             }
         }
 
+        private bool NameEquals(string name1, string name2)
+        {
+            return string.Equals(name1, name2, (_caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
+        }
+
+
         /// <summary>
         /// Reads the next node from the stream.
         /// </summary>
@@ -1361,15 +1373,6 @@ namespace Sgml
             if (_current is null)
             {
                 OpenInput();
-            }
-
-            if (_node.Simulated)
-            {
-                // return the next node
-                _node.Simulated = false;
-                _node = Top();
-                _state = _node.CurrentState;
-                return true;
             }
 
             bool foundnode = false;
@@ -1393,7 +1396,7 @@ namespace Sgml
                         }
                         break;
                     case State.EndTag:
-                        if (string.Equals(_endTag, _node.Name, StringComparison.OrdinalIgnoreCase))
+                        if (NameEquals(_endTag, _node.Name))
                         {
                             Pop(); // we're done!
                             _state = State.Markup;
@@ -1416,6 +1419,12 @@ namespace Sgml
                         break;
                     case State.PseudoStartTag:
                         foundnode = ParseStartTag('<');                        
+                        break;
+                    case State.ContinueStartTag:
+                        foundnode = ContinueStartTag(this._startTag, this._startTagChar);
+                        break;
+                    case State.ContinueTextNode:
+                        foundnode = ContinueTextNode(this._delayedText, false);
                         break;
                     case State.AutoClose:
                         Pop(); // close next node.
@@ -1448,12 +1457,7 @@ namespace Sgml
                         Pop();
                         goto case State.Markup;
                     case State.PartialText:
-                        if (ParseText(_current.Lastchar, false))
-                        {
-                            _node.NodeType = XmlNodeType.Whitespace;
-                        }
-
-                        foundnode = true;
+                        foundnode = ParseText(_current.Lastchar, false);
                         break;
                 }
 
@@ -1470,27 +1474,6 @@ namespace Sgml
                     return true;
                 }
             }
-            if (!_foundRoot && (this.NodeType is XmlNodeType.Element or XmlNodeType.Text or XmlNodeType.CDATA))
-            {
-                _foundRoot = true;
-                if (IsHtml && (NodeType != XmlNodeType.Element ||
-                    !string.Equals(LocalName, "html", StringComparison.OrdinalIgnoreCase)))
-                {
-                    // Simulate an HTML root element!
-                    _node.CurrentState = _state;
-                    Node root = Push("html", XmlNodeType.Element, null);
-                    SwapTopNodes(); // make html the outer element.
-                    _node = root;
-                    root.Simulated = true;
-                    root.IsEmpty = false;
-                    _state = State.Markup;
-                    //this.state = State.PseudoStartTag;
-                    //this.startTag = name;
-                }
-
-                return true;
-            }
-
             return true;
         }
 
@@ -1513,10 +1496,8 @@ namespace Sgml
                 }
                 else if (ParseText(ch, true))
                 {
-                    _node.NodeType = XmlNodeType.Whitespace;
+                    return true;
                 }
-
-                return true;
             }
 
             _state = State.Eof;
@@ -1551,7 +1532,7 @@ namespace Sgml
                 else
                 {
                     string name = _current.ScanToken(_sb, SgmlReader.declterm, false);
-                    if (string.Equals(name, "DOCTYPE", StringComparison.OrdinalIgnoreCase))
+                    if (NameEquals(name, "DOCTYPE"))
                     {
                         ParseDocType();
 
@@ -1559,7 +1540,7 @@ namespace Sgml
                         // therefore if there is no SYSTEM literal then add an empty one.
                         if (this.GetAttribute("SYSTEM") is null && this.GetAttribute("PUBLIC") != null)
                         {
-                            _node.AddAttribute("SYSTEM", "", '"', _folding == CaseFolding.None);
+                            _node.AddAttribute("SYSTEM", "", '"', _caseInsensitive);
                         }
 
                         if (_stripDocType)
@@ -1598,6 +1579,11 @@ namespace Sgml
         private string ScanName(string terminators)
         {
             string name = _current.ScanToken(_sb, terminators, false);
+            return FoldName(name);
+        }
+
+        private string FoldName(string name)
+        { 
             switch (_folding)
             {
                 case CaseFolding.ToUpper:
@@ -1624,6 +1610,79 @@ namespace Sgml
             }
         }
 
+        private bool InjectOptionalStartTag(string name, XmlNodeType nt)
+        {
+            if (_dtd == null)
+            {
+                return false;
+            }
+            ElementDecl decl = null;
+            // special case for missing root elements.
+            if (!_foundRoot && (nt is XmlNodeType.Element or XmlNodeType.Text or XmlNodeType.CDATA))
+            {
+                _foundRoot = true;
+                var rootDecl = _dtd.FindElement(_dtd.Name);
+                if (NameEquals(name, rootDecl.Name))
+                {
+                    // hey it matches, so we're good!
+                    return false;
+                }
+                if (rootDecl.StartTagOptional)
+                {
+                    decl = rootDecl;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Missing required root element {rootDecl.Name}");
+                }
+            }
+            else if (nt is XmlNodeType.Text or XmlNodeType.CDATA)
+            {
+                if (_node?.DtdType == null)
+                {
+                    return false;
+                }
+                if (_node.DtdType.CanContainText())
+                {
+                    return false;
+                }
+                // need to insert something that can contain #PCDATA.
+                decl = _dtd.FindOptionalTextContainer(_node.DtdType);
+            }
+            else
+            {
+                // now similar code for child content that is also missing required start tags, this one
+                // is a bit more complicated because we have to search for optional start tags that "can"
+                // contain the new element.
+                var e = _dtd.FindElement(name);
+                if (e == null)
+                {
+                    return false;
+                }
+                if (_node?.DtdType == null)
+                {
+                    return false;
+                }
+
+                if (_node.DtdType.CanContain(name))
+                {
+                    return false; // all good!
+                }
+                decl = _dtd.FindOptionalContainer(_node.DtdType, name);
+            }
+            if (decl != null)
+            {
+                // Simulate an the root element!
+                _node.CurrentState = _state;
+                Node node = Push(FoldName(decl.Name), XmlNodeType.Element, null);
+                node.DtdType = decl;
+                node.Simulated = true;
+                node.IsEmpty = (decl.ContentModel.DeclaredContent == DeclaredContent.EMPTY);
+                return true;
+            }
+            return false;
+        }
+
         private const string tagterm = " \t\r\n=/><";
         private const string aterm = " \t\r\n='\"/>";
         private const string avterm = " \t\r\n>";
@@ -1645,11 +1704,27 @@ namespace Sgml
             else
             {
                 // TODO: Changes by mindtouch mean that  this.startTag is never non-null.  The effects of this need checking.
-
                 //name = this.startTag;
                 _state = State.Markup;
             }
 
+            return ContinueStartTag(name, ch);
+        }
+
+        private string _startTag;
+        private char _startTagChar;
+
+        private bool ContinueStartTag(string name, char ch)
+        {
+            if (InjectOptionalStartTag(name, XmlNodeType.Element))
+            {
+                _startTag = name;
+                _startTagChar = ch;
+                _state = State.ContinueStartTag;
+                return true;
+            }
+
+            _state = State.Markup;
             Node n = Push(name, XmlNodeType.Element, null);
             n.IsEmpty = false;
             Validate(n);
@@ -1706,7 +1781,7 @@ namespace Sgml
 
                 if (ValidAttributeName(aname))
                 {
-                    Attribute a = n.AddAttribute(aname, value ?? aname, quote, _folding == CaseFolding.None);
+                    Attribute a = n.AddAttribute(aname, value ?? aname, quote, _caseInsensitive);
                     if (a is null)
                     {
                         Log("Duplicate attribute '{0}' ignored", aname);
@@ -1740,7 +1815,6 @@ namespace Sgml
                 }
                 _rootCount++;
             }
-
             ValidateContent(n);
             return true;
         }
@@ -1761,13 +1835,12 @@ namespace Sgml
 
             _endTag = name;
 
-            // Make sure there's a matching start tag for it.                        
-            bool caseInsensitive = (_folding == CaseFolding.None);
+            // Make sure there's a matching start tag for it.     
             _node = _stack[_stack.Count - 1];
             for (int i = _stack.Count - 1; i > 0; i--)
             {
                 Node n = _stack[i];
-                if (string.Equals(n.Name, name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                if (NameEquals(n.Name, name))
                 {
                     _endTag = n.Name;
                     return true;
@@ -1840,7 +1913,7 @@ namespace Sgml
                 _current.ScanToEnd(null, "CDATA", ">");
                 return false;
             }
-            else if (!string.Equals(name, "CDATA", StringComparison.OrdinalIgnoreCase))
+            else if (!NameEquals(name, "CDATA"))
             {
                 Log("Expecting CDATA but found '{0}'", name);
                 _current.ScanToEnd(null, "CDATA", ">");
@@ -1879,16 +1952,16 @@ namespace Sgml
                 if (ch != '[')
                 {
                     string token = _current.ScanToken(_sb, SgmlReader.dtterm, false);
-                    if (string.Equals(token, "PUBLIC", StringComparison.OrdinalIgnoreCase))
+                    if (NameEquals(token, "PUBLIC"))
                     {
                         ch = _current.SkipWhitespace();
                         if (ch is '\"' or '\'')
                         {
                             pubid = _current.ScanLiteral(_sb, ch);
-                            _node.AddAttribute(token, pubid, ch, _folding == CaseFolding.None);
+                            _node.AddAttribute(token, pubid, ch, _caseInsensitive);
                         }
                     } 
-                    else if (!string.Equals(token, "SYSTEM", StringComparison.OrdinalIgnoreCase))
+                    else if (!NameEquals(token, "SYSTEM"))
                     {
                         Log("Unexpected token in DOCTYPE '{0}'", token);
                         _current.ScanToEnd(null, "DOCTYPE", ">");
@@ -1898,7 +1971,7 @@ namespace Sgml
                     {
                         token = "SYSTEM";
                         syslit = _current.ScanLiteral(_sb, ch);
-                        _node.AddAttribute(token, syslit, ch, _folding == CaseFolding.None);  
+                        _node.AddAttribute(token, syslit, ch, _caseInsensitive);  
                     }
                     ch = _current.SkipWhitespace();
                 }
@@ -1916,7 +1989,7 @@ namespace Sgml
                     _current.ScanToEnd(null, "DOCTYPE", ">");
                 }
 
-                if (_dtd != null && !string.Equals(_dtd.Name, name, StringComparison.OrdinalIgnoreCase))
+                if (_dtd != null && !NameEquals(_dtd.Name, name))
                 {
                     throw new InvalidOperationException("DTD does not match document type");
                 }
@@ -1956,7 +2029,7 @@ namespace Sgml
             }
 
             // skip xml declarations, since these are generated in the output instead.
-            if (!string.Equals(name, "xml", StringComparison.OrdinalIgnoreCase))
+            if (!NameEquals(name, "xml"))
             {
                 Push(name, XmlNodeType.ProcessingInstruction, value);
                 return true;
@@ -1974,8 +2047,6 @@ namespace Sgml
             if (newtext)
                 _sb.Length = 0;
 
-            //this.sb.Append(ch);
-            //ch = this.current.ReadChar();
             _state = State.Text;
             while (ch != Entity.EOF)
             {
@@ -2027,8 +2098,30 @@ namespace Sgml
                 value = TrimStringBuilder(_sb, _textWhitespace);
             }
 
-            Push(name: null, XmlNodeType.Text, value);
-            return ws;
+            _delayedState = _state;
+            return ContinueTextNode(value, ws);
+        }
+
+        private string _delayedText;
+        private State _delayedState;
+
+
+        private bool ContinueTextNode(string text, bool isWhitespace)
+        {
+            if (!isWhitespace && InjectOptionalStartTag(null, XmlNodeType.Text))
+            {
+                _delayedText = text;
+                _state = State.ContinueTextNode;
+                return true;
+            }
+            
+            _state = _delayedState;
+            var node = Push(name: null, XmlNodeType.Text, text);
+            if (isWhitespace)
+            {
+                node.NodeType = XmlNodeType.Whitespace;
+            }
+            return true;
         }
 
         private static string TrimStringBuilder(StringBuilder sb, TextWhitespaceHandling handling) // It's simpler to return a substring from within a StringBuilder than it is to prevent whitespace from being added in the first place, hence this approach.
@@ -2198,7 +2291,7 @@ namespace Sgml
                     {
                         // see if this is the end tag for this CDATA node.
                         string temp = _sb.ToString();
-                        if (ParseEndTag() && string.Equals(_endTag, _node.Name, StringComparison.OrdinalIgnoreCase))
+                        if (ParseEndTag() && NameEquals(_endTag, _node.Name))
                         {
                             if (ws || string.IsNullOrEmpty(temp))
                             {
@@ -2546,8 +2639,7 @@ namespace Sgml
                 if (e != null)
                 {
                     node.DtdType = e;
-                    if (e.ContentModel.DeclaredContent == DeclaredContent.EMPTY)
-                        node.IsEmpty = true;
+                    node.IsEmpty = (e.ContentModel.DeclaredContent == DeclaredContent.EMPTY);
                 }
             }
         }
@@ -2612,8 +2704,9 @@ namespace Sgml
                 string name = node.Name.ToUpperInvariant(); // DTD is in upper case
                 int i = 0;
                 int top = _stack.Count - 2;
+
                 if (node.DtdType != null) 
-                { 
+                {
                     // it is a known element, let's see if it's allowed in the
                     // current context.
                     for (i = top; i > 0; i--)
@@ -2624,11 +2717,18 @@ namespace Sgml
                         ElementDecl f = n.DtdType;
                         if (f != null)
                         {
-                            if ((i == 2) && string.Equals(f.Name, "BODY", StringComparison.OrdinalIgnoreCase)) // NOTE (steveb): never close the BODY tag too early
+                            if (f.Excludes(name))
+                                continue;    // element is explicitly not allowed here which may mean we need to auto-close the parent.
+
+                            if (f.Includes(name))
+                                return;   // element is allowed
+
+                            if (_isHtml && (i == 2) && NameEquals(f.Name, "BODY"))
+                            {
+                                // NOTE (steveb): never close the BODY tag too early
                                 break;
-                            else if (string.Equals(f.Name, _dtd.Name, StringComparison.OrdinalIgnoreCase))
-                                break; // can't pop the root element.
-                            else if (f.CanContain(name, _dtd))
+                            }
+                            else if (f.CanContain(name))
                             {
                                 break;
                             }
@@ -2649,32 +2749,25 @@ namespace Sgml
                     }
                 }
 
-                if (i == 0)
+                if (i < 1)
                 {
-                    // Tag was not found or is not allowed anywhere, ignore it and 
-                    // continue on.
+                    // Tag was not found or is the root tag, or is not allowed anywhere, ignore it and 
+                    // continue on.  _stack[0] is the Document node, _stack[1] is the root element.
                     return;
                 }
                 else if (i < top)
                 {
-                    Node n = _stack[top];
-                    if (i == top - 1 && string.Equals(name, n.Name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // e.g. p not allowed inside p, not an interesting error.
-                    }
-                    else
-                    {
+                    Node n = _stack[top];     
 #if DEBUG
-                        string closing = "";
-                        for (int k = top; k >= i+1; k--) 
-                        {
-                            if (closing != "") closing += ",";
-                            Node n2 = _stack[k];
-                            closing += "<" + n2.Name + ">";
-                        }
-                        Log("Element '{0}' not allowed inside '{1}', closing {2}.", name, n.Name, closing);
-#endif
+                    string closing = "";
+                    for (int k = top; k >= i+1; k--) 
+                    {
+                        if (closing != "") closing += ",";
+                        Node n2 = _stack[k];
+                        closing += "<" + n2.Name + ">";
                     }
+                    Log("Element '{0}' not allowed inside '{1}', closing {2}.", name, n.Name, closing);
+#endif
 
                     _state = State.AutoClose;
                     _newnode = node;

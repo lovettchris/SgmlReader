@@ -1,3 +1,7 @@
 ﻿<p>&#x</p>
 `
-<p>&amp;#x</p>
+<html>
+  <body>
+    <p>&amp;#x</p>
+  </body>
+</html>

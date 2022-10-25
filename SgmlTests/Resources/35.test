@@ -5,12 +5,14 @@
 <html>
   <body>
     <table>
-      <tr>
-        <td>row1</td>
-      </tr>
-      <tr>
-        <td>row2</td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>row1</td>
+        </tr>
+        <tr>
+          <td>row2</td>
+        </tr>
+      </tbody>
     </table>
   </body>
-</html> 
+</html>

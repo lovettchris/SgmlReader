@@ -88,7 +88,7 @@ namespace SgmlTests
 
             string[] test = ReadTestResource(name).Split('`');
             before = test[0];
-            after = test[1];
+            after = test.Length > 1 ? test[1] : "";
         }
 
         /// <summary></summary>

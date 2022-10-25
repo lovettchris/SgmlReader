@@ -3,5 +3,7 @@
 </html>
 `
 <html>
-  <script><![CDATA[this is a test]]></script>
+  <head>
+    <script><![CDATA[this is a test]]></script>
+  </head>
 </html>

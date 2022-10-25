@@ -1,0 +1,11 @@
+﻿<FORM><button>123</button><FORM><labeL>foo`
+<html>
+  <body>
+    <form>
+      <button>123</button>
+    </form>
+    <form>
+      <label>foo</label>
+    </form>
+  </body>
+</html>

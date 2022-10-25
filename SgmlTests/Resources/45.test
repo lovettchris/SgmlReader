@@ -1,3 +1,5 @@
 ﻿blah <b>foo</b>
 `
-<html>blah <b>foo</b></html>
+<html>
+  <body>blah <b>foo</b></body>
+</html>

@@ -1,0 +1,14 @@
+﻿<!DOCTYPE test [
+	<!ELEMENT test - - (title, text)>
+	<!ELEMENT title O O (#PCDATA)>
+	<!ELEMENT text - - (#PCDATA)>
+]>
+<test>
+<title>Bla bla</title>
+<text>fasel</text>
+</test>
+`
+<test>
+  <title>Bla bla</title>
+  <text>fasel</text>
+</test>
