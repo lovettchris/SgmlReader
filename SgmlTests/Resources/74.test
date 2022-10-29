@@ -1,8 +1,10 @@
-﻿<FORM><button>123</button><FORM><labeL>foo`
+﻿<FORM><button>123</button><div><FORM><labeL>foo`
 <html>
   <body>
     <form>
       <button>123</button>
+      <div>
+      </div>
     </form>
     <form>
       <label>foo</label>

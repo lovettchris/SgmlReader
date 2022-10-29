@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Xml;
@@ -176,6 +177,29 @@ namespace Sgml
             return _items[_count++];
         }
 
+        public T Top
+        {
+            get
+            {
+                if (_count - 1 >= 0)
+                {
+                    return _items[_count - 1];
+                }
+                return default(T);
+            }
+            set
+            {
+                if (_count - 1 >= 0)
+                {
+                    _items[_count - 1] = value;
+                }
+                else
+                {
+                    throw new Exception("Stack is empty");
+                }
+            }
+        }
+
         /// <summary>
         /// Remove a specific item from the stack.
         /// </summary>
@@ -247,13 +271,15 @@ namespace Sgml
         internal ElementDecl DtdType; // the DTD type found via validation
         internal State CurrentState;
         internal bool Simulated; // tag was injected into result stream.
+        internal HashSet<string> Included;
+        internal HashSet<string> Excluded;
         private readonly HWStack<Attribute> _attributes = new (10);
 
         /// <summary>
         /// Attribute objects are reused during parsing to reduce memory allocations, 
         /// hence the Reset method. 
         /// </summary>
-        public void Reset(string name, XmlNodeType nt, string value) 
+        public void Reset(string name, XmlNodeType nt, string value, ElementDecl e) 
         {           
             Value = value;
             Name = name;
@@ -262,7 +288,15 @@ namespace Sgml
             XmlLang= null;
             IsEmpty = true;
             _attributes.Count = 0;
-            DtdType = null;
+            DtdType = e;
+            if (e != null)
+            {
+                IsEmpty = (e.ContentModel.DeclaredContent == DeclaredContent.EMPTY);
+            } 
+            else if (nt == XmlNodeType.Element)
+            {
+                IsEmpty = false;
+            }
         }
 
         public Attribute AddAttribute(string name, string value, char quotechar, bool caseInsensitive) 
@@ -335,6 +369,24 @@ namespace Sgml
             }
             return null;
         }
+
+        internal bool Excludes(string name)
+        {
+            if (Excluded == null)
+            {
+                return false;
+            }
+            return Excluded.Contains(name);
+        }
+
+        internal bool Includes(string name)
+        {
+            if (Included == null)
+            {
+                return false;
+            }
+            return Included.Contains(name);
+        }
     }
 
     internal enum State
@@ -401,6 +453,7 @@ namespace Sgml
         private WhitespaceHandling _whitespaceHandling;
         private CaseFolding _folding = CaseFolding.None;
         bool _caseInsensitive = false;
+        IEqualityComparer<string> _comparer = StringComparer.Ordinal;
         private bool _stripDocType = true;
         //private string m_startTag;
         private readonly Dictionary<string, string> _unknownNamespaces = new ();
@@ -624,6 +677,7 @@ namespace Sgml
             set {
                 _folding = value;
                 _caseInsensitive = (_folding != CaseFolding.None);
+                _comparer = _caseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
             }
         }
 
@@ -675,7 +729,7 @@ namespace Sgml
         
             _state = State.Initial;
             _stack = new HWStack<Node>(10);
-            _node = Push(null, XmlNodeType.Document, null);
+            _node = Push(null, XmlNodeType.Document, null, null);
             _node.IsEmpty = false;
             _sb = new StringBuilder();
             _name = new StringBuilder();
@@ -692,38 +746,65 @@ namespace Sgml
             _resolver = new DesktopEntityResolver();
         }
 
-        private Node Push(string name, XmlNodeType nt, string value)
+        private Node Push(string name, XmlNodeType nt, string value, ElementDecl e)
         {
+            Node previous = _stack.Top;
             Node result = _stack.Push();
             if (result is null)
             {
                 result = new Node();
-                _stack[_stack.Count - 1] = result;
+                _stack.Top = result;
             }
 
-            result.Reset(name, nt, value);
+            result.Reset(name, nt, value, e);
+
+            if (previous != null)
+            {
+                result.Included = previous.Included;
+                result.Excluded = previous.Excluded;
+            }
+
+            if (e != null)
+            {
+                // Now we have to maintain the inherited list of inclusions and exclusions
+                // so that at any given point in the tree we can efficiently find out when
+                // a given inclusion or exclusion is in effect.
+                if (e.Exclusions != null && e.Exclusions.Length > 0)
+                {
+                    if (result.Excluded == null)
+                    {
+                        result.Excluded = new HashSet<string>(e.Exclusions, _comparer);                        
+                    }
+                    else if (e.Exclusions.Any(i => !result.Excluded.Contains(i)))
+                    {
+                        result.Excluded = new HashSet<string>(result.Excluded, _comparer); // clone
+                        result.Excluded.AddRange(e.Exclusions); // and add.
+                    }
+                }
+
+                if (e.Inclusions != null && e.Inclusions.Length > 0)
+                {
+                    if (result.Included == null)
+                    {
+                        result.Included = new HashSet<string>(e.Inclusions, _comparer);
+                    }
+                    else if (e.Inclusions.Any(i => !result.Included.Contains(i)))
+                    {
+                        result.Included = new HashSet<string>(result.Included, _comparer); // clone
+                        result.Included.AddRange(e.Inclusions); // and add.
+                    }
+                }
+            }
+            
             _node = result;
             return result;
-        }
-
-        private void SwapTopNodes()
-        {
-            int top = _stack.Count - 1;
-            if (top > 0)
-            {
-                Node n = _stack[top - 1];
-                _stack[top - 1] = _stack[top];
-                _stack[top] = n;
-            }
         }
 
         private Node Push(Node n)
         {
             // we have to do a deep clone of the Node object because
             // it is reused in the stack.
-            Node n2 = Push(n.Name, n.NodeType, n.Value);
-            n2.DtdType = n.DtdType;
-            n2.IsEmpty = n.IsEmpty;
+            Node n2 = Push(n.Name, n.NodeType, n.Value, n.DtdType);
             n2.Space = n.Space;
             n2.XmlLang = n.XmlLang;
             n2.CurrentState = n.CurrentState;
@@ -1507,11 +1588,7 @@ namespace Sgml
         private const string declterm = " \t\r\n><";
         private bool ParseTag(char ch)
         {
-            if (ch == '%')
-            {
-                return ParseAspNet();
-            }
-            else if (ch == '!')
+            if (ch == '!')
             {
                 ch = _current.ReadChar();
                 if (ch == '-')
@@ -1610,7 +1687,7 @@ namespace Sgml
             }
         }
 
-        private bool InjectOptionalStartTag(string name, XmlNodeType nt)
+        private bool InjectOptionalStartTag(string name, XmlNodeType nt, ElementDecl e)
         {
             if (_dtd == null)
             {
@@ -1647,40 +1724,120 @@ namespace Sgml
                     return false;
                 }
                 // need to insert something that can contain #PCDATA.
-                decl = _dtd.FindOptionalTextContainer(_node.DtdType);
+                decl = FindOptionalTextContainer(_node.DtdType);
             }
             else
             {
                 // now similar code for child content that is also missing required start tags, this one
                 // is a bit more complicated because we have to search for optional start tags that "can"
                 // contain the new element.
-                var e = _dtd.FindElement(name);
                 if (e == null)
                 {
                     return false;
                 }
+                Node top = _stack.Top;
+                if (top != null && top.Includes(name))
+                {
+                    // we have an inherited inclusion then, so good to go!
+                    return false; 
+                }
+
                 if (_node?.DtdType == null)
                 {
                     return false;
                 }
 
-                if (_node.DtdType.CanContain(name))
+                if (_node.DtdType.CanContain(name, _comparer))
                 {
                     return false; // all good!
                 }
-                decl = _dtd.FindOptionalContainer(_node.DtdType, name);
+                decl = FindOptionalContainer(_node.DtdType, name);
             }
             if (decl != null)
             {
                 // Simulate an the root element!
                 _node.CurrentState = _state;
-                Node node = Push(FoldName(decl.Name), XmlNodeType.Element, null);
-                node.DtdType = decl;
+                Node node = Push(FoldName(decl.Name), XmlNodeType.Element, null, decl);
                 node.Simulated = true;
-                node.IsEmpty = (decl.ContentModel.DeclaredContent == DeclaredContent.EMPTY);
                 return true;
             }
             return false;
+        }
+
+        internal ElementDecl FindOptionalTextContainer(ElementDecl dtdType)
+        {
+            // We know _dtd is not null.
+            
+            // We have to work backwards from elements that can contain name to the current dtdType.
+            // For example if we have text and only <HTML> then we need to insert <BODY> and 
+            // BODY isMixed so text can live there.
+            Stack<ElementDecl> stack = new Stack<ElementDecl>();
+            foreach (ElementDecl f in _dtd.FindOptionalTextContainers())
+            {
+                if (f.Name == dtdType.Name)
+                {
+                    // bugbug this shouldn't happen since we already checked dtdType cannot contain text.
+                    return f;
+                }
+                else
+                {
+                    stack.Push(f);
+                }
+            }
+
+            HashSet<ElementDecl> visited = new HashSet<ElementDecl>();
+            while (stack.Count > 0)
+            {
+                var e = stack.Pop();
+                // Ok, we have an element that can contain text, but is it allowed inside dtdType?
+                var f = FindOptionalContainer(dtdType, e.Name);
+                if (f != null)
+                {                   
+                    return f;
+                }
+            }
+
+            return null;
+        }
+
+        internal ElementDecl FindOptionalContainer(ElementDecl dtdType, string name)
+        {
+            // We have to work backwards from elements that can contain name to the current dtdType.
+            // For example if we just got a <td> and dtdType is <HTML> then we need to insert
+            // 2 start tags, "<BODY>" and "<TABLE>".  This method will find that chain, and return
+            // the top of the chain that needs to be inserted, in this example "<BODY>".
+            Stack<ElementDecl> stack = new Stack<ElementDecl>();
+            var decl = _dtd.FindElement(name);
+            if (decl == null)
+            {
+                return null;
+            }
+            Node top = _stack.Top;
+            stack.Push(decl);
+            HashSet<ElementDecl> visited = new HashSet<ElementDecl>();
+            visited.Add(decl);
+            while (stack.Count > 0)
+            {
+                var e = stack.Pop();
+                foreach (ElementDecl f in _dtd.FindOptionalContainers(dtdType))
+                {
+                    if ((top != null && top.Includes(f.Name)) || f.CanContain(e.Name, _comparer))
+                    {
+                        if (f.Name == dtdType.Name)
+                        {
+                            return e;
+                        }
+                        else if (!visited.Contains(f))
+                        {
+                            // keep looking.
+                            stack.Push(f); 
+                            visited.Add(f);
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         private const string tagterm = " \t\r\n=/><";
@@ -1716,7 +1873,8 @@ namespace Sgml
 
         private bool ContinueStartTag(string name, char ch)
         {
-            if (InjectOptionalStartTag(name, XmlNodeType.Element))
+            ElementDecl e = _dtd?.FindElement(name);
+            if (InjectOptionalStartTag(name, XmlNodeType.Element, e))
             {
                 _startTag = name;
                 _startTagChar = ch;
@@ -1725,9 +1883,7 @@ namespace Sgml
             }
 
             _state = State.Markup;
-            Node n = Push(name, XmlNodeType.Element, null);
-            n.IsEmpty = false;
-            Validate(n);
+            Node n = Push(name, XmlNodeType.Element, null, e);
             ch = _current.SkipWhitespace();
             while (ch != Entity.EOF && ch != '>')
             {
@@ -1852,13 +2008,6 @@ namespace Sgml
             return false;
         }
 
-        private bool ParseAspNet()
-        {
-            string value = "<%" + _current.ScanToEnd(_sb, "AspNet", "%>") + "%>";
-            Push(null, XmlNodeType.CDATA, value);         
-            return true;
-        }
-
         private bool ParseComment()
         {
             char ch = _current.ReadChar();
@@ -1897,7 +2046,7 @@ namespace Sgml
                 value += " "; // '-' cannot be last character
             }
 
-            Push(null, XmlNodeType.Comment, value);         
+            Push(null, XmlNodeType.Comment, value, null);
             return true;
         }
 
@@ -1931,7 +2080,7 @@ namespace Sgml
 
                 string value = _current.ScanToEnd(_sb, "CDATA", "]]>");
 
-                Push(null, XmlNodeType.CDATA, value);
+                Push(null, XmlNodeType.CDATA, value, null);
                 return true;
             }
         }
@@ -1941,7 +2090,7 @@ namespace Sgml
         {
             char ch = _current.SkipWhitespace();
             string name = _current.ScanToken(_sb, SgmlReader.dtterm, false);
-            Push(name, XmlNodeType.DocumentType, null);
+            Push(name, XmlNodeType.DocumentType, null, null);
             ch = _current.SkipWhitespace();
             if (ch != '>')
             {
@@ -2031,7 +2180,7 @@ namespace Sgml
             // skip xml declarations, since these are generated in the output instead.
             if (!NameEquals(name, "xml"))
             {
-                Push(name, XmlNodeType.ProcessingInstruction, value);
+                Push(name, XmlNodeType.ProcessingInstruction, value, null);
                 return true;
             }
 
@@ -2108,7 +2257,7 @@ namespace Sgml
 
         private bool ContinueTextNode(string text, bool isWhitespace)
         {
-            if (!isWhitespace && InjectOptionalStartTag(null, XmlNodeType.Text))
+            if (!isWhitespace && InjectOptionalStartTag(null, XmlNodeType.Text, null))
             {
                 _delayedText = text;
                 _state = State.ContinueTextNode;
@@ -2116,7 +2265,7 @@ namespace Sgml
             }
             
             _state = _delayedState;
-            var node = Push(name: null, XmlNodeType.Text, text);
+            var node = Push(name: null, XmlNodeType.Text, text, null);
             if (isWhitespace)
             {
                 node.NodeType = XmlNodeType.Whitespace;
@@ -2353,7 +2502,7 @@ namespace Sgml
             value = value.Replace("]]>", string.Empty);
             value = value.Replace("/**/", string.Empty);
 
-            Push(null, XmlNodeType.CDATA, value);
+            Push(null, XmlNodeType.CDATA, value, null);
             if (_partial == '\0')
                 _partial = ' ';// force it to pop this CDATA next time in.
 
@@ -2691,7 +2840,7 @@ namespace Sgml
                 if (!VerifyName(node.Name))
                 {
                     Pop();
-                    Push(null, XmlNodeType.Text, "<" + node.Name + ">");
+                    Push(null, XmlNodeType.Text, "<" + node.Name + ">", null);
                     return;
                 }
             }
@@ -2717,10 +2866,10 @@ namespace Sgml
                         ElementDecl f = n.DtdType;
                         if (f != null)
                         {
-                            if (f.Excludes(name))
+                            if (n.Excludes(name))
                                 continue;    // element is explicitly not allowed here which may mean we need to auto-close the parent.
 
-                            if (f.Includes(name))
+                            if (n.Includes(name))
                                 return;   // element is allowed
 
                             if (_isHtml && (i == 2) && NameEquals(f.Name, "BODY"))
@@ -2728,7 +2877,7 @@ namespace Sgml
                                 // NOTE (steveb): never close the BODY tag too early
                                 break;
                             }
-                            else if (f.CanContain(name))
+                            else if (f.CanContain(name, _comparer))
                             {
                                 break;
                             }
@@ -2774,6 +2923,17 @@ namespace Sgml
                     Pop(); // save this new node until we pop the others
                     _poptodepth = i + 1;
                 }
+            }
+        }
+    }
+
+    static class Extensions
+    {
+        public static void AddRange<T>(this HashSet<T> set, IEnumerable<T> items)
+        {
+            foreach (var i in items)
+            {
+                set.Add(i);
             }
         }
     }

@@ -1,8 +1,10 @@
-﻿<ins><p>Test`
+﻿<div><ins><p>Test`
 <html>
   <body>
-    <ins>
-      <p>Test</p>
-    </ins>
+    <div>
+      <ins>
+        <p>Test</p>
+      </ins>
+    </div>
   </body>
 </html>

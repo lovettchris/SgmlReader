@@ -1594,54 +1594,49 @@ namespace Sgml
         /// </summary>
         /// <param name="name">The name of the element to check for.</param>
         /// <returns>True if the specified element can be contained by this element.</returns>
-        public bool CanContain(string name)
+        public bool CanContain(string name, IEqualityComparer<string> comparer)
         {
-            if (Excludes(name))
+            if (_excludeCache != null && _excludeCache.Contains(name))
+            {
                 return false;
+            }
+            else if (_exclusions != null)
+            {
+                _excludeCache = new HashSet<string>(_exclusions, comparer);
+                if (_excludeCache.Contains(name))
+                {
+                    return false;
+                }
+            }
 
-            if (Includes(name))
+            if (_includeCache != null && _includeCache.Contains(name))
+            {
                 return true;
+            }
+            else if (_inclusions != null) 
+            {
+                _includeCache = new HashSet<string>(_inclusions, comparer);
+                if (_includeCache.Contains(name))
+                {
+                    return true;
+                }
+            }
 
             return _contentModel.CanContain(name);
         }
 
-        /// <summary>
-        /// Tests whether another specified element is on exclusions list of this element .
-        /// </summary>
-        /// <param name="name">The name of the element to check for.</param>
-        /// <returns>True if the specified element is member of Exclusions of this element.</returns>
-        public bool Excludes(string name)
-        {
-            if (_exclusions is not null)
-            {
-                foreach (string s in _exclusions)
-                {
-                    if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                }
-            }
-
-            return false;
-        }
+        private HashSet<string> _includeCache;
+        private HashSet<string> _excludeCache;
 
         /// <summary>
-        /// Tests whether another specified element is on inclusions list of this element .
+        /// Get the list of exclusions defined on this element type (or null)
         /// </summary>
-        /// <param name="name">The name of the element to check for.</param>
-        /// <returns>True if the specified element is member of Inclusions of this element.</returns>
-        public bool Includes(string name)
-        {
-            if (_inclusions is not null)
-            {
-                foreach (string s in _inclusions)
-                {
-                    if (string.Equals(s, name, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                }
-            }
+        public string[] Exclusions => _exclusions;
 
-            return false;
-        }
+        /// <summary>
+        /// Get the list of inclusions defined on this element type (or null)
+        /// </summary>
+        public string[] Inclusions => _inclusions;
 
         internal bool CanContainText()
         {
@@ -3192,94 +3187,33 @@ namespace Sgml
             }
         }
 
-        internal ElementDecl FindOptionalContainer(ElementDecl dtdType, string name)
-        {
-            // We have to work backwards from elements that can contain name to the current dtdType.
-            // For example if we just got a <td> and dtdType is <HTML> then we need to insert
-            // 2 start tags, "<BODY>" and "<TABLE>".  This method will find that chain, and return
-            // the top of the chain that needs to be inserted, in this example "<BODY>".
-            Stack<ElementDecl> stack = new Stack<ElementDecl>();
-            var decl = this.FindElement(name);
-            if (decl == null)
-            {
-                return null;
-            }
-            stack.Push(decl);
-            HashSet<ElementDecl> visited = new HashSet<ElementDecl>();
-            visited.Add(decl);
-            while (stack.Count > 0)
-            {
-                var e = stack.Pop();
-                foreach (ElementDecl f in FindOptionalContainers(dtdType, e.Name))
-                {
-                    if (f.Name == dtdType.Name)
-                    {
-                        return e;
-                    }
-                    else if (!visited.Contains(f))
-                    {
-                        stack.Push(f);
-                    }
-                }
-            }
-            
-            return null;
-        }
-
-        internal IEnumerable<ElementDecl> FindOptionalContainers(ElementDecl parentType, string name)
+        internal IEnumerable<ElementDecl> FindOptionalContainers(ElementDecl parentType)
         {
             foreach (var e in this._elements.Values)
             {
-                if ((e.StartTagOptional || string.Equals(e.Name, parentType.Name, StringComparison.OrdinalIgnoreCase)) && e.CanContain(name))
+                if (e.StartTagOptional || string.Equals(e.Name, parentType.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     yield return e;
                 }
             }
         }
 
-        internal ElementDecl FindOptionalTextContainer(ElementDecl dtdType)
-        {
-            // We have to work backwards from elements that can contain name to the current dtdType.
-            // For example if we have text and only <HTML> then we need to insert <BODY> and 
-            // BODY isMixed so text can live there.
-            Stack<ElementDecl> stack = new Stack<ElementDecl>();
-            foreach (ElementDecl f in FindOptionalTextContainers())
-            {
-                if (f.Name == dtdType.Name)
-                {
-                    // bugbug this shouldn't happen since we already checked dtdType cannot contain text.
-                    return f; 
-                }
-                else
-                {
-                    stack.Push(f);
-                }
-            }
-
-            HashSet<ElementDecl> visited = new HashSet<ElementDecl>();
-            while (stack.Count > 0)
-            {
-                var e = stack.Pop();
-                // Ok, we have an element that can contain text, but is it allowed inside dtdType?
-                var f = FindOptionalContainer(dtdType, e.Name);
-                if (f != null)
-                {
-                    return f;
-                }
-            }
-
-            return null;
-        }
+        HashSet<ElementDecl> optionalTextContainers;
 
         internal IEnumerable<ElementDecl> FindOptionalTextContainers()
         {
-            foreach (var e in this._elements.Values)
+            if (optionalTextContainers == null)
             {
-                if (e.StartTagOptional && e.CanContainText())
+                optionalTextContainers = new HashSet<ElementDecl>();
+                foreach (var e in this._elements.Values)
                 {
-                    yield return e;
+                    if (e.StartTagOptional && e.CanContainText())
+                    {
+                        optionalTextContainers.Add(e);
+                    }
                 }
-            }
+            } 
+            return optionalTextContainers;
         }
     }
 
