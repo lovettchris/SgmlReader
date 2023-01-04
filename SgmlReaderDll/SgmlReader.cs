@@ -1699,18 +1699,21 @@ namespace Sgml
             {
                 _foundRoot = true;
                 var rootDecl = _dtd.FindElement(_dtd.Name);
-                if (NameEquals(name, rootDecl.Name))
+                if (rootDecl != null)
                 {
-                    // hey it matches, so we're good!
-                    return false;
-                }
-                if (rootDecl.StartTagOptional)
-                {
-                    decl = rootDecl;
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Missing required root element {rootDecl.Name}");
+                    if (NameEquals(name, rootDecl.Name))
+                    {
+                        // hey it matches, so we're good!
+                        return false;
+                    }
+                    if (rootDecl.StartTagOptional)
+                    {
+                        decl = rootDecl;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"Missing required root element {rootDecl.Name}");
+                    }
                 }
             }
             else if (nt is XmlNodeType.Text or XmlNodeType.CDATA)

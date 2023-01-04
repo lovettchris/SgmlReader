@@ -19,7 +19,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace SgmlTests
 {
 
@@ -586,6 +585,37 @@ namespace SgmlTests
             // FORM is not allowed inside another FORM by exclusion, so the previous
             // FORM element should be autoclosed.
             Test("74.test", XmlRender.Passthrough, CaseFolding.ToLower, "html", true);
+        }
+
+        /// <summary>https://github.com/lovettchris/SgmlReader/issues/47</summary>
+        [Test]
+        public void T75_TestDtdParser()
+        {
+            XmlDocument xmlDocument;
+            using (StringReader stringReader = new StringReader("<test>&foo;</test>"))
+            {
+                SgmlReader sgmlReader = new SgmlReader()
+                {
+                    InputStream = stringReader,
+                    TextWhitespace = TextWhitespaceHandling.OnlyTrailingLineBreaks,
+                    Dtd = SgmlDtd.Parse(null, "foo", null, "<!ENTITY foo 'bar'>", null),
+                    DocType = "foo",
+                    WhitespaceHandling = WhitespaceHandling.Significant,
+                };                
+
+                xmlDocument = new XmlDocument();
+                using (XmlWriter xmlWriter = xmlDocument.CreateNavigator().AppendChild())
+                {
+                    while (!sgmlReader.EOF)
+                    {
+                        xmlWriter.WriteNode(sgmlReader, defattr: true);
+                    }
+                }
+
+                var expected = "<test>bar</test>";
+                var result = xmlDocument.OuterXml;
+                Assert.AreEqual(expected, result);
+            }
         }
     }
 }

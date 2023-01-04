@@ -170,7 +170,7 @@ will be replicated automatically to the following files using `Common\fix_versio
 ```
 Common/version.props
 SgmlReader.nuspec
-SgmlReaderUniversal/Propertyes/AssemblyInfo.cs
+SgmlReaderUniversal/Properties/AssemblyInfo.cs
 ```
 
 ### Developer Checklist
@@ -190,18 +190,12 @@ Please make sure all tests pass and new tests are added for areas you work on.
 See [nunit](https://nunit.org).  If you have Visual Studio, just open the
 Test Explorer and click Run All.
 
-## Signing and Publishing
-
-To publish new nuget package run the following:
-
-```
-pwsh -f Common\full_sign.ps1
-nuget pack SgmlReader.nuspec
-```
 
 ## Release History
-*Note:* all 1.8.x releases up to 1.8.7 are compatible with 1.8.0.  Use assembly
-redirection to account for newer versions when recompilation is not an option.
+
+### Release nodes for 1.8.27
+
+* Fix loading of DTD from string.
 
 ### Release nodes for 1.8.26
 

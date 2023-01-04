@@ -349,6 +349,8 @@ namespace Sgml
             {
                 if (_literal != null)
                     _stm = new StringReader(_literal);
+                else if (_stm == null)
+                    _stm = new StringReader("");
             } 
             else if (_uri is null)
             {
