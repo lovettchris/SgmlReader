@@ -1595,6 +1595,7 @@ namespace Sgml
         /// Tests whether this element can contain another specified element.
         /// </summary>
         /// <param name="name">The name of the element to check for.</param>
+        /// <param name="comparer">The equality comparer for matching names</param>
         /// <returns>True if the specified element can be contained by this element.</returns>
         public bool CanContain(string name, IEqualityComparer<string> comparer)
         {

@@ -2,7 +2,7 @@
   <Import Project="../Common/version.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47;net48;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net46;net47;net48;netcoreapp3.1;net6.0</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
   </PropertyGroup>

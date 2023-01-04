@@ -190,8 +190,23 @@ Please make sure all tests pass and new tests are added for areas you work on.
 See [nunit](https://nunit.org).  If you have Visual Studio, just open the
 Test Explorer and click Run All.
 
+## Signing and Publishing
+
+To publish new nuget package run the following:
+
+```
+pwsh -f Common\full_sign.ps1
+nuget pack SgmlReader.nuspec
+```
+
+### Release nodes for 1.8.27
 
 ## Release History
+
+### Release nodes for 1.8.28
+
+* Add back strong name on .net assemblies.
+* Remove out of service versions for .NET 4.5 and .NET 5.0.
 
 ### Release nodes for 1.8.27
 
