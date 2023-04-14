@@ -26,6 +26,7 @@ foreach ($e in $doc.Root.Descendants()) {
 			Write-Host "signing $src"
 			$path = $ScriptDir + "\..\" + $src
 			sn -q -Rca $path $kset
+			signtool sign /a /i "Sectigo Public Code Signing CA R36" /t http://timestamp.sectigo.com /fd sha256 $path
 		}
 	}
 }

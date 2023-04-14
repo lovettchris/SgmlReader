@@ -2,7 +2,7 @@
   <Import Project="../Common/version.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net46;net47;net48;netcoreapp3.1;net6.0;</TargetFrameworks>
+    <TargetFrameworks>net46;net47;net48;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <ApplicationIcon>App.ico</ApplicationIcon>
     <RepositoryUrl>https://github.com/lovettchris/SgmlReader/</RepositoryUrl>
     <LangVersion>8.0</LangVersion>

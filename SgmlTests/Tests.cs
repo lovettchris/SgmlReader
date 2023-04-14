@@ -58,6 +58,12 @@ namespace SgmlTests
         }
 
         [Test]
+        public void T06_Case_folding_none()
+        {
+            Test("10.test", XmlRender.Passthrough, CaseFolding.None, "html", false);
+        }
+
+        [Test]
         public void T07_Recover_from_attribute_with_nested_quotes() {
             Test("07.test", XmlRender.Passthrough, CaseFolding.ToUpper, "html", true);
         }

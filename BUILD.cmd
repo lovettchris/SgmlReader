@@ -44,7 +44,7 @@ msbuild SgmlReaderUniversal.sln /verbosity:minimal /p:Configuration=Release
 if ERRORLEVEL 1 exit /B 1
 
 REM run .net core tests
-vstest.console %~dp0SgmlTests\bin\Release\net5.0\SgmlTests.dll
+vstest.console %~dp0SgmlTests\bin\Release\net7.0\SgmlTests.dll
 if ERRORLEVEL 1 exit /B 1
 
 if "%MyKeyFile%" == "" goto :eof

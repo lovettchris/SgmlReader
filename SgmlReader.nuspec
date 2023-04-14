@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>Microsoft.Xml.SgmlReader</id>
-    <version>1.8.28</version>
+    <version>1.8.29</version>
     <title>Microsoft.Xml.SgmlReader</title>
     <authors>Chris Lovett, Steve Bjorg</authors>
     <owners>Chris Lovett</owners>
@@ -48,6 +48,10 @@
     <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.dll" target="lib\net6.0" />
     <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.pdb" target="lib\net6.0" />
     <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.xml" target="lib\net6.0" />
+
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReaderDll.dll" target="lib\net7.0" />
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReaderDll.pdb" target="lib\net7.0" />
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReaderDll.xml" target="lib\net7.0" />
     
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.dll" target="lib\netcoreapp3.1" />
     <file src="SgmlReader\bin\Release\netcoreapp3.1\SgmlReaderDll.pdb" target="lib\netcoreapp3.1" />
@@ -91,5 +95,11 @@
     <file src="SgmlReader\bin\Release\net6.0\SgmlReader.pdb" target="tools\net6.0" />
     <file src="SgmlReader\bin\Release\net6.0\SgmlReader.runtimeconfig.json" target="tools\net6.0"/>
     <file src="SgmlReader\bin\Release\net6.0\SgmlReaderDll.dll" target="tools\net6.0" />
+
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReader.exe" target="tools\net7.0" />
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReader.dll" target="tools\net7.0" />
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReader.pdb" target="tools\net7.0" />
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReader.runtimeconfig.json" target="tools\net7.0"/>
+    <file src="SgmlReader\bin\Release\net7.0\SgmlReaderDll.dll" target="tools\net7.0" />
   </files>
 </package>
