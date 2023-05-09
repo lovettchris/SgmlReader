@@ -14,21 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\64.test" />
-    <None Remove="Resources\65.test" />
-    <None Remove="Resources\66.test" />
-    <None Remove="Resources\67.test" />
-    <None Remove="Resources\68.test" />
-    <None Remove="Resources\69.test" />
-    <None Remove="Resources\70.test" />
-    <None Remove="Resources\71.test" />
-    <None Remove="Resources\72.test" />
-    <None Remove="Resources\73.test" />
-    <None Remove="Resources\74.test" />
-    <None Remove="Resources\htmlinline.dtd" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\65.test" />
     <EmbeddedResource Include="Resources\66.test" />
     <EmbeddedResource Include="Resources\67.test" />
@@ -40,6 +25,7 @@
     <EmbeddedResource Include="Resources\73.test" />
     <EmbeddedResource Include="Resources\74.test" />
     <EmbeddedResource Include="Resources\htmlinline.dtd" />
+    <EmbeddedResource Include="Resources\wikipedia.html" />
     <EmbeddedResource Include="Resources\ofx160.dtd" />
     <EmbeddedResource Include="Resources\01.test" />
     <EmbeddedResource Include="Resources\02.test" />

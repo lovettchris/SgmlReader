@@ -199,9 +199,11 @@ pwsh -f Common\full_sign.ps1
 nuget pack SgmlReader.nuspec
 ```
 
-### Release nodes for 1.8.27
-
 ## Release History
+
+### Release nodes for 1.8.30
+
+* Fix bug reading wikipedia.
 
 ### Release nodes for 1.8.28
 

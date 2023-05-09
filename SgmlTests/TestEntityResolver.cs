@@ -28,6 +28,10 @@ namespace SgmlTests
             {
                 return new EmbeddedResourceEntityContent(this.GetType().Assembly, literal) { MimeType = "text/ofx" };
             }
+            else if (literal == "wikipedia.html")
+            {
+                return new EmbeddedResourceEntityContent(this.GetType().Assembly, "wikipedia.html") { MimeType = "text /html" };
+            }
 
             return base.GetContent(uri);
         }

@@ -623,5 +623,22 @@ namespace SgmlTests
                 Assert.AreEqual(expected, result);
             }
         }
+
+        [Test]
+        public void Test_LoadWikipedia()
+        {
+            using (var reader = new SgmlReader()
+            {
+                DocType = "html",
+                PublicIdentifier = "-//W3C//DTD XHTML 1.0 Transitional//EN",
+                SystemLiteral = "http://www.w3.org/TR/html4/loose.dtd",
+                Href = "wikipedia.html",
+                Resolver = new TestEntityResolver()
+            })
+            {
+                var doc = XDocument.Load(reader);
+            }
+        }
     }
+
 }

@@ -452,8 +452,8 @@ namespace Sgml
         private string _docType;
         private WhitespaceHandling _whitespaceHandling;
         private CaseFolding _folding = CaseFolding.None;
-        bool _caseInsensitive = false;
-        IEqualityComparer<string> _comparer = StringComparer.Ordinal;
+        bool _caseInsensitive = true;
+        IEqualityComparer<string> _comparer = StringComparer.OrdinalIgnoreCase;
         private bool _stripDocType = true;
         //private string m_startTag;
         private readonly Dictionary<string, string> _unknownNamespaces = new ();
@@ -674,11 +674,7 @@ namespace Sgml
         public CaseFolding CaseFolding
         {
             get => _folding;
-            set {
-                _folding = value;
-                _caseInsensitive = (_folding != CaseFolding.None);
-                _comparer = _caseInsensitive ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-            }
+            set => _folding = value;
         }
 
         /// <summary>
